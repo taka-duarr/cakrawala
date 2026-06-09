@@ -32,6 +32,20 @@ class AIService
         return $this->callOpenAI($prompt);
     }
 
+    public function getEarlyWarningAnalysis($students)
+    {
+        if (!$this->apiKey) return "AI Analisis Early Warning belum tersedia (API Key kosong).";
+
+        $studentListStr = "";
+        foreach ($students as $student) {
+            $studentListStr .= "- Nama: {$student->name}, Poin Kebaikan: {$student->points_kebaikan}, Poin Pelanggaran: {$student->points_pelanggaran}, Level: {$student->current_level}\n";
+        }
+
+        $prompt = "Berikut adalah daftar siswa kelas Anda:\n" . $studentListStr . "\nAnalisis siswa-siswa tersebut. Tentukan siapa saja siswa yang paling membutuhkan perhatian khusus atau bantuan (misalnya karena memiliki poin pelanggaran tinggi atau poin kebaikan yang sangat rendah dibanding rata-rata kelas). Berikan saran intervensi yang konkret untuk guru/wali kelas dalam membantu memotivasi siswa tersebut agar aktif kembali. Tulis ringkas dalam format list berbutir.";
+
+        return $this->callOpenAI($prompt);
+    }
+
     private function callOpenAI($prompt)
     {
         try {
@@ -43,7 +57,7 @@ class AIService
                         ['role' => 'system', 'content' => 'Anda adalah asisten AI untuk platform pendidikan gamifikasi bernama CAKRAWALA. Anda membantu memberikan saran perkembangan siswa yang ramah, memotivasi, dan edukatif.'],
                         ['role' => 'user', 'content' => $prompt]
                     ],
-                    'max_tokens' => 250,
+                    'max_tokens' => 350,
                 ]);
 
             if ($response->successful()) {

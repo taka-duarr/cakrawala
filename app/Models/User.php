@@ -38,6 +38,26 @@ class User extends Authenticatable
         return $this->belongsToMany(Mission::class)->withPivot('status', 'proof_url')->withTimestamps();
     }
 
+    public function children()
+    {
+        return $this->belongsToMany(User::class, 'parent_student', 'parent_id', 'student_id')->withTimestamps();
+    }
+
+    public function parents()
+    {
+        return $this->belongsToMany(User::class, 'parent_student', 'student_id', 'parent_id')->withTimestamps();
+    }
+
+    public function claimedRewards()
+    {
+        return $this->belongsToMany(Reward::class, 'reward_user')->withPivot('id', 'status')->withTimestamps();
+    }
+
+    public function achievements()
+    {
+        return $this->belongsToMany(Achievement::class, 'achievement_user')->withTimestamps();
+    }
+
     /**
      * Get the attributes that should be cast.
      *

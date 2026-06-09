@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
-    public function index()
+    public function index(Request $request, \App\Services\AIService $aiService)
     {
         $user = auth()->user();
         
@@ -26,7 +26,34 @@ class StudentController extends Controller
             ->latest()
             ->take(10)
             ->get();
+
+        // AI Student Insight and Quest Recommendation
+        $cacheKeyInsight = 'ai_insight_student_' . $user->id;
+        $cacheKeyQuest = 'ai_quest_rec_student_' . $user->id;
+
+        if ($request->has('trigger_ai')) {
+            $aiInsight = $aiService->getStudentInsight($user);
+            $aiQuestRec = $aiService->getQuestRecommendation($user);
+            
+            \Illuminate\Support\Facades\Cache::put($cacheKeyInsight, $aiInsight, 60 * 24);
+            \Illuminate\Support\Facades\Cache::put($cacheKeyQuest, $aiQuestRec, 60 * 24);
+        } else {
+            $aiInsight = \Illuminate\Support\Facades\Cache::get($cacheKeyInsight);
+            $aiQuestRec = \Illuminate\Support\Facades\Cache::get($cacheKeyQuest);
+        }
+
+        // Dapatkan badge siswa
+        $badges = $user->achievements()->get();
         
-        return view('student.dashboard', compact('user', 'availableMissions', 'takenMissionIds', 'activeMissions', 'pointHistory'));
+        return view('student.dashboard', compact(
+            'user', 
+            'availableMissions', 
+            'takenMissionIds', 
+            'activeMissions', 
+            'pointHistory',
+            'aiInsight',
+            'aiQuestRec',
+            'badges'
+        ));
     }
 }

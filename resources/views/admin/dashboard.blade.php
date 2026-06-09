@@ -56,42 +56,42 @@
             </div>
 
             <!-- Kelas Ranking -->
-            <div class="uk-card uk-card-default rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="p-6 border-b border-gray-100 bg-white">
-                    <h3 class="text-xl font-bold text-gray-800">Peringkat Kelas</h3>
-                    <p class="text-sm text-gray-500">Berdasarkan total poin kebaikan yang diraih siswa di setiap kelas.</p>
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden soft-glow-indigo">
+                <div class="p-6 border-b border-slate-100 bg-white">
+                    <h3 class="text-lg font-bold text-slate-800">Peringkat Kelas</h3>
+                    <p class="text-xs text-slate-400 mt-1 font-medium">Berdasarkan total poin kebaikan yang diraih siswa di setiap kelas.</p>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="uk-table uk-table-divider uk-table-hover uk-table-middle mb-0">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="w-16 text-center">Rank</th>
-                                <th>Nama Kelas</th>
-                                <th class="text-right">Total Kebaikan</th>
-                                <th class="text-right">Total Pelanggaran</th>
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50/70 border-b border-slate-100/80">
+                                <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center w-24">Rank</th>
+                                <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nama Kelas</th>
+                                <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Total Kebaikan</th>
+                                <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Total Pelanggaran</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y divide-slate-100/70">
                             @forelse($kelasRanking as $index => $kelas)
-                            <tr>
-                                <td class="text-center">
+                            <tr class="hover:bg-slate-50/50 transition-colors">
+                                <td class="px-6 py-4 text-center">
                                     @if($index == 0)
-                                        <span class="uk-badge bg-yellow-500 text-white w-8 h-8 flex items-center justify-center rounded-full text-lg shadow-sm">1</span>
+                                        <span class="bg-amber-100 text-amber-800 border border-amber-200/50 w-6 h-6 flex items-center justify-center rounded-full text-xs font-black shadow-sm mx-auto">1</span>
                                     @elseif($index == 1)
-                                        <span class="uk-badge bg-gray-400 text-white w-8 h-8 flex items-center justify-center rounded-full text-lg shadow-sm">2</span>
+                                        <span class="bg-slate-100 text-slate-700 border border-slate-200/50 w-6 h-6 flex items-center justify-center rounded-full text-xs font-black shadow-sm mx-auto">2</span>
                                     @elseif($index == 2)
-                                        <span class="uk-badge bg-amber-700 text-white w-8 h-8 flex items-center justify-center rounded-full text-lg shadow-sm">3</span>
+                                        <span class="bg-orange-100 text-orange-800 border border-orange-200/50 w-6 h-6 flex items-center justify-center rounded-full text-xs font-black shadow-sm mx-auto">3</span>
                                     @else
-                                        <span class="text-gray-500 font-medium">{{ $index + 1 }}</span>
+                                        <span class="text-slate-400 text-xs font-bold">{{ $index + 1 }}</span>
                                     @endif
                                 </td>
-                                <td class="font-semibold text-gray-800">{{ $kelas->class_name ?? 'Belum ada kelas' }}</td>
-                                <td class="text-right font-bold text-green-600">{{ $kelas->total_kebaikan }} Pts</td>
-                                <td class="text-right font-bold text-red-500">{{ $kelas->total_pelanggaran }} Pts</td>
+                                <td class="px-6 py-4 font-bold text-slate-800 text-xs">{{ $kelas->class_name ?? 'Belum ada kelas' }}</td>
+                                <td class="px-6 py-4 text-right font-extrabold text-xs text-emerald-600">{{ $kelas->total_kebaikan }} Pts</td>
+                                <td class="px-6 py-4 text-right font-extrabold text-xs text-rose-500">{{ $kelas->total_pelanggaran }} Pts</td>
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="4" class="text-center py-8 text-gray-500">Belum ada data siswa/kelas.</td>
+                                <td colspan="4" class="text-center py-12 text-slate-400 text-xs font-medium">Belum ada data siswa/kelas.</td>
                             </tr>
                             @endforelse
                         </tbody>

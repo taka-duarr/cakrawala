@@ -7,9 +7,13 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
+        <!-- Favicon -->
+        <link rel="icon" type="image/png" href="{{ asset('logo.png') }}">
+
         <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -18,24 +22,195 @@
         <link rel="stylesheet" href="https://unpkg.com/franken-ui@0.0.12/dist/css/core.min.css" />
         <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.5/dist/js/uikit.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.5/dist/js/uikit-icons.min.js"></script>
+
+        <style>
+            body {
+                font-family: 'Inter', sans-serif;
+            }
+            h1, h2, h3, h4, h5, h6 {
+                font-family: 'Outfit', sans-serif;
+            }
+        </style>
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
+    <body class="font-sans antialiased bg-slate-50/50 text-slate-800">
+        <div class="min-h-screen flex flex-col lg:flex-row" x-data="{ sidebarCollapsed: localStorage.getItem('sidebarCollapsed') === 'true' }">
+            
+            <!-- Left Sidebar Navigation (Desktop) -->
             @include('layouts.navigation')
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
+            <!-- Main Content Area -->
+            <div class="flex-1 flex flex-col min-h-screen overflow-x-hidden">
+                <!-- Top Navbar -->
+                <header class="bg-white border-b border-slate-100 h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-40">
+                    <!-- Left: Search / Mobile Toggle -->
+                    <div class="flex items-center flex-1">
+                        <button class="lg:hidden p-2 -ml-2 text-slate-500 hover:text-slate-700 mr-2" uk-toggle="target: #sidebar-mobile">
+                            <span uk-icon="icon: menu; ratio: 1.1"></span>
+                        </button>
+                        
+                        <!-- Desktop Sidebar Toggle Button -->
+                        <button @click="sidebarCollapsed = !sidebarCollapsed; localStorage.setItem('sidebarCollapsed', sidebarCollapsed)" class="hidden lg:flex p-2 -ml-2 text-slate-400 hover:text-indigo-600 rounded-xl hover:bg-slate-50 mr-4 transition" title="Toggle Sidebar">
+                            <svg class="w-5 h-5 transition-transform duration-300" :class="sidebarCollapsed ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 9l-3 3m0 0l3 3m-3-3h7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </button>
+                        
+                        <div class="hidden sm:flex items-center bg-slate-100/60 border border-slate-100 rounded-xl px-3.5 py-1.5 w-80">
+                            <span uk-icon="icon: search; ratio: 0.8" class="text-slate-400 mr-2"></span>
+                            <input type="text" placeholder="Cari misi, teman, lencana..." 
+                                class="bg-transparent border-0 border-transparent focus:border-transparent focus:ring-0 text-xs text-slate-600 focus:outline-none w-full placeholder-slate-400 p-0">
+                        </div>
+                    </div>
+
+                    <!-- Right: Quick Links, Notifications, Profile -->
+                    <div class="flex items-center space-x-6">
+                        <!-- Quick Links -->
+                        <div class="hidden md:flex items-center space-x-5 text-xs font-semibold text-slate-500">
+                            <a href="{{ route('dashboard') }}" class="hover:text-indigo-600 transition">Quest</a>
+                            @if(auth()->user()->role && auth()->user()->role->name === 'siswa')
+                                <a href="{{ route('student.rewards') }}" class="hover:text-indigo-600 transition">Reward Store</a>
+                            @endif
+                            <a href="{{ route('leaderboard') }}" class="hover:text-indigo-600 transition">Leaderboard</a>
+                        </div>
+
+                        <!-- Notifications -->
+                        <div class="relative">
+                            <button class="relative p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-50 transition" type="button">
+                                <span uk-icon="icon: bell; ratio: 0.95"></span>
+                                <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[8px] font-bold text-white ring-2 ring-white">3</span>
+                            </button>
+                            <div uk-dropdown="mode: click; pos: bottom-right; container: body" class="uk-dropdown rounded-2xl shadow-xl border border-slate-100 bg-white p-4 w-80 z-50">
+                                <div class="flex justify-between items-center pb-2 border-b border-slate-100 mb-3">
+                                    <span class="text-xs font-bold text-slate-800">Notifikasi Karakter</span>
+                                    <span class="text-[9px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">3 Baru</span>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="flex items-start space-x-2.5 text-xs">
+                                        <svg class="w-5 h-5 text-indigo-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 21l-.813-5.096L3 15l5.096-.813L9 9l.813 5.096L15 15l-5.187.904zM18 7.5L17.25 11l-.75-3.5L13 7l3.5-.75L17.25 3l.75 3.5L21 7l-3 1.5z"></path></svg>
+                                        <div>
+                                            <div class="font-bold text-slate-800 leading-tight">Misi Harian Tersedia!</div>
+                                            <div class="text-slate-500 mt-0.5">Misi "Hadir Tepat Waktu" siap diambil hari ini.</div>
+                                            <div class="text-[9px] text-slate-400 mt-1">1 jam yang lalu</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start space-x-2.5 text-xs pt-3 border-t border-slate-50">
+                                        <svg class="w-5 h-5 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499c.195-.39.736-.39.93 0l2.399 4.86 5.342.776c.433.063.606.592.293.898l-3.866 3.769 1.127 5.318c.092.433-.362.762-.75.558L12 17.15l-4.782 2.516c-.388.204-.842-.125-.75-.558l1.127-5.318-3.866-3.769c-.313-.306-.14-.835.293-.898l5.342-.776 2.399-4.86z"></path></svg>
+                                        <div>
+                                            <div class="font-bold text-slate-800 leading-tight">Poin Karakter Disetujui</div>
+                                            <div class="text-slate-500 mt-0.5">Poin misi "Membaca Buku" (+10 Pts) telah ditambahkan.</div>
+                                            <div class="text-[9px] text-slate-400 mt-1">3 jam yang lalu</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start space-x-2.5 text-xs pt-3 border-t border-slate-50">
+                                        <svg class="w-5 h-5 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15a3 3 0 100-6 3 3 0 000 6zM19.5 8.25c0-1.518-1.232-2.75-2.75-2.75h-.75V3H8v2.5h-.75C5.732 5.5 4.5 6.732 4.5 8.25v.75c0 1.518 1.232 2.75 2.75 2.75h.75M19.5 8.25v.75c0 1.518-1.232 2.75-2.75 2.75h-.75M9 21h6M12 15v6"></path></svg>
+                                        <div>
+                                            <div class="font-bold text-slate-800 leading-tight">Lencana Baru Diraih!</div>
+                                            <div class="text-slate-500 mt-0.5">Selamat! Anda memperoleh lencana "Pemula Aktif".</div>
+                                            <div class="text-[9px] text-slate-400 mt-1">Kemarin</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3 pt-2 border-t border-slate-100 text-center">
+                                    <a href="{{ route('notifications') }}" class="text-[10px] font-bold text-indigo-600 hover:text-indigo-700 transition hover:underline block">
+                                        Lihat Semua Notifikasi →
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Profile Info (Logout Form) -->
+                        <div class="flex items-center space-x-3 pl-4 border-l border-slate-100">
+                            <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center font-bold text-indigo-700 text-xs shadow-inner">
+                                {{ substr(auth()->user()->name, 0, 1) }}
+                            </div>
+                            <div class="hidden sm:block text-left">
+                                <div class="text-xs font-bold text-slate-800 leading-tight">{{ auth()->user()->name }}</div>
+                                <div class="text-[9px] text-slate-400 font-semibold capitalize">{{ auth()->user()->role->display_name ?? 'Siswa' }}</div>
+                            </div>
+                            <!-- Logout Button -->
+                            <form method="POST" action="{{ route('logout') }}" class="inline ml-2">
+                                @csrf
+                                <button type="submit" class="p-1 text-slate-400 hover:text-rose-600 rounded transition" title="Log Out">
+                                    <span uk-icon="icon: sign-out; ratio: 0.9"></span>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </header>
-            @endisset
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+                <!-- Optional Header -->
+                @isset($header)
+                    <div class="bg-white border-b border-slate-100 py-4 px-4 sm:px-6 lg:px-8">
+                        {{ $header }}
+                    </div>
+                @endisset
+
+                <!-- Main Content -->
+                <main class="flex-1 py-8 px-4 sm:px-6 lg:px-8">
+                    {{ $slot }}
+                </main>
+            </div>
+        </div>
+
+        <!-- Mobile Sidebar Drawer (UIkit off-canvas) -->
+        <div id="sidebar-mobile" class="lg:hidden" uk-offcanvas="overlay: true">
+            <div class="uk-offcanvas-bar bg-white p-0 w-72">
+                <div class="h-full flex flex-col justify-between p-6">
+                    <div class="space-y-6">
+                        <div class="pb-4 border-b border-slate-100">
+                            <div class="flex items-center space-x-3">
+                                <img src="{{ asset('logo.png') }}" alt="Logo" class="h-12 w-12 object-contain rounded-xl shadow-sm bg-slate-50 p-1">
+                                <div class="text-xl font-extrabold tracking-tight text-slate-800">
+                                    CAKRAWALA
+                                </div>
+                            </div>
+                            <div class="text-[10px] text-slate-400 font-medium mt-1">Melampaui Nilai, Membentuk Masa Depan</div>
+                        </div>
+                        
+                        <!-- Navigation Menu (Responsive) -->
+                        <nav class="space-y-2">
+                            <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold {{ (request()->routeIs('dashboard') || request()->routeIs('*.dashboard')) ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                                <span uk-icon="icon: home; ratio: 0.8"></span>
+                                <span>Dashboard</span>
+                            </a>
+                            
+                            <a href="{{ route('leaderboard') }}" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold {{ request()->routeIs('leaderboard') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                                <span uk-icon="icon: star; ratio: 0.8"></span>
+                                <span>Leaderboard</span>
+                            </a>
+                            
+                            @if(auth()->user()->role && auth()->user()->role->name === 'siswa')
+                                <a href="{{ route('student.rewards') }}" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold {{ request()->routeIs('student.rewards') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                                    <span uk-icon="icon: cart; ratio: 0.8"></span>
+                                    <span>Toko Hadiah</span>
+                                </a>
+                            @endif
+
+                            @if(auth()->user()->role && auth()->user()->role->name === 'admin')
+                                <a href="{{ route('admin.rewards.manage') }}" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold {{ request()->routeIs('admin.rewards.manage') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                                    <span uk-icon="icon: settings; ratio: 0.8"></span>
+                                    <span>Kelola Toko Hadiah</span>
+                                </a>
+                            @endif
+
+                            <a href="{{ route('events') }}" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold {{ request()->routeIs('events') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                                <span uk-icon="icon: calendar; ratio: 0.8"></span>
+                                <span>Event</span>
+                            </a>
+
+                            <a href="{{ route('announcements') }}" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold {{ request()->routeIs('announcements') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                                <span uk-icon="icon: info; ratio: 0.8"></span>
+                                <span>Pengumuman</span>
+                            </a>
+
+                            <a href="{{ route('help') }}" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold {{ request()->routeIs('help') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                                <span uk-icon="icon: question; ratio: 0.8"></span>
+                                <span>Bantuan</span>
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>
