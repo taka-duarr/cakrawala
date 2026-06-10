@@ -117,3 +117,62 @@
   transform: translateX(4px);
 }
 
+/* UIkit Modal Premium Styling & FOUC/Flat-Rendering Fix */
+.uk-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    background-color: rgba(15, 23, 42, 0.3) !important; /* slate-900 overlay */
+    backdrop-filter: blur(8px) !important;
+    transition: opacity 0.15s linear;
+}
+
+.uk-modal.uk-open {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.uk-modal-dialog {
+    position: relative;
+    box-sizing: border-box;
+    width: 540px;
+    max-width: calc(100% - 2rem);
+    margin: 0 auto !important;
+    background: #ffffff !important;
+    border-radius: 1rem !important; /* rounded-2xl */
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    border: 1px solid rgba(241, 245, 249, 0.8) !important;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-property: opacity, transform;
+}
+
+.uk-open > .uk-modal-dialog {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.uk-modal-close-default {
+    position: absolute !important;
+    top: 1.25rem !important;
+    right: 1.25rem !important;
+    color: #94a3b8 !important; /* slate-400 */
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: color 0.15s ease !important;
+    z-index: 10;
+}
+
+.uk-modal-close-default:hover {
+    color: #475569 !important; /* slate-600 */
+}
+

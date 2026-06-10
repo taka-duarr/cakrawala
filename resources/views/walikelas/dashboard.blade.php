@@ -176,6 +176,7 @@
                                     <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center w-16">No</th>
                                     <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nama Siswa</th>
                                     <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Level</th>
+                                    <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Status Keaktifan</th>
                                     <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Kebaikan</th>
                                     <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Pelanggaran</th>
                                 </tr>
@@ -198,6 +199,11 @@
                                     <td class="px-6 py-4">
                                         <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-100/80">
                                             {{ $student->current_level }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border {{ $student->activity_color }}">
+                                            {{ $student->activity_status }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 text-center font-extrabold text-xs text-emerald-600">{{ $student->points_kebaikan }} Pts</td>

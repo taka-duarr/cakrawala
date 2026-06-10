@@ -14,7 +14,7 @@ class OrangTuaController extends Controller
         $parent = auth()->user();
         
         // Dapatkan semua anak dari orang tua ini
-        $children = $parent->children()->with(['missions', 'achievements'])->get();
+        $children = $parent->children()->with(['missions', 'achievements', 'classroom'])->get();
 
         // Cari riwayat poin dari semua anak
         $childrenIds = $children->pluck('id')->toArray();

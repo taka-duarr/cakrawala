@@ -78,7 +78,8 @@ class RewardController extends Controller
         $pendingClaims = DB::table('reward_user')
             ->join('users', 'reward_user.user_id', '=', 'users.id')
             ->join('rewards', 'reward_user.reward_id', '=', 'rewards.id')
-            ->select('reward_user.id', 'users.name as student_name', 'users.class_name', 'rewards.name as reward_name', 'rewards.points_cost', 'reward_user.status', 'reward_user.created_at')
+            ->leftJoin('classrooms', 'users.classroom_id', '=', 'classrooms.id')
+            ->select('reward_user.id', 'users.name as student_name', 'classrooms.name as class_name', 'rewards.name as reward_name', 'rewards.points_cost', 'reward_user.status', 'reward_user.created_at')
             ->where('reward_user.status', 'pending_approval')
             ->latest()
             ->get();

@@ -18,7 +18,7 @@ class AIService
     {
         if (!$this->apiKey) return "AI Insight belum tersedia (API Key kosong).";
 
-        $prompt = "Buatkan ringkasan 2 paragraf untuk siswa bernama {$student->name} kelas {$student->class_name} yang saat ini berada di level {$student->current_level}. Ia memiliki Poin Kebaikan: {$student->points_kebaikan} dan Poin Pelanggaran: {$student->points_pelanggaran}. Berikan pujian untuk poin kebaikannya, dan teguran/saran yang membangun jika ada poin pelanggaran.";
+        $prompt = "Buatkan ringkasan 2 paragraf untuk siswa bernama {$student->name} kelas " . ($student->classroom->name ?? 'Belum ada kelas') . " yang saat ini berada di level {$student->current_level}. Ia memiliki Poin Kebaikan: {$student->points_kebaikan} dan Poin Pelanggaran: {$student->points_pelanggaran}. Berikan pujian untuk poin kebaikannya, dan teguran/saran yang membangun jika ada poin pelanggaran.";
 
         return $this->callOpenAI($prompt);
     }

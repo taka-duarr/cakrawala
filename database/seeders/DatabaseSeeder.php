@@ -37,12 +37,28 @@ class DatabaseSeeder extends Seeder
             'role_id' => 2,
         ]);
 
+        // Create Classrooms
+        $class1 = \App\Models\Classroom::create([
+            'name' => 'X IPA 1',
+            'points' => 1850,
+        ]);
+
+        $class2 = \App\Models\Classroom::create([
+            'name' => 'X IPS 2',
+            'points' => 840,
+        ]);
+
+        $class3 = \App\Models\Classroom::create([
+            'name' => 'XI IPA 3',
+            'points' => 790,
+        ]);
+
         // Wali Kelas User
         $waliKelas = User::factory()->create([
             'name' => 'Bapak Rian Wali',
             'email' => 'walikelas@cakrawala.com',
             'role_id' => 3,
-            'class_name' => 'X IPA 1'
+            'classroom_id' => $class1->id,
         ]);
 
         // Orang Tua User
@@ -60,7 +76,7 @@ class DatabaseSeeder extends Seeder
             'points_kebaikan' => 150,
             'points_pelanggaran' => 0,
             'current_level' => 'Berkembang',
-            'class_name' => 'X IPA 1'
+            'classroom_id' => $class1->id,
         ]);
 
         // Hubungkan Orang Tua dan Siswa (Anak)

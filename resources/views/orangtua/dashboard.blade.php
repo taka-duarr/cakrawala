@@ -25,7 +25,7 @@
                         </div>
                         <div>
                             <h2 class="text-2xl font-bold text-slate-800">{{ $child->name }}</h2>
-                            <p class="text-sm text-slate-500">Kelas: <strong class="text-slate-700">{{ $child->class_name ?? '-' }}</strong> · Level: <span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full text-xs font-semibold">{{ $child->current_level }}</span></p>
+                            <p class="text-sm text-slate-500">Kelas: <strong class="text-slate-700">{{ $child->classroom->name ?? '-' }}</strong> · Level: <span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full text-xs font-semibold">{{ $child->current_level }}</span></p>
                         </div>
                     </div>
                     

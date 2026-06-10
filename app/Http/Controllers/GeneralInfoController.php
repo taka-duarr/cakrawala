@@ -11,7 +11,8 @@ class GeneralInfoController extends Controller
     public function leaderboard()
     {
         // Fetch actual students
-        $actualStudents = User::where('role_id', 5)
+        $actualStudents = User::with('classroom')
+            ->where('role_id', 5)
             ->orderByDesc('points_kebaikan')
             ->get();
 
@@ -28,7 +29,7 @@ class GeneralInfoController extends Controller
         foreach ($actualStudents as $student) {
             $leaderboardData->push((object)[
                 'name' => $student->name,
-                'class_name' => $student->class_name ?? 'X IPA 1',
+                'class_name' => $student->classroom->name ?? 'Belum ada kelas',
                 'current_level' => $student->current_level ?? 'Pemula',
                 'points_kebaikan' => $student->points_kebaikan,
                 'points_pelanggaran' => $student->points_pelanggaran,
@@ -46,9 +47,12 @@ class GeneralInfoController extends Controller
         $leaderboardData = $leaderboardData->sortByDesc('points_kebaikan')->values();
 
         // Class rankings
-        $classRankings = User::where('role_id', 5)
-            ->selectRaw('class_name, sum(points_kebaikan) as total_kebaikan, sum(points_pelanggaran) as total_pelanggaran')
-            ->groupBy('class_name')
+        $classRankings = \App\Models\Classroom::leftJoin('users', function($join) {
+                $join->on('classrooms.id', '=', 'users.classroom_id')
+                     ->where('users.role_id', '=', 5);
+            })
+            ->selectRaw('classrooms.name as class_name, coalesce(sum(users.points_kebaikan), 0) as total_kebaikan, coalesce(sum(users.points_pelanggaran), 0) as total_pelanggaran')
+            ->groupBy('classrooms.id', 'classrooms.name')
             ->orderByDesc('total_kebaikan')
             ->get();
 
