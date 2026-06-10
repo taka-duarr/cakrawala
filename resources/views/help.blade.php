@@ -30,14 +30,7 @@
                             <p>Anda dapat mengumpulkan Poin Kebaikan dengan mengambil dan menyelesaikan misi di **Quest Board** pada dashboard Anda. Setelah mengambil misi, lakukan instruksinya (seperti hadir tepat waktu atau piket kelas), lalu kirimkan link bukti foto/video di form yang tersedia untuk disetujui oleh Guru/Wali Kelas.</p>
                         </div>
                     </li>
-                    <li class="py-4 px-2 faq-item">
-                        <a class="uk-accordion-title text-sm font-extrabold text-slate-800 hover:text-indigo-600 transition flex items-center justify-between" href>
-                            <span>Apa perbedaan Poin Kebaikan dan Poin Pelanggaran?</span>
-                        </a>
-                        <div class="uk-accordion-content mt-3 text-xs text-slate-500 leading-relaxed">
-                            <p>**Poin Kebaikan** diperoleh dari penyelesaian misi dan tindakan positif. Poin ini dapat ditukarkan dengan hadiah. Sementara itu, **Poin Pelanggaran** didapatkan jika siswa melakukan pelanggaran kedisiplinan. Poin pelanggaran yang terlalu tinggi akan memicu peringatan dini dari AI (Early Warning) untuk wali kelas dan orang tua.</p>
-                        </div>
-                    </li>
+
                     <li class="py-4 px-2 faq-item">
                         <a class="uk-accordion-title text-sm font-extrabold text-slate-800 hover:text-indigo-600 transition flex items-center justify-between" href>
                             <span>Bagaimana cara menukarkan hadiah di Toko Hadiah?</span>
@@ -51,7 +44,7 @@
                             <span>Bagaimana AI Student Insight memantau perkembangan saya?</span>
                         </a>
                         <div class="uk-accordion-content mt-3 text-xs text-slate-500 leading-relaxed">
-                            <p>AI Student Insight menganalisis tren aktivitas mingguan, penyelesaian misi, serta rasio poin kebaikan vs pelanggaran Anda. Sistem cerdas ini memberikan rekomendasi belajar yang personal untuk memicu motivasi belajar dan memberikan peringatan dini kepada Wali Kelas jika terdeteksi penurunan aktivitas belajar.</p>
+                            <p>AI Student Insight menganalisis tren aktivitas mingguan dan penyelesaian misi Anda. Sistem cerdas ini memberikan rekomendasi belajar yang personal untuk memicu motivasi belajar dan memberikan peringatan dini kepada Wali Kelas jika terdeteksi penurunan aktivitas belajar.</p>
                         </div>
                     </li>
                     <li class="py-4 px-2 faq-item">

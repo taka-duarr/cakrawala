@@ -159,7 +159,7 @@
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                 <div class="p-6 border-b border-slate-100 bg-white">
                     <h3 class="text-base font-bold text-slate-800">Aktivitas Poin Terbaru</h3>
-                    <p class="text-[10px] text-slate-400 mt-0.5 font-semibold uppercase tracking-wider">Histori transaksi poin kebaikan & pelanggaran siswa</p>
+                    <p class="text-[10px] text-slate-400 mt-0.5 font-semibold uppercase tracking-wider">Histori transaksi poin siswa</p>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">

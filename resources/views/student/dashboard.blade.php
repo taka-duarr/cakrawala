@@ -233,7 +233,7 @@
                     <!-- Stat 3 -->
                     <div class="bg-slate-50/50 border border-slate-100 p-4 rounded-xl text-center">
                         <span class="text-[10px] text-slate-400 font-semibold block mb-1">Total points</span>
-                        <strong class="text-base font-bold text-indigo-600">{{ $user->points_kebaikan }}</strong>
+                        <strong class="text-base font-bold text-indigo-600">{{ $user->points }}</strong>
                     </div>
                     <!-- Stat 4 -->
                     <div class="bg-slate-50/50 border border-slate-100 p-4 rounded-xl text-center">
@@ -346,3 +346,4 @@
 
     </div>
 </x-app-layout>
+

@@ -32,7 +32,7 @@ class GuruController extends Controller
         // Daftar semua siswa di kelas
         $siswas = User::with('classroom')
             ->where('role_id', 5)
-            ->orderByDesc('points_kebaikan')
+            ->orderByDesc('points')
             ->get();
 
         $achievements = Achievement::all();

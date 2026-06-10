@@ -38,12 +38,8 @@
                     <strong class="text-3xl text-slate-800 font-bold">{{ $students->count() }}</strong>
                 </div>
                 <div class="bg-white rounded-2xl border border-slate-100 p-6 soft-glow-emerald">
-                    <span class="text-xs font-semibold text-slate-500 block mb-1">Total Poin Kebaikan</span>
+                    <span class="text-xs font-semibold text-slate-500 block mb-1">Total Poin Kelas</span>
                     <strong class="text-3xl text-emerald-600 font-bold">{{ $totalKebaikan }}</strong>
-                </div>
-                <div class="bg-white rounded-2xl border border-slate-100 p-6 soft-glow-rose">
-                    <span class="text-xs font-semibold text-slate-500 block mb-1">Total Poin Pelanggaran</span>
-                    <strong class="text-3xl text-rose-600 font-bold">{{ $totalPelanggaran }}</strong>
                 </div>
                 <div class="bg-white rounded-2xl border border-slate-100 p-6 soft-glow-indigo">
                     <span class="text-xs font-semibold text-slate-500 block mb-1">Rata-rata Kebaikan Kelas</span>
@@ -141,7 +137,7 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Siswa Berisiko (Pelanggaran > 20) -->
+                <!-- Siswa Berisiko (Poin Minus) -->
                 <div class="bg-white rounded-2xl border border-slate-100 p-6 soft-glow-rose lg:col-span-1">
                     <h3 class="text-lg font-bold text-slate-800 mb-4">Siswa Membutuhkan Perhatian</h3>
                     <div class="space-y-3">
@@ -152,7 +148,7 @@
                                 <div class="text-[10px] text-rose-500 font-bold bg-rose-100/50 px-2 py-0.5 rounded-full inline-block">Level: {{ $student->current_level }}</div>
                             </div>
                             <span class="font-bold text-[10px] bg-rose-200 text-rose-800 px-2.5 py-1 rounded-full border border-rose-300/30">
-                                {{ $student->points_pelanggaran }} Pelanggaran
+                                {{ $student->points }} Pts
                             </span>
                         </div>
                         @empty
@@ -177,8 +173,7 @@
                                     <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nama Siswa</th>
                                     <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Level</th>
                                     <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Status Keaktifan</th>
-                                    <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Kebaikan</th>
-                                    <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Pelanggaran</th>
+                                    <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Total Poin</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100/70">
@@ -206,8 +201,7 @@
                                             {{ $student->activity_status }}
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 text-center font-extrabold text-xs text-emerald-600">{{ $student->points_kebaikan }} Pts</td>
-                                    <td class="px-6 py-4 text-center font-extrabold text-xs text-rose-500">{{ $student->points_pelanggaran }} Pts</td>
+                                    <td class="px-6 py-4 text-center font-extrabold text-xs text-emerald-600">{{ $student->points }} Pts</td>
                                 </tr>
                                 @empty
                                 <tr>
@@ -225,3 +219,4 @@
         </div>
     </div>
 </x-app-layout>
+

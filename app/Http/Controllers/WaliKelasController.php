@@ -25,16 +25,16 @@ class WaliKelasController extends Controller
         // Get students in this class
         $students = User::where('role_id', 5)
             ->where('classroom_id', $wali->classroom_id)
-            ->orderByDesc('points_kebaikan')
+            ->orderByDesc('points')
             ->get()
             ->map(function ($student) {
-                if ($student->points_pelanggaran > 20) {
-                    $student->activity_status = 'Berisiko';
+                if ($student->points < 0) {
+                    $student->activity_status = 'Berisiko (Poin Minus)';
                     $student->activity_color = 'bg-rose-50 text-rose-700 border-rose-100';
-                } elseif ($student->points_kebaikan >= 500) {
+                } elseif ($student->points >= 500) {
                     $student->activity_status = 'Sangat Aktif';
                     $student->activity_color = 'bg-emerald-50 text-emerald-700 border-emerald-100';
-                } elseif ($student->points_kebaikan >= 150) {
+                } elseif ($student->points >= 150) {
                     $student->activity_status = 'Aktif';
                     $student->activity_color = 'bg-indigo-50 text-indigo-700 border-indigo-100';
                 } else {
@@ -45,13 +45,12 @@ class WaliKelasController extends Controller
             });
 
         // Calculate statistics
-        $totalKebaikan = $students->sum('points_kebaikan');
-        $totalPelanggaran = $students->sum('points_pelanggaran');
+        $totalKebaikan = $students->sum('points');
         $avgKebaikan = $students->count() > 0 ? round($totalKebaikan / $students->count(), 1) : 0;
         
-        // Students at risk (points_pelanggaran > 30)
+        // Students at risk (points < 50 or minus)
         $atRiskStudents = $students->filter(function ($student) {
-            return $student->points_pelanggaran > 20;
+            return $student->points < 50;
         });
 
         // Class Ranking Comparison
@@ -59,7 +58,7 @@ class WaliKelasController extends Controller
                 $join->on('classrooms.id', '=', 'users.classroom_id')
                      ->where('users.role_id', '=', 5);
             })
-            ->selectRaw('classrooms.id, classrooms.name, coalesce(sum(users.points_kebaikan), 0) as total_kebaikan')
+            ->selectRaw('classrooms.id, classrooms.name, coalesce(sum(users.points), 0) as total_kebaikan')
             ->groupBy('classrooms.id', 'classrooms.name')
             ->orderByDesc('total_kebaikan')
             ->get();
@@ -97,7 +96,6 @@ class WaliKelasController extends Controller
             'className',
             'students',
             'totalKebaikan',
-            'totalPelanggaran',
             'avgKebaikan',
             'atRiskStudents',
             'myRank',

@@ -2,11 +2,11 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-bold text-2xl text-slate-800 leading-tight">
-                {{ __('Manajemen Admin') }}
+                {{ __('Manajemen Orang Tua') }}
             </h2>
             <button onclick="UIkit.modal('#modal-add-user').show()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md shadow-indigo-100 transition flex items-center space-x-2">
                 <span uk-icon="icon: plus; ratio: 0.8"></span>
-                <span>Tambah Admin</span>
+                <span>Tambah Orang Tua</span>
             </button>
         </div>
     </x-slot>
@@ -37,7 +37,7 @@
 
             <!-- Filter Card -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-                <form action="{{ route('admin.users.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <form action="{{ route('admin.parents.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Pencarian</label>
                         <div class="relative">
@@ -48,22 +48,14 @@
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Filter Peran (Role)</label>
-                        <select name="role_id" onchange="this.form.submit()" class="w-full py-2 text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
-                            <option value="">Semua Peran</option>
-                            @foreach($roles as $role)
-                                <option value="{{ $role->id }}" {{ request('role_id') == $role->id ? 'selected' : '' }}>{{ $role->display_name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+
 
                     <div class="flex items-end">
                         <button type="submit" class="w-full md:w-auto bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold px-6 py-2.5 rounded-xl transition">
                             Terapkan Filter
                         </button>
-                        @if(request('search') || request('role_id'))
-                            <a href="{{ route('admin.users.index') }}" class="ml-2 text-xs font-semibold text-rose-600 hover:text-rose-700 py-2.5 px-3">
+                        @if(request('search'))
+                            <a href="{{ route('admin.parents.index') }}" class="ml-2 text-xs font-semibold text-rose-600 hover:text-rose-700 py-2.5 px-3">
                                 Reset
                             </a>
                         @endif
@@ -78,8 +70,8 @@
                         <thead>
                             <tr class="bg-slate-50/70 border-b border-slate-100/80">
                                 <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nama & Email</th>
-                                <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Peran (Role)</th>
                                 <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Status</th>
+                                <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Anak (Siswa)</th>
                                 <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Aksi</th>
                             </tr>
                         </thead>
@@ -90,20 +82,17 @@
                                     <div class="font-bold text-slate-800 text-xs">{{ $user->name }}</div>
                                     <div class="text-[10px] text-slate-400 font-semibold mt-0.5">{{ $user->email }}</div>
                                 </td>
-                                <td class="px-6 py-4">
-                                    <span class="px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider
-                                        @if($user->role->name === 'admin') bg-rose-50 text-rose-700 border border-rose-100
-                                        @elseif($user->role->name === 'guru') bg-indigo-50 text-indigo-700 border border-indigo-100
-                                        @elseif($user->role->name === 'walikelas') bg-amber-50 text-amber-700 border border-amber-100
-                                        @elseif($user->role->name === 'orangtua') bg-purple-50 text-purple-700 border border-purple-100
-                                        @else bg-emerald-50 text-emerald-700 border border-emerald-100 @endif">
-                                        {{ $user->role->display_name }}
-                                    </span>
-                                </td>
                                 <td class="px-6 py-4 text-center">
                                     <span class="px-2 py-0.5 rounded-full text-[10px] font-bold {{ $user->is_active ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600' }}">
                                         {{ $user->is_active ? 'Aktif' : 'Nonaktif' }}
                                     </span>
+                                </td>
+                                <td class="px-6 py-4 text-xs font-semibold text-slate-600">
+                                    @if($user->children->count())
+                                        {{ $user->children->pluck('name')->join(', ') }}
+                                    @else
+                                        <span class="text-slate-400 italic">Belum terhubung</span>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 text-right space-x-1">
                                     <!-- Toggle Active -->
@@ -129,8 +118,6 @@
                                         data-id="{{ $user->id }}"
                                         data-name="{{ $user->name }}"
                                         data-email="{{ $user->email }}"
-                                        data-role-id="{{ $user->role_id }}"
-                                        data-classroom-id="{{ $user->classroom_id ?? '' }}"
                                         data-child-id="{{ $user->children->first()->id ?? '' }}"
                                         class="edit-user-btn text-xs font-bold text-indigo-600 hover:bg-indigo-50 px-2 py-1 rounded-lg" 
                                         title="Edit"
@@ -171,7 +158,7 @@
     <div id="modal-add-user" class="uk-modal" uk-modal>
         <div class="uk-modal-dialog uk-modal-body rounded-2xl p-6">
             <button class="uk-modal-close-default" type="button" uk-close></button>
-            <h2 class="text-lg font-bold text-slate-800 mb-4">Tambah Pengguna Baru</h2>
+            <h2 class="text-lg font-bold text-slate-800 mb-4">Tambah Orang Tua Baru</h2>
             <form action="{{ route('admin.users.store') }}" method="POST" class="space-y-4">
                 @csrf
                 <div>
@@ -190,7 +177,18 @@
                 </div>
 
                 <div>
-                    <input type="hidden" name="role_id" value="1">
+                    <input type="hidden" name="role_id" value="4">
+                </div>
+
+                <!-- Child Assignment -->
+                <div id="add-child-field">
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Nama Anak (Siswa)</label>
+                    <select name="parent_student_id" class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="">-- Hubungkan Siswa --</option>
+                        @foreach($students as $student)
+                            <option value="{{ $student->id }}">{{ $student->name }} ({{ $student->classroom->name ?? 'Belum ada kelas' }})</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="flex justify-end space-x-2 pt-2">
@@ -220,7 +218,17 @@
                 </div>
 
                 <div>
-                    <input type="hidden" name="role_id" value="1">
+                    <input type="hidden" name="role_id" value="4">
+                </div>
+
+                <div id="edit-child-field">
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Nama Anak (Siswa)</label>
+                    <select name="parent_student_id" id="edit-child" class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="">-- Hubungkan Siswa --</option>
+                        @foreach($students as $student)
+                            <option value="{{ $student->id }}">{{ $student->name }} ({{ $student->classroom->name ?? 'Belum ada kelas' }})</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="flex justify-end space-x-2 pt-2">
@@ -261,9 +269,13 @@
                     const id = this.getAttribute('data-id');
                     const name = this.getAttribute('data-name');
                     const email = this.getAttribute('data-email');
+                    const childId = this.getAttribute('data-child-id');
 
                     document.getElementById('edit-name').value = name;
                     document.getElementById('edit-email').value = email;
+                    
+                    const childSelector = document.getElementById('edit-child');
+                    if(childSelector) childSelector.value = childId || '';
 
                     document.getElementById('edit-user-form').action = `/admin/users/${id}/update`;
                     

@@ -3,6 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\AcademicYear;
+use App\Models\Semester;
+use App\Models\Jurusan;
+use App\Models\Classroom;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -37,50 +41,171 @@ class DatabaseSeeder extends Seeder
             'role_id' => 2,
         ]);
 
-        // Create Classrooms
-        $class1 = \App\Models\Classroom::create([
-            'name' => 'X IPA 1',
-            'points' => 1850,
+        // ─── Jurusan ─────────────────────────────────────────────────
+        $ipa  = Jurusan::create(['name' => 'IPA',   'description' => 'Ilmu Pengetahuan Alam']);
+        $ips  = Jurusan::create(['name' => 'IPS',   'description' => 'Ilmu Pengetahuan Sosial']);
+        $bhs  = Jurusan::create(['name' => 'Bahasa','description' => 'Program Bahasa & Sastra']);
+
+        // ─── Tahun Ajaran & Semester ──────────────────────────────────
+        $ta2425 = AcademicYear::create(['name' => '2024/2025', 'is_active' => false]);
+        $ta2526 = AcademicYear::create(['name' => '2025/2026', 'is_active' => true]);
+
+        Semester::create(['academic_year_id' => $ta2425->id, 'name' => 'Ganjil', 'is_active' => false]);
+        Semester::create(['academic_year_id' => $ta2425->id, 'name' => 'Genap',  'is_active' => false]);
+
+        $semGanjil = Semester::create(['academic_year_id' => $ta2526->id, 'name' => 'Ganjil', 'is_active' => true]);
+        Semester::create(['academic_year_id' => $ta2526->id, 'name' => 'Genap',  'is_active' => false]);
+
+        // ─── Classrooms ────────────────────────────────────────────────
+        $class1 = Classroom::create([
+            'name'             => 'X IPA 1',
+            'points'           => 1850,
+            'grade_level'      => 10,
+            'jurusan_id'       => $ipa->id,
+            'academic_year_id' => $ta2526->id,
+            'semester_id'      => $semGanjil->id,
         ]);
 
-        $class2 = \App\Models\Classroom::create([
-            'name' => 'X IPS 2',
-            'points' => 840,
+        $class2 = Classroom::create([
+            'name'             => 'X IPS 2',
+            'points'           => 840,
+            'grade_level'      => 10,
+            'jurusan_id'       => $ips->id,
+            'academic_year_id' => $ta2526->id,
+            'semester_id'      => $semGanjil->id,
         ]);
 
-        $class3 = \App\Models\Classroom::create([
-            'name' => 'XI IPA 3',
-            'points' => 790,
+        $class3 = Classroom::create([
+            'name'             => 'XI IPA 3',
+            'points'           => 790,
+            'grade_level'      => 11,
+            'jurusan_id'       => $ipa->id,
+            'academic_year_id' => $ta2526->id,
+            'semester_id'      => $semGanjil->id,
         ]);
 
-        // Wali Kelas User
+        $class4 = Classroom::create([
+            'name'             => 'XI IPS 1',
+            'points'           => 620,
+            'grade_level'      => 11,
+            'jurusan_id'       => $ips->id,
+            'academic_year_id' => $ta2526->id,
+            'semester_id'      => $semGanjil->id,
+        ]);
+
+        $class5 = Classroom::create([
+            'name'             => 'XII Bahasa',
+            'points'           => 1100,
+            'grade_level'      => 12,
+            'jurusan_id'       => $bhs->id,
+            'academic_year_id' => $ta2526->id,
+            'semester_id'      => $semGanjil->id,
+        ]);
+
+        // ─── Wali Kelas ───────────────────────────────────────────────
         $waliKelas = User::factory()->create([
-            'name' => 'Bapak Rian Wali',
-            'email' => 'walikelas@cakrawala.com',
-            'role_id' => 3,
+            'name'         => 'Bapak Rian Wali',
+            'email'        => 'walikelas@cakrawala.com',
+            'role_id'      => 3,
             'classroom_id' => $class1->id,
         ]);
 
         // Orang Tua User
         $orangTua = User::factory()->create([
-            'name' => 'Ibu Maria (Orang Tua Andi)',
-            'email' => 'orangtua@cakrawala.com',
+            'name'    => 'Ibu Maria (Orang Tua Andi)',
+            'email'   => 'orangtua@cakrawala.com',
             'role_id' => 4,
         ]);
 
-        // Siswa User
+        // ─── Siswa Utama (untuk login demo) ──────────────────────────
         $siswa = User::factory()->create([
-            'name' => 'Andi Siswa',
-            'email' => 'siswa@cakrawala.com',
-            'role_id' => 5,
-            'points_kebaikan' => 150,
-            'points_pelanggaran' => 0,
-            'current_level' => 'Berkembang',
-            'classroom_id' => $class1->id,
+            'name'               => 'Andi Pratama',
+            'email'              => 'siswa@cakrawala.com',
+            'role_id'            => 5,
+            'points'    => 150,
+
+            'current_level'      => 'Berkembang',
+            'classroom_id'       => $class1->id,
         ]);
 
         // Hubungkan Orang Tua dan Siswa (Anak)
         $orangTua->children()->attach($siswa->id);
+
+        // ─── Siswa Dummy Kelas X IPA 1 ────────────────────────────────
+        $siswasClass1 = [
+            ['name' => 'Budi Santoso',       'points' => 320,  'current_level' => 'Berkembang'],
+            ['name' => 'Citra Dewi',          'points' => 280, 'current_level' => 'Berkembang'],
+            ['name' => 'Dimas Arya',          'points' => 195,  'current_level' => 'Berkembang'],
+            ['name' => 'Eka Putri',           'points' => 450,  'current_level' => 'Berkembang'],
+            ['name' => 'Fajar Nugroho',       'points' => 60, 'current_level' => 'Pemula'],
+        ];
+        foreach ($siswasClass1 as $i => $s) {
+            User::factory()->create(array_merge($s, [
+                'email'      => 'siswa.xipa1.' . ($i+1) . '@cakrawala.com',
+                'role_id'    => 5,
+                'classroom_id' => $class1->id,
+            ]));
+        }
+
+        // ─── Siswa Dummy Kelas X IPS 2 ────────────────────────────────
+        $siswasClass2 = [
+            ['name' => 'Galih Prakoso',       'points' => 210,  'current_level' => 'Berkembang'],
+            ['name' => 'Hani Rahayu',         'points' => 175, 'current_level' => 'Berkembang'],
+            ['name' => 'Ivan Susanto',        'points' => 90,  'current_level' => 'Pemula'],
+            ['name' => 'Julia Anggraini',     'points' => 340,  'current_level' => 'Berkembang'],
+        ];
+        foreach ($siswasClass2 as $i => $s) {
+            User::factory()->create(array_merge($s, [
+                'email'        => 'siswa.xips2.' . ($i+1) . '@cakrawala.com',
+                'role_id'      => 5,
+                'classroom_id' => $class2->id,
+            ]));
+        }
+
+        // ─── Siswa Dummy Kelas XI IPA 3 ───────────────────────────────
+        $siswasClass3 = [
+            ['name' => 'Kevin Maulana',       'points' => 780,  'current_level' => 'Unggul'],
+            ['name' => 'Laila Sari',          'points' => 520,  'current_level' => 'Berkembang'],
+            ['name' => 'Mario Prabowo',       'points' => 410, 'current_level' => 'Berkembang'],
+            ['name' => 'Nadia Kusuma',        'points' => 650,  'current_level' => 'Unggul'],
+            ['name' => 'Omar Fauzi',          'points' => 290, 'current_level' => 'Berkembang'],
+        ];
+        foreach ($siswasClass3 as $i => $s) {
+            User::factory()->create(array_merge($s, [
+                'email'        => 'siswa.xiipa3.' . ($i+1) . '@cakrawala.com',
+                'role_id'      => 5,
+                'classroom_id' => $class3->id,
+            ]));
+        }
+
+        // ─── Siswa Dummy Kelas XI IPS 1 ───────────────────────────────
+        $siswasClass4 = [
+            ['name' => 'Putri Wulandari',     'points' => 130, 'current_level' => 'Berkembang'],
+            ['name' => 'Rizky Firmansyah',    'points' => 200,  'current_level' => 'Berkembang'],
+            ['name' => 'Sari Indah',          'points' => 75,  'current_level' => 'Pemula'],
+        ];
+        foreach ($siswasClass4 as $i => $s) {
+            User::factory()->create(array_merge($s, [
+                'email'        => 'siswa.xiips1.' . ($i+1) . '@cakrawala.com',
+                'role_id'      => 5,
+                'classroom_id' => $class4->id,
+            ]));
+        }
+
+        // ─── Siswa Dummy Kelas XII Bahasa ─────────────────────────────
+        $siswasClass5 = [
+            ['name' => 'Tegar Wahyudi',       'points' => 1600, 'current_level' => 'Teladan'],
+            ['name' => 'Umi Kalsum',          'points' => 920, 'current_level' => 'Unggul'],
+            ['name' => 'Vino Aditya',         'points' => 740, 'current_level' => 'Unggul'],
+            ['name' => 'Wulan Pertiwi',       'points' => 1200, 'current_level' => 'Unggul'],
+        ];
+        foreach ($siswasClass5 as $i => $s) {
+            User::factory()->create(array_merge($s, [
+                'email'        => 'siswa.xiibhs.' . ($i+1) . '@cakrawala.com',
+                'role_id'      => 5,
+                'classroom_id' => $class5->id,
+            ]));
+        }
 
         // Seeding Missions
         \App\Models\Mission::create([

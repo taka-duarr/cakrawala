@@ -2,11 +2,11 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-bold text-2xl text-slate-800 leading-tight">
-                {{ __('Manajemen Admin') }}
+                {{ __('Manajemen Guru & Wali Kelas') }}
             </h2>
             <button onclick="UIkit.modal('#modal-add-user').show()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md shadow-indigo-100 transition flex items-center space-x-2">
                 <span uk-icon="icon: plus; ratio: 0.8"></span>
-                <span>Tambah Admin</span>
+                <span>Tambah Guru</span>
             </button>
         </div>
     </x-slot>
@@ -37,7 +37,7 @@
 
             <!-- Filter Card -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-                <form action="{{ route('admin.users.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <form action="{{ route('admin.teachers.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Pencarian</label>
                         <div class="relative">
@@ -63,7 +63,7 @@
                             Terapkan Filter
                         </button>
                         @if(request('search') || request('role_id'))
-                            <a href="{{ route('admin.users.index') }}" class="ml-2 text-xs font-semibold text-rose-600 hover:text-rose-700 py-2.5 px-3">
+                            <a href="{{ route('admin.teachers.index') }}" class="ml-2 text-xs font-semibold text-rose-600 hover:text-rose-700 py-2.5 px-3">
                                 Reset
                             </a>
                         @endif
@@ -79,6 +79,7 @@
                             <tr class="bg-slate-50/70 border-b border-slate-100/80">
                                 <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nama & Email</th>
                                 <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Peran (Role)</th>
+                                <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Kelas (Wali)</th>
                                 <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Status</th>
                                 <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Aksi</th>
                             </tr>
@@ -99,6 +100,9 @@
                                         @else bg-emerald-50 text-emerald-700 border border-emerald-100 @endif">
                                         {{ $user->role->display_name }}
                                     </span>
+                                </td>
+                                <td class="px-6 py-4 text-xs font-semibold text-slate-600">
+                                    {{ $user->classroom->name ?? '-' }}
                                 </td>
                                 <td class="px-6 py-4 text-center">
                                     <span class="px-2 py-0.5 rounded-full text-[10px] font-bold {{ $user->is_active ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600' }}">
@@ -150,7 +154,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="4" class="text-center py-12 text-slate-400 text-xs font-medium">Data user tidak ditemukan.</td>
+                                <td colspan="5" class="text-center py-12 text-slate-400 text-xs font-medium">Data user tidak ditemukan.</td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -190,7 +194,27 @@
                 </div>
 
                 <div>
-                    <input type="hidden" name="role_id" value="1">
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Peran (Role)</label>
+                    <select name="role_id" id="add-role-selector" onchange="toggleFormFields('add')" required class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
+                        @foreach($roles as $role)
+                            <option value="{{ $role->id }}" data-name="{{ $role->name }}">{{ $role->display_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Classroom Assignment (Only visible for Student & Wali Kelas) -->
+                <div id="add-classroom-field" class="hidden">
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Kelas Akademik</label>
+                    <select name="classroom_id" class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="">-- Pilih Kelas --</option>
+                        @foreach($classrooms as $classroom)
+                            <option value="{{ $classroom->id }}">{{ $classroom->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Child Assignment (Only visible for Orang Tua) -->
+                <div id="add-child-field" class="hidden">
                 </div>
 
                 <div class="flex justify-end space-x-2 pt-2">
@@ -220,7 +244,25 @@
                 </div>
 
                 <div>
-                    <input type="hidden" name="role_id" value="1">
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Peran (Role)</label>
+                    <select name="role_id" id="edit-role-selector" onchange="toggleFormFields('edit')" required class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
+                        @foreach($roles as $role)
+                            <option value="{{ $role->id }}" data-name="{{ $role->name }}">{{ $role->display_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div id="edit-classroom-field" class="hidden">
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Kelas Akademik</label>
+                    <select name="classroom_id" id="edit-classroom" class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="">-- Pilih Kelas --</option>
+                        @foreach($classrooms as $classroom)
+                            <option value="{{ $classroom->id }}">{{ $classroom->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div id="edit-child-field" class="hidden">
                 </div>
 
                 <div class="flex justify-end space-x-2 pt-2">
@@ -253,7 +295,28 @@
     </div>
 
     <script>
+        function toggleFormFields(prefix) {
+            const selector = document.getElementById(`${prefix}-role-selector`);
+            const selectedOption = selector.options[selector.selectedIndex];
+            const roleName = selectedOption.getAttribute('data-name');
+
+            const classroomField = document.getElementById(`${prefix}-classroom-field`);
+            const childField = document.getElementById(`${prefix}-child-field`);
+
+            if (roleName === 'siswa' || roleName === 'walikelas') {
+                classroomField.classList.remove('hidden');
+                childField.classList.add('hidden');
+            } else if (roleName === 'orangtua') {
+                classroomField.classList.add('hidden');
+                childField.classList.remove('hidden');
+            } else {
+                classroomField.classList.add('hidden');
+                childField.classList.add('hidden');
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
+            toggleFormFields('add');
 
             // Edit User trigger
             document.querySelectorAll('.edit-user-btn').forEach(btn => {
@@ -261,12 +324,25 @@
                     const id = this.getAttribute('data-id');
                     const name = this.getAttribute('data-name');
                     const email = this.getAttribute('data-email');
+                    const roleId = this.getAttribute('data-role-id');
+                    const classroomId = this.getAttribute('data-classroom-id');
+                    const childId = this.getAttribute('data-child-id');
 
                     document.getElementById('edit-name').value = name;
                     document.getElementById('edit-email').value = email;
+                    
+                    const roleSelector = document.getElementById('edit-role-selector');
+                    roleSelector.value = roleId;
+                    
+                    const classroomSelector = document.getElementById('edit-classroom');
+                    classroomSelector.value = classroomId || '';
+
+                    const childSelector = document.getElementById('edit-child');
+                    childSelector.value = childId || '';
 
                     document.getElementById('edit-user-form').action = `/admin/users/${id}/update`;
                     
+                    toggleFormFields('edit');
                     UIkit.modal('#modal-edit-user').show();
                 });
             });

@@ -22,11 +22,10 @@ class User extends Authenticatable
         'email',
         'password',
         'role_id',
-        'points_kebaikan',
-        'points_pelanggaran',
         'current_level',
         'classroom_id',
         'is_active',
+        'points',
     ];
 
     public function role()
