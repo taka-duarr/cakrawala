@@ -15,12 +15,33 @@ class MissionController extends Controller
 
     public function submitProof(Request $request, $id)
     {
-        $request->validate(['proof_url' => 'required|url']);
+        $mission = \App\Models\Mission::findOrFail($id);
+        
+        $rules = [];
+        if ($mission->proof_type === 'file') {
+            $rules['proof_file'] = 'required|file|mimes:pdf,jpg,jpeg,png|max:5120'; // max 5MB
+        } elseif ($mission->proof_type === 'link') {
+            $rules['proof_url'] = 'required|url';
+        } elseif ($mission->proof_type === 'text') {
+            $rules['proof_text'] = 'required|string';
+        }
+
+        $request->validate($rules);
+
         $user = auth()->user();
-        $user->missions()->updateExistingPivot($id, [
-            'status' => 'pending_approval',
-            'proof_url' => $request->proof_url
-        ]);
+        $updateData = ['status' => 'pending_approval'];
+
+        if ($mission->proof_type === 'file' && $request->hasFile('proof_file')) {
+            $path = $request->file('proof_file')->store('proofs', 'public');
+            $updateData['proof_url'] = asset('storage/' . $path);
+        } elseif ($mission->proof_type === 'link') {
+            $updateData['proof_url'] = $request->proof_url;
+        } elseif ($mission->proof_type === 'text') {
+            $updateData['proof_content'] = $request->proof_text;
+        }
+
+        $user->missions()->updateExistingPivot($id, $updateData);
+
         return back()->with('success', 'Bukti misi berhasil dikirim, menunggu persetujuan guru.');
     }
 

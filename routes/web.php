@@ -26,6 +26,22 @@ Route::get('/dashboard', function () {
 // Role-based routes
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+    
+    // User Management Routes
+    Route::get('/users', [AdminController::class, 'usersIndex'])->name('users.index');
+    Route::post('/users/store', [AdminController::class, 'usersStore'])->name('users.store');
+    Route::put('/users/{id}/update', [AdminController::class, 'usersUpdate'])->name('users.update');
+    Route::delete('/users/{id}/destroy', [AdminController::class, 'usersDestroy'])->name('users.destroy');
+    Route::post('/users/{id}/toggle-status', [AdminController::class, 'usersToggleStatus'])->name('users.toggle-status');
+    Route::post('/users/{id}/reset-password', [AdminController::class, 'usersResetPassword'])->name('users.reset-password');
+
+    // Classroom Management Routes
+    Route::get('/classrooms', [AdminController::class, 'classroomsIndex'])->name('classrooms.index');
+    Route::post('/classrooms/store', [AdminController::class, 'classroomsStore'])->name('classrooms.store');
+    Route::put('/classrooms/{id}/update', [AdminController::class, 'classroomsUpdate'])->name('classrooms.update');
+    Route::delete('/classrooms/{id}/destroy', [AdminController::class, 'classroomsDestroy'])->name('classrooms.destroy');
+
+    // Reward Management Routes
     Route::get('/rewards', [\App\Http\Controllers\RewardController::class, 'manage'])->name('rewards.manage');
     Route::post('/rewards/store', [\App\Http\Controllers\RewardController::class, 'store'])->name('rewards.store');
     Route::put('/rewards/{id}/update', [\App\Http\Controllers\RewardController::class, 'update'])->name('rewards.update');
@@ -36,6 +52,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(function () {
     Route::get('/dashboard', [GuruController::class, 'index'])->name('dashboard');
     Route::post('/mission/approve/{userId}/{missionId}', [\App\Http\Controllers\MissionController::class, 'approveMission'])->name('mission.approve');
+    Route::post('/missions/store', [GuruController::class, 'storeMission'])->name('missions.store');
+    Route::post('/missions/validate', [GuruController::class, 'validateMission'])->name('missions.validate');
+    Route::post('/points/adjust', [GuruController::class, 'adjustPoints'])->name('points.adjust');
+    Route::post('/badges/toggle', [GuruController::class, 'toggleBadge'])->name('badges.toggle');
 });
 
 Route::middleware(['auth', 'role:walikelas'])->prefix('walikelas')->name('walikelas.')->group(function () {

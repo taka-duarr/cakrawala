@@ -106,11 +106,21 @@
                             </div>
                         </div>
                         @if($mission->pivot->status === 'taken')
-                        <form method="POST" action="{{ route('student.mission.submit', $mission->id) }}" class="flex w-full lg:w-auto space-x-2 items-center" onsubmit="let btn = this.querySelector('button[type=submit]'); if(btn) { btn.disabled = true; btn.innerHTML = '<span class=\'animate-spin inline-block w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full align-middle\'></span>'; }">
+                        <form method="POST" action="{{ route('student.mission.submit', $mission->id) }}" enctype="multipart/form-data" class="flex flex-col sm:flex-row w-full lg:w-auto gap-2 items-end sm:items-center" onsubmit="let btn = this.querySelector('button[type=submit]'); if(btn) { btn.disabled = true; btn.innerHTML = '<span class=\'animate-spin inline-block w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full align-middle\'></span>'; }">
                             @csrf
-                            <input type="url" name="proof_url" placeholder="Masukkan Link Bukti..." required
-                                class="flex-1 lg:w-60 border border-slate-200 rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            <button type="submit" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition shadow-sm hover:shadow-md h-[32px] flex items-center justify-center min-w-[70px]">
+                            @if($mission->proof_type === 'file')
+                                <input type="file" name="proof_file" required
+                                    class="w-full sm:w-48 text-xs border border-slate-200 rounded-xl px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                            @elseif($mission->proof_type === 'text')
+                                <input type="text" name="proof_text" placeholder="Tulis deskripsi bukti..." required
+                                    class="w-full sm:w-48 border border-slate-200 rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                            @elseif($mission->proof_type === 'link')
+                                <input type="url" name="proof_url" placeholder="Masukkan Link Bukti (https://...)" required
+                                    class="w-full sm:w-48 border border-slate-200 rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                            @else
+                                <span class="text-[10px] text-slate-400 font-semibold px-2">Tanpa Bukti</span>
+                            @endif
+                            <button type="submit" class="w-full sm:w-auto px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition shadow-sm hover:shadow-md h-[32px] flex items-center justify-center min-w-[70px]">
                                 Kirim
                             </button>
                         </form>

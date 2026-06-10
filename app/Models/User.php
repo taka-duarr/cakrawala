@@ -25,7 +25,8 @@ class User extends Authenticatable
         'points_kebaikan',
         'points_pelanggaran',
         'current_level',
-        'class_name',
+        'classroom_id',
+        'is_active',
     ];
 
     public function role()
@@ -33,9 +34,14 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
+    public function classroom()
+    {
+        return $this->belongsTo(Classroom::class);
+    }
+
     public function missions()
     {
-        return $this->belongsToMany(Mission::class)->withPivot('status', 'proof_url')->withTimestamps();
+        return $this->belongsToMany(Mission::class)->withPivot('status', 'proof_url', 'proof_content', 'notes')->withTimestamps();
     }
 
     public function children()
@@ -68,6 +74,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
     }
 }
