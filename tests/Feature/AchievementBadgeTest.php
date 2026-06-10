@@ -57,7 +57,7 @@ class AchievementBadgeTest extends TestCase
     {
         $student = User::factory()->create([
             'role_id' => 5, // siswa
-            'points_kebaikan' => 50,
+            'points' => 50,
         ]);
 
         $pointService = resolve(PointService::class);
@@ -66,7 +66,7 @@ class AchievementBadgeTest extends TestCase
         $pointService->addPoints($student, 260, 'kebaikan', 'Juara 1 Lomba Matematika');
 
         $student->refresh();
-        $this->assertEquals(310, $student->points_kebaikan);
+        $this->assertEquals(310, $student->points);
 
         // Assert they got the "Bintang Akademik" badge
         $badge = Achievement::where('criteria', 'points_300')->first();
@@ -77,7 +77,7 @@ class AchievementBadgeTest extends TestCase
     {
         $student = User::factory()->create([
             'role_id' => 5, // siswa
-            'points_kebaikan' => 0,
+            'points' => 0,
         ]);
 
         $mission = Mission::create([
@@ -106,7 +106,7 @@ class AchievementBadgeTest extends TestCase
     {
         $student = User::factory()->create([
             'role_id' => 5, // siswa
-            'points_kebaikan' => 0,
+            'points' => 0,
         ]);
 
         $mission = Mission::create([

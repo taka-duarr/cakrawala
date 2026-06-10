@@ -8,7 +8,7 @@
             <div class="bg-indigo-50 border border-indigo-100 rounded-full px-4 py-1.5 flex items-center space-x-2 text-indigo-700 font-bold text-sm shadow-sm">
                 <svg class="w-4 h-4 text-amber-500 inline-block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499c.195-.39.736-.39.93 0l2.399 4.86 5.342.776c.433.063.606.592.293.898l-3.866 3.769 1.127 5.318c.092.433-.362.762-.75.558L12 17.15l-4.782 2.516c-.388.204-.842-.125-.75-.558l1.127-5.318-3.866-3.769c-.313-.306-.14-.835.293-.898l5.342-.776 2.399-4.86z"></path></svg>
                 <span>Poin Kebaikan Anda:</span>
-                <span class="bg-indigo-600 text-white rounded-full px-3 py-0.5 text-xs">{{ $user->points_kebaikan }} Pts</span>
+                <span class="bg-indigo-600 text-white rounded-full px-3 py-0.5 text-xs">{{ $user->points }} Pts</span>
             </div>
         </div>
     </x-slot>
@@ -69,7 +69,7 @@
                         </div>
 
                         <div class="mt-4">
-                            @if($user->points_kebaikan >= $reward->points_cost)
+                            @if($user->points >= $reward->points_cost)
                             <form method="POST" action="{{ route('student.rewards.claim', $reward->id) }}" onsubmit="let btn = this.querySelector('button[type=submit]'); if(btn) { btn.disabled = true; btn.innerHTML = '<span class=\'animate-spin inline-block w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full mr-1.5 align-middle\'></span> Menukarkan...'; }">
                                 @csrf
                                 <button type="submit" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold transition">

@@ -106,7 +106,7 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-center text-xs font-black text-indigo-600">
-                                    {{ $user->role->name === 'siswa' ? $user->points_kebaikan . ' Pts' : '-' }}
+                                    {{ $user->role->name === 'siswa' ? $user->points . ' Pts' : '-' }}
                                 </td>
                                 <td class="px-6 py-4 text-right space-x-1">
                                     <!-- Toggle Active -->

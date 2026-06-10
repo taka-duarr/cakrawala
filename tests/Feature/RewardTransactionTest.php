@@ -30,7 +30,7 @@ class RewardTransactionTest extends TestCase
     {
         $student = User::factory()->create([
             'role_id' => 5, // siswa
-            'points_kebaikan' => 200,
+            'points' => 200,
         ]);
 
         $reward = Reward::create([
@@ -48,7 +48,7 @@ class RewardTransactionTest extends TestCase
         
         // Assert points were deducted
         $student->refresh();
-        $this->assertEquals(80, $student->points_kebaikan);
+        $this->assertEquals(80, $student->points);
 
         // Assert record exists in pivot
         $this->assertDatabaseHas('reward_user', [
@@ -62,7 +62,7 @@ class RewardTransactionTest extends TestCase
     {
         $student = User::factory()->create([
             'role_id' => 5, // siswa
-            'points_kebaikan' => 50,
+            'points' => 50,
         ]);
 
         $reward = Reward::create([
@@ -80,7 +80,7 @@ class RewardTransactionTest extends TestCase
         
         // Assert points were NOT deducted
         $student->refresh();
-        $this->assertEquals(50, $student->points_kebaikan);
+        $this->assertEquals(50, $student->points);
 
         // Assert no record in pivot
         $this->assertDatabaseMissing('reward_user', [
