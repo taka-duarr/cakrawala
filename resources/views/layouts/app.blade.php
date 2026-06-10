@@ -39,7 +39,7 @@
             @include('layouts.navigation')
 
             <!-- Main Content Area -->
-            <div class="flex-1 flex flex-col min-h-screen overflow-x-hidden">
+            <div class="flex-1 flex flex-col min-h-screen overflow-x-clip">
                 <!-- Top Navbar -->
                 <header class="bg-white border-b border-slate-100 h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-40">
                     <!-- Left: Search / Mobile Toggle -->
@@ -75,47 +75,10 @@
 
                         <!-- Notifications -->
                         <div class="relative">
-                            <button class="relative p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-50 transition" type="button">
+                            <a href="{{ route('notifications') }}" class="relative inline-block p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-50 transition" title="Lihat Notifikasi">
                                 <span uk-icon="icon: bell; ratio: 0.95"></span>
-                                <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[8px] font-bold text-white ring-2 ring-white">3</span>
-                            </button>
-                            <div uk-dropdown="mode: click; pos: bottom-right; container: body" class="uk-dropdown rounded-2xl shadow-xl border border-slate-100 bg-white p-4 w-80 z-50">
-                                <div class="flex justify-between items-center pb-2 border-b border-slate-100 mb-3">
-                                    <span class="text-xs font-bold text-slate-800">Notifikasi Karakter</span>
-                                    <span class="text-[9px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">3 Baru</span>
-                                </div>
-                                <div class="space-y-3">
-                                    <div class="flex items-start space-x-2.5 text-xs">
-                                        <svg class="w-5 h-5 text-indigo-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 21l-.813-5.096L3 15l5.096-.813L9 9l.813 5.096L15 15l-5.187.904zM18 7.5L17.25 11l-.75-3.5L13 7l3.5-.75L17.25 3l.75 3.5L21 7l-3 1.5z"></path></svg>
-                                        <div>
-                                            <div class="font-bold text-slate-800 leading-tight">Misi Harian Tersedia!</div>
-                                            <div class="text-slate-500 mt-0.5">Misi "Hadir Tepat Waktu" siap diambil hari ini.</div>
-                                            <div class="text-[9px] text-slate-400 mt-1">1 jam yang lalu</div>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-start space-x-2.5 text-xs pt-3 border-t border-slate-50">
-                                        <svg class="w-5 h-5 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499c.195-.39.736-.39.93 0l2.399 4.86 5.342.776c.433.063.606.592.293.898l-3.866 3.769 1.127 5.318c.092.433-.362.762-.75.558L12 17.15l-4.782 2.516c-.388.204-.842-.125-.75-.558l1.127-5.318-3.866-3.769c-.313-.306-.14-.835.293-.898l5.342-.776 2.399-4.86z"></path></svg>
-                                        <div>
-                                            <div class="font-bold text-slate-800 leading-tight">Poin Karakter Disetujui</div>
-                                            <div class="text-slate-500 mt-0.5">Poin misi "Membaca Buku" (+10 Pts) telah ditambahkan.</div>
-                                            <div class="text-[9px] text-slate-400 mt-1">3 jam yang lalu</div>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-start space-x-2.5 text-xs pt-3 border-t border-slate-50">
-                                        <svg class="w-5 h-5 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15a3 3 0 100-6 3 3 0 000 6zM19.5 8.25c0-1.518-1.232-2.75-2.75-2.75h-.75V3H8v2.5h-.75C5.732 5.5 4.5 6.732 4.5 8.25v.75c0 1.518 1.232 2.75 2.75 2.75h.75M19.5 8.25v.75c0 1.518-1.232 2.75-2.75 2.75h-.75M9 21h6M12 15v6"></path></svg>
-                                        <div>
-                                            <div class="font-bold text-slate-800 leading-tight">Lencana Baru Diraih!</div>
-                                            <div class="text-slate-500 mt-0.5">Selamat! Anda memperoleh lencana "Pemula Aktif".</div>
-                                            <div class="text-[9px] text-slate-400 mt-1">Kemarin</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mt-3 pt-2 border-t border-slate-100 text-center">
-                                    <a href="{{ route('notifications') }}" class="text-[10px] font-bold text-indigo-600 hover:text-indigo-700 transition hover:underline block">
-                                        Lihat Semua Notifikasi →
-                                    </a>
-                                </div>
-                            </div>
+                                <span class="absolute top-1 right-1 flex h-3 w-3 items-center justify-center rounded-full bg-rose-500 text-[6px] font-bold leading-none text-white ring-[1px] ring-white">3</span>
+                            </a>
                         </div>
 
                         <!-- Profile Info (Logout Form) -->
