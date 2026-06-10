@@ -31,7 +31,7 @@ class RewardController extends Controller
             return back()->with('error', 'Hadiah tidak tersedia saat ini.');
         }
 
-        if ($user->points_kebaikan < $reward->points_cost) {
+        if ($user->points < $reward->points_cost) {
             return back()->with('error', 'Poin Kebaikan Anda tidak cukup untuk menukarkan hadiah ini.');
         }
 

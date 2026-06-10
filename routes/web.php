@@ -29,6 +29,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     
     // User Management Routes
     Route::get('/users', [AdminController::class, 'usersIndex'])->name('users.index');
+    Route::get('/parents', [AdminController::class, 'parentsIndex'])->name('parents.index');
+    Route::get('/teachers', [AdminController::class, 'teachersIndex'])->name('teachers.index');
+    Route::get('/students', [AdminController::class, 'studentsIndex'])->name('students.index');
     Route::post('/users/store', [AdminController::class, 'usersStore'])->name('users.store');
     Route::put('/users/{id}/update', [AdminController::class, 'usersUpdate'])->name('users.update');
     Route::delete('/users/{id}/destroy', [AdminController::class, 'usersDestroy'])->name('users.destroy');
@@ -40,6 +43,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/classrooms/store', [AdminController::class, 'classroomsStore'])->name('classrooms.store');
     Route::put('/classrooms/{id}/update', [AdminController::class, 'classroomsUpdate'])->name('classrooms.update');
     Route::delete('/classrooms/{id}/destroy', [AdminController::class, 'classroomsDestroy'])->name('classrooms.destroy');
+    Route::post('/classrooms/{id}/enroll', [AdminController::class, 'classroomEnrollStudent'])->name('classrooms.enroll');
+    Route::delete('/classrooms/{classroomId}/unenroll/{userId}', [AdminController::class, 'classroomUnenrollStudent'])->name('classrooms.unenroll');
 
     // Reward Management Routes
     Route::get('/rewards', [\App\Http\Controllers\RewardController::class, 'manage'])->name('rewards.manage');
@@ -47,6 +52,32 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::put('/rewards/{id}/update', [\App\Http\Controllers\RewardController::class, 'update'])->name('rewards.update');
     Route::delete('/rewards/{id}/destroy', [\App\Http\Controllers\RewardController::class, 'destroy'])->name('rewards.destroy');
     Route::post('/rewards/claims/{id}/approve', [\App\Http\Controllers\RewardController::class, 'approveClaim'])->name('rewards.approve');
+
+    // Academic Year Management Routes
+    Route::get('/academic-years', [AdminController::class, 'academicYearsIndex'])->name('academic-years.index');
+    Route::post('/academic-years/store', [AdminController::class, 'academicYearsStore'])->name('academic-years.store');
+    Route::put('/academic-years/{id}/update', [AdminController::class, 'academicYearsUpdate'])->name('academic-years.update');
+    Route::delete('/academic-years/{id}/destroy', [AdminController::class, 'academicYearsDestroy'])->name('academic-years.destroy');
+    Route::post('/academic-years/{id}/set-active', [AdminController::class, 'academicYearsSetActive'])->name('academic-years.set-active');
+
+    // Semester Management Routes
+    Route::post('/semesters/store', [AdminController::class, 'semestersStore'])->name('semesters.store');
+    Route::delete('/semesters/{id}/destroy', [AdminController::class, 'semestersDestroy'])->name('semesters.destroy');
+    Route::post('/semesters/{id}/set-active', [AdminController::class, 'semestersSetActive'])->name('semesters.set-active');
+
+    // Jurusan Management Routes
+    Route::get('/jurusans', [AdminController::class, 'jurusansIndex'])->name('jurusans.index');
+    Route::post('/jurusans/store', [AdminController::class, 'jurusansStore'])->name('jurusans.store');
+    Route::put('/jurusans/{id}/update', [AdminController::class, 'jurusansUpdate'])->name('jurusans.update');
+    Route::delete('/jurusans/{id}/destroy', [AdminController::class, 'jurusansDestroy'])->name('jurusans.destroy');
+
+    // Point Management Routes
+    Route::get('/currency-settings', [AdminController::class, 'currencySettingsIndex'])->name('currency-settings.index');
+    Route::post('/currency-settings/update', [AdminController::class, 'currencySettingsUpdate'])->name('currency-settings.update');
+    Route::get('/point-history', [AdminController::class, 'pointHistoryIndex'])->name('point-history.index');
+    Route::get('/point-adjust', [AdminController::class, 'pointAdjustIndex'])->name('point-adjust.index');
+    Route::post('/point-adjust/store', [AdminController::class, 'pointAdjustStore'])->name('point-adjust.store');
+    Route::get('/point-audit', [AdminController::class, 'pointAuditIndex'])->name('point-audit.index');
 });
 
 Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(function () {

@@ -12,6 +12,10 @@ class Classroom extends Model
     protected $fillable = [
         'name',
         'points',
+        'jurusan_id',
+        'academic_year_id',
+        'semester_id',
+        'grade_level',
     ];
 
     public function users()
@@ -32,4 +36,20 @@ class Classroom extends Model
             $q->where('name', 'walikelas');
         });
     }
+
+    public function jurusan()
+    {
+        return $this->belongsTo(Jurusan::class);
+    }
+
+    public function academicYear()
+    {
+        return $this->belongsTo(AcademicYear::class);
+    }
+
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class);
+    }
 }
+

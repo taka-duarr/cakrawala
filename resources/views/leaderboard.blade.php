@@ -26,7 +26,7 @@
                         </div>
                         <h4 class="font-bold text-sm text-slate-700 mt-4 text-center leading-none">{{ $leaderboardData[1]->name }}</h4>
                         <span class="text-[10px] text-slate-400 font-semibold mt-1">{{ $leaderboardData[1]->class_name }}</span>
-                        <span class="mt-2.5 px-3 py-1 bg-slate-50 text-slate-700 text-xs font-extrabold rounded-full border border-slate-200">{{ $leaderboardData[1]->points_kebaikan }} Pts</span>
+                        <span class="mt-2.5 px-3 py-1 bg-slate-50 text-slate-700 text-xs font-extrabold rounded-full border border-slate-200">{{ $leaderboardData[1]->points }} Pts</span>
                     </div>
                     @endif
 
@@ -42,7 +42,7 @@
                         </div>
                         <h4 class="font-extrabold text-base text-slate-800 mt-4 text-center leading-none">{{ $leaderboardData[0]->name }}</h4>
                         <span class="text-xs text-slate-400 font-semibold mt-1">{{ $leaderboardData[0]->class_name }}</span>
-                        <span class="mt-2.5 px-4 py-1.5 bg-amber-50 text-amber-700 text-xs font-black rounded-full border border-amber-200 shadow-sm shadow-amber-100">{{ $leaderboardData[0]->points_kebaikan }} Pts</span>
+                        <span class="mt-2.5 px-4 py-1.5 bg-amber-50 text-amber-700 text-xs font-black rounded-full border border-amber-200 shadow-sm shadow-amber-100">{{ $leaderboardData[0]->points }} Pts</span>
                     </div>
                     @endif
 
@@ -55,7 +55,7 @@
                         </div>
                         <h4 class="font-bold text-sm text-slate-700 mt-4 text-center leading-none">{{ $leaderboardData[2]->name }}</h4>
                         <span class="text-[10px] text-slate-400 font-semibold mt-1">{{ $leaderboardData[2]->class_name }}</span>
-                        <span class="mt-2.5 px-3 py-1 bg-orange-50/50 text-orange-800 text-xs font-extrabold rounded-full border border-orange-200">{{ $leaderboardData[2]->points_kebaikan }} Pts</span>
+                        <span class="mt-2.5 px-3 py-1 bg-orange-50/50 text-orange-800 text-xs font-extrabold rounded-full border border-orange-200">{{ $leaderboardData[2]->points }} Pts</span>
                     </div>
                     @endif
                 </div>
@@ -78,8 +78,7 @@
                                             <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nama Siswa</th>
                                             <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Kelas</th>
                                             <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Level</th>
-                                            <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Poin Kebaikan</th>
-                                            <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Pelanggaran</th>
+                                            <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Total Poin</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-slate-100/70">
@@ -113,8 +112,7 @@
                                                     {{ $item->current_level }}
                                                 </span>
                                             </td>
-                                            <td class="px-6 py-4 text-right font-extrabold text-xs text-emerald-600">{{ $item->points_kebaikan }} Pts</td>
-                                            <td class="px-6 py-4 text-right font-extrabold text-xs text-rose-500">{{ $item->points_pelanggaran }} Pts</td>
+                                            <td class="px-6 py-4 text-right font-extrabold text-xs text-emerald-600">{{ $item->points }} Pts</td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -130,8 +128,7 @@
                                         <tr class="bg-slate-50/70 border-b border-slate-100/80">
                                             <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center w-24">Rank</th>
                                             <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nama Kelas</th>
-                                            <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Total Kebaikan</th>
-                                            <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Total Pelanggaran</th>
+                                            <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Total Poin</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-slate-100/70">
@@ -150,7 +147,6 @@
                                             </td>
                                             <td class="px-6 py-4 font-bold text-slate-800 text-xs">{{ $kelas->class_name }}</td>
                                             <td class="px-6 py-4 text-right font-extrabold text-xs text-emerald-600">{{ $kelas->total_kebaikan }} Pts</td>
-                                            <td class="px-6 py-4 text-right font-extrabold text-xs text-rose-500">{{ $kelas->total_pelanggaran }} Pts</td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -164,3 +160,4 @@
         </div>
     </div>
 </x-app-layout>
+

@@ -156,8 +156,7 @@
                                 <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nama Siswa</th>
                                 <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Kelas</th>
                                 <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Level</th>
-                                <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Poin Kebaikan</th>
-                                <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Poin Pelanggaran</th>
+                                <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Total Poin</th>
                                 <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center w-48">Aksi</th>
                             </tr>
                         </thead>
@@ -192,8 +191,7 @@
                                         {{ $siswa->current_level ?? 'Pemula' }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 text-right font-extrabold text-xs text-emerald-600">{{ $siswa->points_kebaikan }} Pts</td>
-                                <td class="px-6 py-4 text-right font-extrabold text-xs text-rose-500">{{ $siswa->points_pelanggaran }} Pts</td>
+                                <td class="px-6 py-4 text-right font-extrabold text-xs text-emerald-600">{{ $siswa->points }} Pts</td>
                                 <td class="px-6 py-4 text-center">
                                     <div class="flex items-center justify-center space-x-2">
                                         <button 
@@ -357,7 +355,7 @@
                 <span uk-icon="icon: plus-circle; ratio: 1.1"></span>
                 <span>Sesuaikan Poin Karakter</span>
             </h2>
-            <p class="text-xs text-slate-400 mb-4 font-semibold">Berikan apresiasi poin kebaikan atau catat pelanggaran siswa secara manual.</p>
+            <p class="text-xs text-slate-400 mb-4 font-semibold">Berikan apresiasi poin atau kurangi poin siswa secara manual.</p>
 
             <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 mb-4 text-xs">
                 <span class="text-slate-400 font-medium">Siswa:</span>
@@ -369,14 +367,6 @@
                 <input type="hidden" name="user_id" id="adj-user-id">
 
                 <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-1">Jenis Poin</label>
-                        <select name="type" required class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
-                            <option value="kebaikan">Poin Kebaikan (Keaktifan/Karakter)</option>
-                            <option value="pelanggaran">Poin Pelanggaran (Disiplin)</option>
-                        </select>
-                    </div>
-
                     <div>
                         <label class="block text-xs font-bold text-slate-500 mb-1">Operasi</label>
                         <select name="operation" required class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
@@ -518,3 +508,4 @@
         });
     </script>
 </x-app-layout>
+

@@ -18,7 +18,7 @@ class AIService
     {
         if (!$this->apiKey) return "AI Insight belum tersedia (API Key kosong).";
 
-        $prompt = "Buatkan ringkasan 2 paragraf untuk siswa bernama {$student->name} kelas " . ($student->classroom->name ?? 'Belum ada kelas') . " yang saat ini berada di level {$student->current_level}. Ia memiliki Poin Kebaikan: {$student->points_kebaikan} dan Poin Pelanggaran: {$student->points_pelanggaran}. Berikan pujian untuk poin kebaikannya, dan teguran/saran yang membangun jika ada poin pelanggaran.";
+        $prompt = "Buatkan ringkasan 2 paragraf untuk siswa bernama {$student->name} kelas " . ($student->classroom->name ?? 'Belum ada kelas') . " yang saat ini berada di level {$student->current_level}. Ia memiliki saldo Poin: {$student->points}. Berikan pujian jika poinnya tinggi, dan teguran/saran yang membangun jika poinnya rendah/berkurang.";
 
         return $this->callOpenAI($prompt);
     }
@@ -27,7 +27,7 @@ class AIService
     {
         if (!$this->apiKey) return "AI Rekomendasi Misi belum tersedia (API Key kosong).";
 
-        $prompt = "Siswa {$student->name} berada di level {$student->current_level} dengan Poin Kebaikan {$student->points_kebaikan}. Sarankan 3 misi kebaikan harian/mingguan yang cocok untuk level dan usianya. Format sebagai list berbutir.";
+        $prompt = "Siswa {$student->name} berada di level {$student->current_level} dengan total Poin {$student->points}. Sarankan 3 misi kebaikan harian/mingguan yang cocok untuk level dan usianya. Format sebagai list berbutir.";
 
         return $this->callOpenAI($prompt);
     }
@@ -38,10 +38,10 @@ class AIService
 
         $studentListStr = "";
         foreach ($students as $student) {
-            $studentListStr .= "- Nama: {$student->name}, Poin Kebaikan: {$student->points_kebaikan}, Poin Pelanggaran: {$student->points_pelanggaran}, Level: {$student->current_level}\n";
+            $studentListStr .= "- Nama: {$student->name}, Poin: {$student->points}, Level: {$student->current_level}\n";
         }
 
-        $prompt = "Berikut adalah daftar siswa kelas Anda:\n" . $studentListStr . "\nAnalisis siswa-siswa tersebut. Tentukan siapa saja siswa yang paling membutuhkan perhatian khusus atau bantuan (misalnya karena memiliki poin pelanggaran tinggi atau poin kebaikan yang sangat rendah dibanding rata-rata kelas). Berikan saran intervensi yang konkret untuk guru/wali kelas dalam membantu memotivasi siswa tersebut agar aktif kembali. Tulis ringkas dalam format list berbutir.";
+        $prompt = "Berikut adalah daftar siswa kelas Anda:\n" . $studentListStr . "\nAnalisis siswa-siswa tersebut. Tentukan siapa saja siswa yang paling membutuhkan perhatian khusus atau bantuan (misalnya karena poinnya minus atau poin yang sangat rendah dibanding rata-rata kelas). Berikan saran intervensi yang konkret untuk guru/wali kelas dalam membantu memotivasi siswa tersebut agar aktif kembali. Tulis ringkas dalam format list berbutir.";
 
         return $this->callOpenAI($prompt);
     }

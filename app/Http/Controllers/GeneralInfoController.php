@@ -13,15 +13,15 @@ class GeneralInfoController extends Controller
         // Fetch actual students
         $actualStudents = User::with('classroom')
             ->where('role_id', 5)
-            ->orderByDesc('points_kebaikan')
+            ->orderByDesc('points')
             ->get();
 
         // Standard mock competitors to populate the podium and list nicely
         $mockCompetitors = collect([
-            (object)['name' => 'Budi Santoso', 'class_name' => 'X IPA 1', 'current_level' => 'Teladan', 'points_kebaikan' => 1250, 'points_pelanggaran' => 0, 'email' => 'budi@sekolah.sch.id'],
-            (object)['name' => 'Siti Aminah', 'class_name' => 'X IPS 2', 'current_level' => 'Unggul', 'points_kebaikan' => 840, 'points_pelanggaran' => 5, 'email' => 'siti@sekolah.sch.id'],
-            (object)['name' => 'Dewi Lestari', 'class_name' => 'XI IPA 3', 'current_level' => 'Unggul', 'points_kebaikan' => 790, 'points_pelanggaran' => 10, 'email' => 'dewi@sekolah.sch.id'],
-            (object)['name' => 'Rian Hidayat', 'class_name' => 'X IPA 1', 'current_level' => 'Berkembang', 'points_kebaikan' => 450, 'points_pelanggaran' => 0, 'email' => 'rian@sekolah.sch.id'],
+            (object)['name' => 'Budi Santoso', 'class_name' => 'X IPA 1', 'current_level' => 'Teladan', 'points' => 1250, 'email' => 'budi@sekolah.sch.id'],
+            (object)['name' => 'Siti Aminah', 'class_name' => 'X IPS 2', 'current_level' => 'Unggul', 'points' => 840, 'email' => 'siti@sekolah.sch.id'],
+            (object)['name' => 'Dewi Lestari', 'class_name' => 'XI IPA 3', 'current_level' => 'Unggul', 'points' => 790, 'email' => 'dewi@sekolah.sch.id'],
+            (object)['name' => 'Rian Hidayat', 'class_name' => 'X IPA 1', 'current_level' => 'Berkembang', 'points' => 450, 'email' => 'rian@sekolah.sch.id'],
         ]);
 
         // Merge real student data with competitors and sort
@@ -31,8 +31,7 @@ class GeneralInfoController extends Controller
                 'name' => $student->name,
                 'class_name' => $student->classroom->name ?? 'Belum ada kelas',
                 'current_level' => $student->current_level ?? 'Pemula',
-                'points_kebaikan' => $student->points_kebaikan,
-                'points_pelanggaran' => $student->points_pelanggaran,
+                'points' => $student->points,
                 'email' => $student->email
             ]);
         }
@@ -44,23 +43,23 @@ class GeneralInfoController extends Controller
             }
         }
 
-        $leaderboardData = $leaderboardData->sortByDesc('points_kebaikan')->values();
+        $leaderboardData = $leaderboardData->sortByDesc('points')->values();
 
         // Class rankings
         $classRankings = \App\Models\Classroom::leftJoin('users', function($join) {
                 $join->on('classrooms.id', '=', 'users.classroom_id')
                      ->where('users.role_id', '=', 5);
             })
-            ->selectRaw('classrooms.name as class_name, coalesce(sum(users.points_kebaikan), 0) as total_kebaikan, coalesce(sum(users.points_pelanggaran), 0) as total_pelanggaran')
+            ->selectRaw('classrooms.name as class_name, coalesce(sum(users.points), 0) as total_kebaikan')
             ->groupBy('classrooms.id', 'classrooms.name')
             ->orderByDesc('total_kebaikan')
             ->get();
 
         if ($classRankings->isEmpty()) {
             $classRankings = collect([
-                (object)['class_name' => 'X IPA 1', 'total_kebaikan' => 1850, 'total_pelanggaran' => 0],
-                (object)['class_name' => 'X IPS 2', 'total_kebaikan' => 840, 'total_pelanggaran' => 5],
-                (object)['class_name' => 'XI IPA 3', 'total_kebaikan' => 790, 'total_pelanggaran' => 10],
+                (object)['class_name' => 'X IPA 1', 'total_kebaikan' => 1850],
+                (object)['class_name' => 'X IPS 2', 'total_kebaikan' => 840],
+                (object)['class_name' => 'XI IPA 3', 'total_kebaikan' => 790],
             ]);
         }
 
@@ -123,8 +122,8 @@ class GeneralInfoController extends Controller
                 'is_pinned' => false
             ],
             [
-                'title' => 'Peringatan Penurunan Poin Pelanggaran',
-                'body' => 'Diberitahukan kepada seluruh siswa bahwa pelanggaran ketertiban (seperti terlambat atau seragam tidak lengkap) akan memotong poin perkembangan karakter Anda. Mari bersama-sama menjaga disiplin sekolah.',
+                'title' => 'Peringatan Kedisiplinan',
+                'body' => 'Diberitahukan kepada seluruh siswa bahwa pelanggaran ketertiban (seperti terlambat atau seragam tidak lengkap) akan memotong langsung poin Anda. Mari bersama-sama menjaga disiplin sekolah.',
                 'author' => 'Tim Ketertiban Sekolah',
                 'date' => '1 minggu yang lalu',
                 'is_pinned' => false

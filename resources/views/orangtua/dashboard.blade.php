@@ -31,12 +31,8 @@
                     
                     <div class="mt-4 md:mt-0 flex space-x-6">
                         <div class="text-center md:text-right">
-                            <span class="text-xs text-slate-400 block font-medium">Poin Kebaikan</span>
-                            <strong class="text-2xl text-emerald-600 font-bold">{{ $child->points_kebaikan }} Pts</strong>
-                        </div>
-                        <div class="text-center md:text-right border-l border-slate-100 pl-6">
-                            <span class="text-xs text-slate-400 block font-medium">Poin Pelanggaran</span>
-                            <strong class="text-2xl text-rose-500 font-bold">{{ $child->points_pelanggaran }} Pts</strong>
+                            <span class="text-xs text-slate-400 block font-medium">Total Poin</span>
+                            <strong class="text-2xl text-emerald-600 font-bold">{{ $child->points }} Pts</strong>
                         </div>
                     </div>
                 </div>
@@ -103,8 +99,8 @@
                                                 <div class="text-xs font-semibold text-slate-700 leading-tight">{{ $history->source }}</div>
                                                 <div class="text-[9px] text-slate-400 mt-0.5 capitalize">{{ $history->type }}</div>
                                             </td>
-                                            <td class="px-4 py-3 text-center font-extrabold text-xs {{ $history->type === 'kebaikan' ? 'text-emerald-600' : 'text-rose-500' }}">
-                                                {{ $history->type === 'kebaikan' ? '+' : '-' }}{{ $history->points }} Pts
+                                            <td class="px-4 py-3 text-center font-extrabold text-xs {{ $history->points > 0 ? 'text-emerald-600' : 'text-rose-500' }}">
+                                                {{ $history->points > 0 ? '+' : '' }}{{ $history->points }} Pts
                                             </td>
                                             <td class="px-4 py-3 text-right text-[10px] text-slate-400 font-medium whitespace-nowrap">
                                                 {{ $history->created_at->diffForHumans() }}
@@ -131,3 +127,4 @@
         </div>
     </div>
 </x-app-layout>
+

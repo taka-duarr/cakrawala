@@ -18,7 +18,7 @@
         'Teladan' => '1501 - 3000 Point',
         default => '3000+ Point',
     };
-    $pct = $levelMax > 0 ? min(100, ($user->points_kebaikan / $levelMax) * 100) : 100;
+    $pct = $levelMax > 0 ? min(100, ($user->points / $levelMax) * 100) : 100;
 @endphp
 
 <aside class="hidden lg:flex bg-white border-r border-slate-100 flex-col h-screen sticky top-0 z-35 overflow-hidden transition-all duration-300"
@@ -81,9 +81,27 @@
                     @if($roleName === 'admin')
                         <a href="{{ route('admin.users.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.users.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
-                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Kelola Pengguna' : 'delay: 999999'">
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Manajemen Sistem' : 'delay: 999999'">
+                            <span uk-icon="icon: cog; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Manajemen Sistem</span>
+                        </a>
+                        <a href="{{ route('admin.teachers.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.teachers.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Manajemen Guru' : 'delay: 999999'">
+                            <span uk-icon="icon: receiver; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Manajemen Guru</span>
+                        </a>
+                        <a href="{{ route('admin.students.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.students.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Manajemen Siswa' : 'delay: 999999'">
                             <span uk-icon="icon: users; ratio: 0.8"></span>
-                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Kelola Pengguna</span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Manajemen Siswa</span>
+                        </a>
+                        <a href="{{ route('admin.parents.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.parents.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Manajemen Orang Tua' : 'delay: 999999'">
+                            <span uk-icon="icon: happy; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Manajemen Orang Tua</span>
                         </a>
                         <a href="{{ route('admin.classrooms.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.classrooms.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
@@ -91,11 +109,52 @@
                             <span uk-icon="icon: grid; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Kelola Kelas</span>
                         </a>
+                        <a href="{{ route('admin.jurusans.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.jurusans.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Jurusan' : 'delay: 999999'">
+                            <span uk-icon="icon: tag; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Jurusan</span>
+                        </a>
+                        <a href="{{ route('admin.academic-years.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.academic-years.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Tahun Ajaran & Semester' : 'delay: 999999'">
+                            <span uk-icon="icon: calendar; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Tahun Ajaran</span>
+                        </a>
                         <a href="{{ route('admin.rewards.manage') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.rewards.manage') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Kelola Toko Hadiah' : 'delay: 999999'">
                             <span uk-icon="icon: settings; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Kelola Toko Hadiah</span>
+                        </a>
+
+                        <!-- Manajemen Poin Group -->
+                        <div x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms class="pt-2">
+                            <span class="block text-[9px] text-slate-300 font-bold uppercase tracking-wider mb-2 px-3.5">Manajemen Poin</span>
+                        </div>
+                        <a href="{{ route('admin.currency-settings.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.currency-settings.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Pengaturan Poin' : 'delay: 999999'">
+                            <span uk-icon="icon: credit-card; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Pengaturan Poin</span>
+                        </a>
+                        <a href="{{ route('admin.point-history.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.point-history.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Histori Transaksi' : 'delay: 999999'">
+                            <span uk-icon="icon: history; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Histori Transaksi</span>
+                        </a>
+                        <a href="{{ route('admin.point-adjust.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.point-adjust.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Penyesuaian Poin' : 'delay: 999999'">
+                            <span uk-icon="icon: plus-circle; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Penyesuaian Poin</span>
+                        </a>
+                        <a href="{{ route('admin.point-audit.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.point-audit.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Audit Poin' : 'delay: 999999'">
+                            <span uk-icon="icon: search; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Audit Poin</span>
                         </a>
                     @endif
 
@@ -155,14 +214,15 @@
                 <div class="h-full bg-white rounded-full transition-all duration-500" style="width: {{ $pct }}%"></div>
             </div>
             <div class="flex justify-between text-[9px] text-indigo-100 font-semibold">
-                <span>{{ $user->points_kebaikan }} / {{ $levelMax }} Pts</span>
+                <span>{{ $user->points }} / {{ $levelMax }} Pts</span>
                 <span>{{ $pointsText }}</span>
             </div>
         </div>
     </div>
     <!-- Collapsed Level Trophy Icon -->
-    <div x-show="sidebarCollapsed" x-transition:enter="transition ease-out duration-250" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100" class="w-11 h-11 bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-xl flex items-center justify-center text-white shadow-md mx-auto mt-auto cursor-pointer" uk-tooltip="pos: right; title: Level {{ $levelName }} ({{ $user->points_kebaikan }} / {{ $levelMax }} Pts)">
+    <div x-show="sidebarCollapsed" x-transition:enter="transition ease-out duration-250" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100" class="w-11 h-11 bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-xl flex items-center justify-center text-white shadow-md mx-auto mt-auto cursor-pointer" uk-tooltip="pos: right; title: Level {{ $levelName }} ({{ $user->points }} / {{ $levelMax }} Pts)">
         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15a3 3 0 100-6 3 3 0 000 6zM19.5 8.25c0-1.518-1.232-2.75-2.75-2.75h-.75V3H8v2.5h-.75C5.732 5.5 4.5 6.732 4.5 8.25v.75c0 1.518 1.232 2.75 2.75 2.75h.75M19.5 8.25v.75c0 1.518-1.232 2.75-2.75 2.75h-.75M9 21h6M12 15v6"></path></svg>
     </div>
     @endif
 </aside>
+

@@ -19,14 +19,10 @@ class PointService
         ]);
 
         // Update user points
-        if ($type === 'kebaikan') {
-            $user->points_kebaikan += $points;
-        } else {
-            $user->points_pelanggaran += $points;
-        }
+        $user->points += $points;
 
-        // Recalculate level based on kebaikan points
-        $user->current_level = $this->calculateLevel($user->points_kebaikan);
+        // Recalculate level based on points
+        $user->current_level = $this->calculateLevel($user->points);
         
         $user->save();
 
@@ -47,9 +43,9 @@ class PointService
             if ($achievement->criteria === 'first_mission') {
                 $eligible = $user->missions()->wherePivot('status', 'approved')->exists();
             } elseif ($achievement->criteria === 'points_300') {
-                $eligible = $user->points_kebaikan >= 300;
+                $eligible = $user->points >= 300;
             } elseif ($achievement->criteria === 'teladan_1500') {
-                $eligible = ($user->points_kebaikan >= 1500 && $user->points_pelanggaran === 0);
+                $eligible = ($user->points >= 1500);
             } elseif ($achievement->criteria === 'volunteer_social') {
                 $eligible = $user->missions()
                     ->wherePivot('status', 'approved')
