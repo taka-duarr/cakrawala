@@ -68,6 +68,7 @@
                         <div class="hidden md:flex items-center space-x-5 text-xs font-semibold text-slate-500">
                             <a href="{{ route('dashboard') }}" class="hover:text-indigo-600 transition">Quest</a>
                             @if(auth()->user()->role && auth()->user()->role->name === 'siswa')
+                                <a href="{{ route('student.my-classes') }}" class="hover:text-indigo-600 transition">Kelas Saya</a>
                                 <a href="{{ route('student.rewards') }}" class="hover:text-indigo-600 transition">Reward Store</a>
                             @endif
                             <a href="{{ route('leaderboard') }}" class="hover:text-indigo-600 transition">Leaderboard</a>
@@ -143,6 +144,10 @@
                             </a>
                             
                             @if(auth()->user()->role && auth()->user()->role->name === 'siswa')
+                                <a href="{{ route('student.my-classes') }}" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold {{ request()->routeIs('student.my-classes') || request()->routeIs('student.class-detail') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                                    <span uk-icon="icon: grid; ratio: 0.8"></span>
+                                    <span>Kelas Saya</span>
+                                </a>
                                 <a href="{{ route('student.rewards') }}" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold {{ request()->routeIs('student.rewards') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                                     <span uk-icon="icon: cart; ratio: 0.8"></span>
                                     <span>Toko Hadiah</span>
@@ -153,6 +158,14 @@
                                 <a href="{{ route('admin.rewards.manage') }}" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold {{ request()->routeIs('admin.rewards.manage') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                                     <span uk-icon="icon: settings; ratio: 0.8"></span>
                                     <span>Kelola Toko Hadiah</span>
+                                </a>
+                                <a href="{{ route('admin.subjects.index') }}" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold {{ request()->routeIs('admin.subjects.*') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                                    <span uk-icon="icon: bookmark; ratio: 0.8"></span>
+                                    <span>Mata Pelajaran</span>
+                                </a>
+                                <a href="{{ route('admin.teaching-assignments.index') }}" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold {{ request()->routeIs('admin.teaching-assignments.*') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                                    <span uk-icon="icon: users; ratio: 0.8"></span>
+                                    <span>Penugasan Mengajar</span>
                                 </a>
                             @endif
 

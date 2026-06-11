@@ -71,6 +71,18 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::put('/jurusans/{id}/update', [AdminController::class, 'jurusansUpdate'])->name('jurusans.update');
     Route::delete('/jurusans/{id}/destroy', [AdminController::class, 'jurusansDestroy'])->name('jurusans.destroy');
 
+    // Subject Management Routes
+    Route::get('/subjects', [AdminController::class, 'subjectsIndex'])->name('subjects.index');
+    Route::post('/subjects/store', [AdminController::class, 'subjectsStore'])->name('subjects.store');
+    Route::put('/subjects/{id}/update', [AdminController::class, 'subjectsUpdate'])->name('subjects.update');
+    Route::delete('/subjects/{id}/destroy', [AdminController::class, 'subjectsDestroy'])->name('subjects.destroy');
+
+    // Teaching Assignment Management Routes
+    Route::get('/teaching-assignments', [AdminController::class, 'teachingAssignmentsIndex'])->name('teaching-assignments.index');
+    Route::post('/teaching-assignments/store', [AdminController::class, 'teachingAssignmentsStore'])->name('teaching-assignments.store');
+    Route::put('/teaching-assignments/{id}/update', [AdminController::class, 'teachingAssignmentsUpdate'])->name('teaching-assignments.update');
+    Route::delete('/teaching-assignments/{id}/destroy', [AdminController::class, 'teachingAssignmentsDestroy'])->name('teaching-assignments.destroy');
+
     // Point Management Routes
     Route::get('/currency-settings', [AdminController::class, 'currencySettingsIndex'])->name('currency-settings.index');
     Route::post('/currency-settings/update', [AdminController::class, 'currencySettingsUpdate'])->name('currency-settings.update');
@@ -87,6 +99,7 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
     Route::post('/missions/validate', [GuruController::class, 'validateMission'])->name('missions.validate');
     Route::post('/points/adjust', [GuruController::class, 'adjustPoints'])->name('points.adjust');
     Route::post('/badges/toggle', [GuruController::class, 'toggleBadge'])->name('badges.toggle');
+    Route::get('/assignments/{id}', [GuruController::class, 'assignmentDetail'])->name('assignments.detail');
 });
 
 Route::middleware(['auth', 'role:walikelas'])->prefix('walikelas')->name('walikelas.')->group(function () {
@@ -104,6 +117,8 @@ Route::middleware(['auth', 'role:siswa'])->prefix('student')->name('student.')->
     Route::post('/mission/{id}/submit', [\App\Http\Controllers\MissionController::class, 'submitProof'])->name('mission.submit');
     Route::get('/rewards', [\App\Http\Controllers\RewardController::class, 'index'])->name('rewards');
     Route::post('/rewards/{id}/claim', [\App\Http\Controllers\RewardController::class, 'claim'])->name('rewards.claim');
+    Route::get('/my-classes', [StudentController::class, 'myClasses'])->name('my-classes');
+    Route::get('/my-classes/{id}', [StudentController::class, 'classDetail'])->name('class-detail');
 });
 
 Route::middleware('auth')->group(function () {

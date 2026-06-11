@@ -120,7 +120,7 @@
                                 </div>
                                 <div>
                                     <p class="text-xs font-semibold text-slate-700 truncate max-w-[100px]">{{ $student->name }}</p>
-                                    <p class="text-[9px] text-slate-400 font-semibold">{{ number_format($student->points_kebaikan) }} pts</p>
+                                    <p class="text-[9px] text-slate-400 font-semibold">{{ number_format($student->points) }} pts</p>
                                 </div>
                             </div>
                             <form method="POST" action="{{ route('admin.classrooms.unenroll', [$classroom->id, $student->id]) }}" class="inline" onsubmit="return confirm('Keluarkan {{ $student->name }} dari kelas ini?')">

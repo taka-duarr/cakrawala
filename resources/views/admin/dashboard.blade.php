@@ -100,7 +100,7 @@
                                         <div class="font-bold text-slate-800 text-xs">{{ $siswa->name }}</div>
                                         <div class="text-[9px] text-slate-400 font-semibold mt-0.5">{{ $siswa->classroom->name ?? 'Belum ada kelas' }} · Level {{ $siswa->current_level }}</div>
                                     </td>
-                                    <td class="px-6 py-3.5 text-right font-extrabold text-xs text-indigo-600">{{ number_format($siswa->points_kebaikan) }} Pts</td>
+                                    <td class="px-6 py-3.5 text-right font-extrabold text-xs text-indigo-600">{{ number_format($siswa->points) }} Pts</td>
                                 </tr>
                                 @empty
                                 <tr>

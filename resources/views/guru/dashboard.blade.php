@@ -61,9 +61,41 @@
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                     </div>
                     <div>
-                        <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Total Siswa Terdaftar</p>
+                        <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Total Siswa di Kelas Anda</p>
                         <p class="text-3xl font-black text-slate-800 mt-1">{{ $siswas->count() }}</p>
                     </div>
+                </div>
+            </div>
+
+            <!-- Kelas & Mapel yang Diampu -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 soft-glow-indigo">
+                <h3 class="text-lg font-bold text-slate-800 mb-2">Mata Pelajaran & Kelas yang Diampu</h3>
+                <p class="text-xs text-slate-400 mb-4 font-medium">Daftar kelas akademik dan mata pelajaran yang ditugaskan kepada Anda oleh Admin.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    @forelse($assignments as $assign)
+                    <a href="{{ route('guru.assignments.detail', $assign->id) }}" class="bg-slate-50/70 border border-slate-100 hover:border-indigo-200 rounded-xl p-4 flex flex-col justify-between hover:shadow-md transition group">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="bg-indigo-50 text-indigo-700 group-hover:bg-indigo-600 group-hover:text-white text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider transition-colors">
+                                    {{ $assign->classroom->name }}
+                                </span>
+                                <span class="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">
+                                    {{ $assign->academicYear->name ?? '-' }}
+                                </span>
+                            </div>
+                            <h4 class="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">{{ $assign->subject->name }}</h4>
+                            <p class="text-[10px] text-slate-400 font-medium mt-1">Kode: {{ $assign->subject->code ?? '-' }} · Semester {{ $assign->semester->name ?? '-' }}</p>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-[9px] text-slate-500 font-semibold">
+                            <span>Siswa terdaftar:</span>
+                            <span class="font-bold text-slate-700 bg-white px-2 py-0.5 rounded-md border border-slate-100">{{ \App\Models\User::where('role_id', 5)->where('classroom_id', $assign->classroom_id)->count() }} Siswa</span>
+                        </div>
+                    </a>
+                    @empty
+                    <div class="col-span-3 text-center py-6 text-slate-400 text-xs font-semibold bg-slate-50/50 rounded-xl border border-dashed border-slate-150">
+                        ⚠️ Anda belum memiliki penugasan mengajar aktif. Silakan hubungi Admin.
+                    </div>
+                    @endforelse
                 </div>
             </div>
 

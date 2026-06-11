@@ -56,4 +56,59 @@ class StudentController extends Controller
             'badges'
         ));
     }
+
+    public function myClasses()
+    {
+        $user = auth()->user();
+        
+        $classroom = $user->classroom ? \App\Models\Classroom::with('jurusan')->find($user->classroom_id) : null;
+        
+        $assignments = [];
+        if ($classroom) {
+            $assignments = \App\Models\TeachingAssignment::with(['teacher', 'subject', 'academicYear', 'semester'])
+                ->where('classroom_id', $classroom->id)
+                ->where('is_active', true)
+                ->get();
+        }
+        
+        return view('student.my_classes', compact('user', 'classroom', 'assignments'));
+    }
+
+    public function classDetail($id)
+    {
+        $user = auth()->user();
+        
+        // Pastikan penugasan mengajar ini ada di kelas siswa tersebut
+        $assignment = \App\Models\TeachingAssignment::with(['teacher', 'subject', 'academicYear', 'semester', 'classroom.jurusan'])
+            ->where('classroom_id', $user->classroom_id)
+            ->findOrFail($id);
+
+        // Cari teman sekelas (Classmates)
+        $classmates = \App\Models\User::where('role_id', 5)
+            ->where('classroom_id', $assignment->classroom_id)
+            ->orderByDesc('points')
+            ->get();
+
+        // Cari misi yang berkaitan dengan subject/mata pelajaran ini
+        $subjectCode = $assignment->subject->code;
+        $subjectName = $assignment->subject->name;
+        $subjectMissions = \App\Models\Mission::where('is_active', true)
+            ->where(function ($query) use ($subjectCode, $subjectName) {
+                if ($subjectCode) {
+                    $query->where('title', 'like', '%' . $subjectCode . '%')
+                          ->orWhere('description', 'like', '%' . $subjectCode . '%');
+                }
+                $query->orWhere('title', 'like', '%' . $subjectName . '%')
+                      ->orWhere('description', 'like', '%' . $subjectName . '%');
+            })
+            ->get();
+
+        // Dapatkan data status misi siswa untuk mencocokkan status (taken, pending_approval, approved, dll)
+        $takenMissions = $user->missions()
+            ->withPivot('status', 'proof_url', 'proof_content', 'notes')
+            ->get()
+            ->keyBy('id');
+
+        return view('student.class_detail', compact('user', 'assignment', 'classmates', 'subjectMissions', 'takenMissions'));
+    }
 }

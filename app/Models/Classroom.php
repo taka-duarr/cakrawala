@@ -51,5 +51,9 @@ class Classroom extends Model
     {
         return $this->belongsTo(Semester::class);
     }
-}
 
+    public function teachingAssignments()
+    {
+        return $this->hasMany(TeachingAssignment::class);
+    }
+}

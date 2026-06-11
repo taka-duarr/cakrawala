@@ -12,9 +12,21 @@ class GuruController extends Controller
 {
     public function index()
     {
-        // Misi yang menunggu persetujuan guru
+        $teacher = auth()->user();
+
+        // Ambil penugasan mengajar guru yang aktif beserta kelas dan mata pelajarannya
+        $assignments = \App\Models\TeachingAssignment::with(['classroom.jurusan', 'subject', 'academicYear', 'semester'])
+            ->where('teacher_id', $teacher->id)
+            ->where('is_active', true)
+            ->get();
+
+        // Dapatkan ID kelas-kelas yang diampu
+        $classroomIds = $assignments->pluck('classroom_id')->unique()->toArray();
+
+        // Misi yang menunggu persetujuan guru (hanya untuk siswa di kelas yang diampu)
         $pendingMissions = User::with('classroom')
             ->where('role_id', 5)
+            ->whereIn('classroom_id', $classroomIds)
             ->whereHas('missions', function ($q) {
                 $q->where('status', 'pending_approval');
             })
@@ -29,15 +41,16 @@ class GuruController extends Controller
                     });
             });
 
-        // Daftar semua siswa di kelas
+        // Daftar siswa di kelas yang diampu
         $siswas = User::with('classroom')
             ->where('role_id', 5)
+            ->whereIn('classroom_id', $classroomIds)
             ->orderByDesc('points')
             ->get();
 
         $achievements = Achievement::all();
 
-        return view('guru.dashboard', compact('pendingMissions', 'siswas', 'achievements'));
+        return view('guru.dashboard', compact('pendingMissions', 'siswas', 'achievements', 'assignments'));
     }
 
     public function storeMission(Request $request)
@@ -134,5 +147,21 @@ class GuruController extends Controller
         }
 
         return redirect()->back()->with('success', $msg);
+    }
+
+    public function assignmentDetail($id)
+    {
+        $teacher = auth()->user();
+
+        $assignment = \App\Models\TeachingAssignment::with(['classroom.jurusan', 'subject', 'academicYear', 'semester'])
+            ->where('teacher_id', $teacher->id)
+            ->findOrFail($id);
+
+        $students = User::where('role_id', 5)
+            ->where('classroom_id', $assignment->classroom_id)
+            ->orderBy('name')
+            ->get();
+
+        return view('guru.assignment_detail', compact('assignment', 'students'));
     }
 }
