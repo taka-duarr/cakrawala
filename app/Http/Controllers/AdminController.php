@@ -12,8 +12,11 @@ use App\Models\Setting;
 use App\Models\AcademicYear;
 use App\Models\Semester;
 use App\Models\Jurusan;
+use App\Models\Subject;
+use App\Models\TeachingAssignment;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
@@ -442,6 +445,205 @@ class AdminController extends Controller
     {
         Jurusan::findOrFail($id)->delete();
         return redirect()->back()->with('success', 'Jurusan berhasil dihapus!');
+    }
+
+    // --- Subject Management ---
+    public function subjectsIndex()
+    {
+        $subjects = Subject::withCount('teachingAssignments')
+            ->orderBy('name')
+            ->get();
+
+        return view('admin.subjects', compact('subjects'));
+    }
+
+    public function subjectsStore(Request $request)
+    {
+        $request->validate([
+            'name'        => 'required|string|max:150|unique:subjects,name',
+            'code'        => 'nullable|string|max:30|unique:subjects,code',
+            'description' => 'nullable|string|max:255',
+            'is_active'   => 'nullable|boolean',
+        ]);
+
+        Subject::create([
+            'name'        => $request->name,
+            'code'        => $request->code,
+            'description' => $request->description,
+            'is_active'   => $request->has('is_active'),
+        ]);
+
+        return redirect()->back()->with('success', 'Mata pelajaran berhasil ditambahkan!');
+    }
+
+    public function subjectsUpdate(Request $request, $id)
+    {
+        $subject = Subject::findOrFail($id);
+
+        $request->validate([
+            'name'        => ['required', 'string', 'max:150', Rule::unique('subjects', 'name')->ignore($subject->id)],
+            'code'        => ['nullable', 'string', 'max:30', Rule::unique('subjects', 'code')->ignore($subject->id)],
+            'description' => 'nullable|string|max:255',
+            'is_active'   => 'nullable|boolean',
+        ]);
+
+        $subject->update([
+            'name'        => $request->name,
+            'code'        => $request->code,
+            'description' => $request->description,
+            'is_active'   => $request->has('is_active'),
+        ]);
+
+        return redirect()->back()->with('success', 'Mata pelajaran berhasil diperbarui!');
+    }
+
+    public function subjectsDestroy($id)
+    {
+        Subject::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'Mata pelajaran berhasil dihapus!');
+    }
+
+    // --- Teaching Assignment Management ---
+    public function teachingAssignmentsIndex(Request $request)
+    {
+        $teachers = User::whereHas('role', fn($q) => $q->whereIn('name', ['guru', 'walikelas']))
+            ->orderBy('name')
+            ->get();
+        $subjects = Subject::where('is_active', true)->orderBy('name')->get();
+        $classrooms = Classroom::with(['jurusan', 'academicYear', 'semester'])->orderBy('grade_level')->orderBy('name')->get();
+        $academicYears = AcademicYear::orderByDesc('name')->get();
+        $semesters = Semester::with('academicYear')->orderByDesc('id')->get();
+
+        $query = TeachingAssignment::with(['teacher', 'subject', 'classroom', 'academicYear', 'semester'])
+            ->latest();
+
+        if ($request->teacher_id) {
+            $query->where('teacher_id', $request->teacher_id);
+        }
+        if ($request->subject_id) {
+            $query->where('subject_id', $request->subject_id);
+        }
+        if ($request->classroom_id) {
+            $query->where('classroom_id', $request->classroom_id);
+        }
+        if ($request->academic_year_id) {
+            $query->where('academic_year_id', $request->academic_year_id);
+        }
+        if ($request->semester_id) {
+            $query->where('semester_id', $request->semester_id);
+        }
+
+        $assignments = $query->paginate(15)->withQueryString();
+
+        return view('admin.teaching_assignments', compact(
+            'assignments',
+            'teachers',
+            'subjects',
+            'classrooms',
+            'academicYears',
+            'semesters'
+        ));
+    }
+
+    public function teachingAssignmentsStore(Request $request)
+    {
+        $validated = $request->validate([
+            'teacher_id'       => 'required|exists:users,id',
+            'subject_id'       => 'required|exists:subjects,id',
+            'classroom_id'     => 'required|exists:classrooms,id',
+            'academic_year_id' => 'nullable|exists:academic_years,id',
+            'semester_id'      => 'nullable|exists:semesters,id',
+            'is_active'        => 'nullable|boolean',
+        ]);
+
+        $teacher = User::with('role')->findOrFail($validated['teacher_id']);
+        if (!in_array($teacher->role?->name, ['guru', 'walikelas'])) {
+            return redirect()->back()->withErrors(['teacher_id' => 'User yang dipilih harus memiliki role guru atau wali kelas.'])->withInput();
+        }
+
+        if ($request->semester_id) {
+            $semester = Semester::findOrFail($request->semester_id);
+            if ($request->academic_year_id && $semester->academic_year_id != $request->academic_year_id) {
+                return redirect()->back()->withErrors(['semester_id' => 'Semester tidak sesuai dengan tahun ajaran yang dipilih.'])->withInput();
+            }
+        }
+
+        $duplicate = TeachingAssignment::where('teacher_id', $request->teacher_id)
+            ->where('subject_id', $request->subject_id)
+            ->where('classroom_id', $request->classroom_id)
+            ->where('academic_year_id', $request->academic_year_id)
+            ->where('semester_id', $request->semester_id)
+            ->exists();
+
+        if ($duplicate) {
+            return redirect()->back()->withErrors(['assignment' => 'Penugasan guru untuk mapel, kelas, dan periode ini sudah ada.'])->withInput();
+        }
+
+        TeachingAssignment::create([
+            'teacher_id'       => $request->teacher_id,
+            'subject_id'       => $request->subject_id,
+            'classroom_id'     => $request->classroom_id,
+            'academic_year_id' => $request->academic_year_id,
+            'semester_id'      => $request->semester_id,
+            'is_active'        => $request->has('is_active'),
+        ]);
+
+        return redirect()->route('admin.teaching-assignments.index')->with('success', 'Penugasan mengajar berhasil ditambahkan!');
+    }
+
+    public function teachingAssignmentsUpdate(Request $request, $id)
+    {
+        $assignment = TeachingAssignment::findOrFail($id);
+
+        $validated = $request->validate([
+            'teacher_id'       => 'required|exists:users,id',
+            'subject_id'       => 'required|exists:subjects,id',
+            'classroom_id'     => 'required|exists:classrooms,id',
+            'academic_year_id' => 'nullable|exists:academic_years,id',
+            'semester_id'      => 'nullable|exists:semesters,id',
+            'is_active'        => 'nullable|boolean',
+        ]);
+
+        $teacher = User::with('role')->findOrFail($validated['teacher_id']);
+        if (!in_array($teacher->role?->name, ['guru', 'walikelas'])) {
+            return redirect()->back()->withErrors(['teacher_id' => 'User yang dipilih harus memiliki role guru atau wali kelas.'])->withInput();
+        }
+
+        if ($request->semester_id) {
+            $semester = Semester::findOrFail($request->semester_id);
+            if ($request->academic_year_id && $semester->academic_year_id != $request->academic_year_id) {
+                return redirect()->back()->withErrors(['semester_id' => 'Semester tidak sesuai dengan tahun ajaran yang dipilih.'])->withInput();
+            }
+        }
+
+        $duplicate = TeachingAssignment::where('teacher_id', $request->teacher_id)
+            ->where('subject_id', $request->subject_id)
+            ->where('classroom_id', $request->classroom_id)
+            ->where('academic_year_id', $request->academic_year_id)
+            ->where('semester_id', $request->semester_id)
+            ->where('id', '!=', $assignment->id)
+            ->exists();
+
+        if ($duplicate) {
+            return redirect()->back()->withErrors(['assignment' => 'Penugasan guru untuk mapel, kelas, dan periode ini sudah ada.'])->withInput();
+        }
+
+        $assignment->update([
+            'teacher_id'       => $request->teacher_id,
+            'subject_id'       => $request->subject_id,
+            'classroom_id'     => $request->classroom_id,
+            'academic_year_id' => $request->academic_year_id,
+            'semester_id'      => $request->semester_id,
+            'is_active'        => $request->has('is_active'),
+        ]);
+
+        return redirect()->route('admin.teaching-assignments.index')->with('success', 'Penugasan mengajar berhasil diperbarui!');
+    }
+
+    public function teachingAssignmentsDestroy($id)
+    {
+        TeachingAssignment::findOrFail($id)->delete();
+        return redirect()->route('admin.teaching-assignments.index')->with('success', 'Penugasan mengajar berhasil dihapus!');
     }
 
     // --- Currency & Point Settings ---

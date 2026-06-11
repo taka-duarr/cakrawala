@@ -63,6 +63,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Achievement::class, 'achievement_user')->withTimestamps();
     }
 
+    public function teachingAssignments()
+    {
+        return $this->hasMany(TeachingAssignment::class, 'teacher_id');
+    }
+
     /**
      * Get the attributes that should be cast.
      *

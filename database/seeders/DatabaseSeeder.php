@@ -313,5 +313,55 @@ class DatabaseSeeder extends Seeder
             'criteria' => 'volunteer_social',
             'icon' => 'users',
         ]);
+
+        // Seeding Mata Pelajaran
+        $matematika = \App\Models\Subject::create([
+            'name' => 'Matematika',
+            'code' => 'MTK',
+            'description' => 'Pembelajaran numerasi, logika, dan pemecahan masalah.',
+            'is_active' => true,
+        ]);
+
+        $bahasaIndonesia = \App\Models\Subject::create([
+            'name' => 'Bahasa Indonesia',
+            'code' => 'BIN',
+            'description' => 'Pembelajaran literasi, komunikasi, dan apresiasi bahasa.',
+            'is_active' => true,
+        ]);
+
+        $fisika = \App\Models\Subject::create([
+            'name' => 'Fisika',
+            'code' => 'FIS',
+            'description' => 'Pembelajaran sains, pengukuran, dan fenomena alam.',
+            'is_active' => true,
+        ]);
+
+        // Seeding Penugasan Mengajar awal untuk fondasi absensi per mapel
+        \App\Models\TeachingAssignment::create([
+            'teacher_id' => 2,
+            'subject_id' => $matematika->id,
+            'classroom_id' => $class1->id,
+            'academic_year_id' => $ta2526->id,
+            'semester_id' => $semGanjil->id,
+            'is_active' => true,
+        ]);
+
+        \App\Models\TeachingAssignment::create([
+            'teacher_id' => 2,
+            'subject_id' => $bahasaIndonesia->id,
+            'classroom_id' => $class2->id,
+            'academic_year_id' => $ta2526->id,
+            'semester_id' => $semGanjil->id,
+            'is_active' => true,
+        ]);
+
+        \App\Models\TeachingAssignment::create([
+            'teacher_id' => $waliKelas->id,
+            'subject_id' => $fisika->id,
+            'classroom_id' => $class1->id,
+            'academic_year_id' => $ta2526->id,
+            'semester_id' => $semGanjil->id,
+            'is_active' => true,
+        ]);
     }
 }

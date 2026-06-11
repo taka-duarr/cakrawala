@@ -207,4 +207,78 @@ class GuruOperationsTest extends TestCase
         $this->student->refresh();
         $this->assertFalse($this->student->achievements->contains($this->achievement->id));
     }
+
+    public function test_guru_can_view_assignment_detail()
+    {
+        $classroom = \App\Models\Classroom::create([
+            'name' => 'Class X-A',
+            'points' => 100,
+        ]);
+
+        // Assign student to classroom
+        $this->student->update(['classroom_id' => $classroom->id]);
+
+        $subject = \App\Models\Subject::create([
+            'name' => 'Fisika Kuantum',
+            'code' => 'FIS-KU',
+            'description' => 'Mata pelajaran fisika kuantum tingkat dasar.',
+        ]);
+
+        $academicYear = \App\Models\AcademicYear::create([
+            'name' => '2025/2026',
+            'is_active' => true,
+        ]);
+
+        $semester = \App\Models\Semester::create([
+            'academic_year_id' => $academicYear->id,
+            'name' => 'Ganjil',
+            'is_active' => true,
+        ]);
+
+        $assignment = \App\Models\TeachingAssignment::create([
+            'teacher_id' => $this->guru->id,
+            'subject_id' => $subject->id,
+            'classroom_id' => $classroom->id,
+            'academic_year_id' => $academicYear->id,
+            'semester_id' => $semester->id,
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($this->guru)
+            ->get(route('guru.assignments.detail', $assignment->id));
+
+        $response->assertStatus(200);
+        $response->assertSee('Fisika Kuantum');
+        $response->assertSee('Class X-A');
+        $response->assertSee('Siswa Naruto');
+    }
+
+    public function test_guru_can_view_assignment_detail_with_null_semester()
+    {
+        $classroom = \App\Models\Classroom::create([
+            'name' => 'Class X-B',
+            'points' => 50,
+        ]);
+
+        $subject = \App\Models\Subject::create([
+            'name' => 'Kimia Organik',
+            'code' => 'KIM-OR',
+        ]);
+
+        $assignment = \App\Models\TeachingAssignment::create([
+            'teacher_id' => $this->guru->id,
+            'subject_id' => $subject->id,
+            'classroom_id' => $classroom->id,
+            'academic_year_id' => null,
+            'semester_id' => null,
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($this->guru)
+            ->get(route('guru.assignments.detail', $assignment->id));
+
+        $response->assertStatus(200);
+        $response->assertSee('Kimia Organik');
+        $response->assertSee('Class X-B');
+    }
 }
