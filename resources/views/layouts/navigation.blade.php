@@ -83,6 +83,16 @@
                         </a>
                     @endif
 
+                    <!-- Guru-specific Links -->
+                    @if($roleName === 'guru')
+                        <a href="{{ route('guru.my-schedule') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('guru.my-schedule') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Jadwal Mengajar' : 'delay: 999999'">
+                            <span uk-icon="icon: calendar; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Jadwal Mengajar</span>
+                        </a>
+                    @endif
+
                     <!-- Admin-specific Links -->
                     @if($roleName === 'admin')
                         <a href="{{ route('admin.users.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.users.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
@@ -144,6 +154,12 @@
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Kelola Toko Hadiah' : 'delay: 999999'">
                             <span uk-icon="icon: settings; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Kelola Toko Hadiah</span>
+                        </a>
+                        <a href="{{ route('admin.school-locations.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.school-locations.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Lokasi Sekolah' : 'delay: 999999'">
+                            <span uk-icon="icon: location; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Lokasi Sekolah</span>
                         </a>
 
                         <!-- Manajemen Poin Group -->

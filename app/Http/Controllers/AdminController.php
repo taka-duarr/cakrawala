@@ -554,6 +554,10 @@ class AdminController extends Controller
             'academic_year_id' => 'nullable|exists:academic_years,id',
             'semester_id'      => 'nullable|exists:semesters,id',
             'is_active'        => 'nullable|boolean',
+            'day_of_week'      => 'nullable|string',
+            'start_time'       => 'nullable',
+            'end_time'         => 'nullable',
+            'total_meetings'   => 'nullable|integer|min:1|max:40',
         ]);
 
         $teacher = User::with('role')->findOrFail($validated['teacher_id']);
@@ -579,6 +583,37 @@ class AdminController extends Controller
             return redirect()->back()->withErrors(['assignment' => 'Penugasan guru untuk mapel, kelas, dan periode ini sudah ada.'])->withInput();
         }
 
+        // Check for schedule overlap / clash
+        if ($request->day_of_week && $request->start_time && $request->end_time) {
+            $clash = TeachingAssignment::with(['classroom', 'subject'])
+                ->where('academic_year_id', $request->academic_year_id)
+                ->where('semester_id', $request->semester_id)
+                ->where('day_of_week', $request->day_of_week)
+                ->where('is_active', true)
+                ->where(function ($query) use ($request) {
+                    $query->where('start_time', '<', $request->end_time)
+                          ->where('end_time', '>', $request->start_time);
+                })
+                ->where(function ($query) use ($request) {
+                    $query->where('teacher_id', $request->teacher_id)
+                          ->orWhere('classroom_id', $request->classroom_id);
+                })
+                ->first();
+
+            if ($clash) {
+                $timeString = substr($clash->start_time, 0, 5) . ' - ' . substr($clash->end_time, 0, 5);
+                if ($clash->teacher_id == $request->teacher_id) {
+                    return redirect()->back()->withErrors([
+                        'assignment' => "Jadwal bentrok! Guru tersebut sudah memiliki jadwal mengajar pada hari " . $clash->getDayTranslation() . " pukul " . $timeString . " di kelas " . $clash->classroom->name . "."
+                    ])->withInput();
+                } else {
+                    return redirect()->back()->withErrors([
+                        'assignment' => "Jadwal bentrok! Kelas " . $clash->classroom->name . " sudah memiliki jadwal pelajaran " . $clash->subject->name . " pada hari " . $clash->getDayTranslation() . " pukul " . $timeString . "."
+                    ])->withInput();
+                }
+            }
+        }
+
         TeachingAssignment::create([
             'teacher_id'       => $request->teacher_id,
             'subject_id'       => $request->subject_id,
@@ -586,6 +621,10 @@ class AdminController extends Controller
             'academic_year_id' => $request->academic_year_id,
             'semester_id'      => $request->semester_id,
             'is_active'        => $request->has('is_active'),
+            'day_of_week'      => $request->day_of_week,
+            'start_time'       => $request->start_time,
+            'end_time'         => $request->end_time,
+            'total_meetings'   => $request->total_meetings ?? 16,
         ]);
 
         return redirect()->route('admin.teaching-assignments.index')->with('success', 'Penugasan mengajar berhasil ditambahkan!');
@@ -602,6 +641,10 @@ class AdminController extends Controller
             'academic_year_id' => 'nullable|exists:academic_years,id',
             'semester_id'      => 'nullable|exists:semesters,id',
             'is_active'        => 'nullable|boolean',
+            'day_of_week'      => 'nullable|string',
+            'start_time'       => 'nullable',
+            'end_time'         => 'nullable',
+            'total_meetings'   => 'nullable|integer|min:1|max:40',
         ]);
 
         $teacher = User::with('role')->findOrFail($validated['teacher_id']);
@@ -628,6 +671,38 @@ class AdminController extends Controller
             return redirect()->back()->withErrors(['assignment' => 'Penugasan guru untuk mapel, kelas, dan periode ini sudah ada.'])->withInput();
         }
 
+        // Check for schedule overlap / clash
+        if ($request->day_of_week && $request->start_time && $request->end_time) {
+            $clash = TeachingAssignment::with(['classroom', 'subject'])
+                ->where('academic_year_id', $request->academic_year_id)
+                ->where('semester_id', $request->semester_id)
+                ->where('day_of_week', $request->day_of_week)
+                ->where('is_active', true)
+                ->where('id', '!=', $assignment->id)
+                ->where(function ($query) use ($request) {
+                    $query->where('start_time', '<', $request->end_time)
+                          ->where('end_time', '>', $request->start_time);
+                })
+                ->where(function ($query) use ($request) {
+                    $query->where('teacher_id', $request->teacher_id)
+                          ->orWhere('classroom_id', $request->classroom_id);
+                })
+                ->first();
+
+            if ($clash) {
+                $timeString = substr($clash->start_time, 0, 5) . ' - ' . substr($clash->end_time, 0, 5);
+                if ($clash->teacher_id == $request->teacher_id) {
+                    return redirect()->back()->withErrors([
+                        'assignment' => "Jadwal bentrok! Guru tersebut sudah memiliki jadwal mengajar pada hari " . $clash->getDayTranslation() . " pukul " . $timeString . " di kelas " . $clash->classroom->name . "."
+                    ])->withInput();
+                } else {
+                    return redirect()->back()->withErrors([
+                        'assignment' => "Jadwal bentrok! Kelas " . $clash->classroom->name . " sudah memiliki jadwal pelajaran " . $clash->subject->name . " pada hari " . $clash->getDayTranslation() . " pukul " . $timeString . "."
+                    ])->withInput();
+                }
+            }
+        }
+
         $assignment->update([
             'teacher_id'       => $request->teacher_id,
             'subject_id'       => $request->subject_id,
@@ -635,6 +710,10 @@ class AdminController extends Controller
             'academic_year_id' => $request->academic_year_id,
             'semester_id'      => $request->semester_id,
             'is_active'        => $request->has('is_active'),
+            'day_of_week'      => $request->day_of_week,
+            'start_time'       => $request->start_time,
+            'end_time'         => $request->end_time,
+            'total_meetings'   => $request->total_meetings ?? 16,
         ]);
 
         return redirect()->route('admin.teaching-assignments.index')->with('success', 'Penugasan mengajar berhasil diperbarui!');

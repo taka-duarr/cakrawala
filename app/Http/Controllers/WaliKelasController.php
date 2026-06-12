@@ -82,8 +82,13 @@ class WaliKelasController extends Controller
         
         if ($request->has('trigger_ai')) {
             if ($students->count() > 0) {
-                $aiWarning = $aiService->getEarlyWarningAnalysis($students);
-                Cache::put($cacheKey, $aiWarning, 60 * 24); // Cache for 1 day
+                try {
+                    $aiWarning = $aiService->getEarlyWarningAnalysis($students);
+                    Cache::put($cacheKey, $aiWarning, 60 * 24); // Cache for 1 day
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error('AI Service Error (WaliKelas Dashboard): ' . $e->getMessage());
+                    return redirect()->route('walikelas.dashboard')->with('error', 'Layanan AI untuk analisis kelas sedang tidak aktif. Harap coba lagi nanti.');
+                }
             } else {
                 $aiWarning = "Belum ada siswa di kelas Anda untuk dianalisis oleh AI.";
             }

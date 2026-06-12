@@ -16,6 +16,9 @@ return new class extends Migration
             $table->foreignId('academic_year_id')->nullable()->constrained('academic_years')->nullOnDelete();
             $table->foreignId('semester_id')->nullable()->constrained('semesters')->nullOnDelete();
             $table->boolean('is_active')->default(true);
+            $table->string('day_of_week')->nullable();
+            $table->time('start_time')->nullable();
+            $table->time('end_time')->nullable();
             $table->timestamps();
 
             $table->unique(

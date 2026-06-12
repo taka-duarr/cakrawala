@@ -9,13 +9,45 @@ class MissionController extends Controller
     public function takeMission(Request $request, $id)
     {
         $user = auth()->user();
+        
+        $existing = $user->missions()->where('mission_id', $id)->first();
+        if ($existing) {
+            $pivot = $existing->pivot;
+            if (in_array($pivot->status, ['taken', 'pending_approval'])) {
+                return back()->with('error', 'Opps! Anda sudah mengambil misi ini sebelumnya.');
+            } elseif ($pivot->status === 'approved') {
+                return back()->with('error', 'Opps! Anda sudah menyelesaikan misi ini.');
+            }
+            
+            // Jika ditolak, izinkan mengambil ulang dengan mereset bukti/catatan
+            if ($pivot->status === 'rejected') {
+                $user->missions()->updateExistingPivot($id, [
+                    'status' => 'taken', 
+                    'proof_url' => null, 
+                    'proof_content' => null, 
+                    'notes' => null
+                ]);
+                return back()->with('success', 'Misi berhasil diambil kembali! Silakan kirimkan bukti baru.');
+            }
+        }
+
         $user->missions()->attach($id, ['status' => 'taken']);
-        return back()->with('success', 'Misi berhasil diambil!');
+        return back()->with('success', 'Misi berhasil diambil! Selamat berjuang!');
     }
 
     public function submitProof(Request $request, $id)
     {
         $mission = \App\Models\Mission::findOrFail($id);
+        $user = auth()->user();
+        
+        $existing = $user->missions()->where('mission_id', $id)->first();
+        if (!$existing) {
+            return back()->with('error', 'Silakan ambil misi ini terlebih dahulu sebelum mengirimkan bukti.');
+        }
+
+        if ($existing->pivot->status === 'approved') {
+            return back()->with('error', 'Misi ini sudah selesai dan telah disetujui.');
+        }
         
         $rules = [];
         if ($mission->proof_type === 'file') {
@@ -28,7 +60,6 @@ class MissionController extends Controller
 
         $request->validate($rules);
 
-        $user = auth()->user();
         $updateData = ['status' => 'pending_approval'];
 
         if ($mission->proof_type === 'file' && $request->hasFile('proof_file')) {

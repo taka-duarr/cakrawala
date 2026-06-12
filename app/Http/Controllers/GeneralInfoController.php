@@ -140,49 +140,85 @@ class GeneralInfoController extends Controller
 
     public function notifications()
     {
-        $notifications = [
-            [
-                'title' => 'Misi Harian Tersedia!',
-                'body' => 'Misi "Hadir Tepat Waktu" siap diambil hari ini.',
-                'time' => '1 jam yang lalu',
-                'icon' => 'sparkles',
-                'category' => 'quest',
-                'is_unread' => true
-            ],
-            [
-                'title' => 'Poin Karakter Disetujui',
-                'body' => 'Poin misi "Membaca Buku" (+10 Pts) telah ditambahkan.',
-                'time' => '3 jam yang lalu',
-                'icon' => 'star',
-                'category' => 'point',
-                'is_unread' => true
-            ],
-            [
-                'title' => 'Lencana Baru Diraih!',
-                'body' => 'Selamat! Anda memperoleh lencana "Pemula Aktif".',
-                'time' => 'Kemarin',
-                'icon' => 'trophy',
-                'category' => 'achievement',
-                'is_unread' => true
-            ],
-            [
-                'title' => 'Klaim Hadiah Disetujui',
-                'body' => 'Klaim hadiah "Voucher Kantin Sehat" Anda telah disetujui oleh Wali Kelas.',
-                'time' => '2 hari yang lalu',
-                'icon' => 'gift',
-                'category' => 'reward',
-                'is_unread' => false
-            ],
-            [
-                'title' => 'Peringatan AI Early Warning',
-                'body' => 'Ada analisis baru perkembangan keaktifan kelas oleh sistem AI.',
-                'time' => '3 hari yang lalu',
-                'icon' => 'warning',
-                'category' => 'system',
-                'is_unread' => false
-            ]
-        ];
+        $user = auth()->user();
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        $notifications = \App\Models\Notification::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        if ($notifications->isEmpty()) {
+            $defaultNotifications = [
+                [
+                    'title' => 'Misi Harian Tersedia!',
+                    'body' => 'Misi "Hadir Tepat Waktu" siap diambil hari ini.',
+                    'category' => 'quest',
+                    'icon' => 'sparkles',
+                    'is_unread' => true,
+                    'created_at' => now()->subHour(),
+                ],
+                [
+                    'title' => 'Poin Karakter Disetujui',
+                    'body' => 'Poin misi "Membaca Buku" (+10 Pts) telah ditambahkan.',
+                    'category' => 'point',
+                    'icon' => 'star',
+                    'is_unread' => true,
+                    'created_at' => now()->subHours(3),
+                ],
+                [
+                    'title' => 'Lencana Baru Diraih!',
+                    'body' => 'Selamat! Anda memperoleh lencana "Pemula Aktif".',
+                    'category' => 'achievement',
+                    'icon' => 'trophy',
+                    'is_unread' => true,
+                    'created_at' => now()->subDay(),
+                ],
+                [
+                    'title' => 'Klaim Hadiah Disetujui',
+                    'body' => 'Klaim hadiah "Voucher Kantin Sehat" Anda telah disetujui oleh Wali Kelas.',
+                    'category' => 'reward',
+                    'icon' => 'gift',
+                    'is_unread' => false,
+                    'created_at' => now()->subDays(2),
+                ],
+                [
+                    'title' => 'Peringatan AI Early Warning',
+                    'body' => 'Ada analisis baru perkembangan keaktifan kelas oleh sistem AI.',
+                    'category' => 'system',
+                    'icon' => 'warning',
+                    'is_unread' => false,
+                    'created_at' => now()->subDays(3),
+                ]
+            ];
+
+            foreach ($defaultNotifications as $dn) {
+                \App\Models\Notification::create([
+                    'user_id' => $user->id,
+                    'title' => $dn['title'],
+                    'body' => $dn['body'],
+                    'category' => $dn['category'],
+                    'icon' => $dn['icon'],
+                    'is_unread' => $dn['is_unread'],
+                    'created_at' => $dn['created_at'],
+                ]);
+            }
+
+            $notifications = \App\Models\Notification::where('user_id', $user->id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
 
         return view('notifications', compact('notifications'));
+    }
+
+    public function markAllAsRead()
+    {
+        \App\Models\Notification::where('user_id', auth()->id())
+            ->where('is_unread', true)
+            ->update(['is_unread' => false]);
+
+        return redirect()->back()->with('success', 'Semua notifikasi berhasil ditandai sebagai dibaca.');
     }
 }

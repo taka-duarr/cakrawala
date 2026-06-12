@@ -30,8 +30,13 @@ class OrangTuaController extends Controller
             $cacheKey = 'ai_insight_student_' . $child->id;
             
             if ($request->has('trigger_ai') && $request->student_id == $child->id) {
-                $insight = $aiService->getStudentInsight($child);
-                Cache::put($cacheKey, $insight, 60 * 24); // Cache selama 1 hari
+                try {
+                    $insight = $aiService->getStudentInsight($child);
+                    Cache::put($cacheKey, $insight, 60 * 24); // Cache selama 1 hari
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error('AI Service Error (Parent Dashboard): ' . $e->getMessage());
+                    return redirect()->route('parent.dashboard')->with('error', 'Layanan AI untuk analisis anak sedang tidak tersedia saat ini.');
+                }
             }
             
             $aiInsights[$child->id] = Cache::get($cacheKey) ?? 'AI Insight belum digenerate. Klik tombol "Minta AI Insight" di bawah.';

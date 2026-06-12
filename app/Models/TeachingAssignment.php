@@ -13,12 +13,17 @@ class TeachingAssignment extends Model
         'academic_year_id',
         'semester_id',
         'is_active',
+        'day_of_week',
+        'start_time',
+        'end_time',
+        'total_meetings',
     ];
 
     protected function casts(): array
     {
         return [
             'is_active' => 'boolean',
+            'total_meetings' => 'integer',
         ];
     }
 
@@ -45,5 +50,24 @@ class TeachingAssignment extends Model
     public function semester()
     {
         return $this->belongsTo(Semester::class);
+    }
+
+    public function attendanceSessions()
+    {
+        return $this->hasMany(AttendanceSession::class);
+    }
+
+    public function getDayTranslation()
+    {
+        $translations = [
+            'Monday' => 'Senin',
+            'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',
+            'Friday' => 'Jumat',
+            'Saturday' => 'Sabtu',
+            'Sunday' => 'Minggu',
+        ];
+        return $translations[$this->day_of_week] ?? $this->day_of_week;
     }
 }

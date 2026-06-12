@@ -23,6 +23,9 @@
         <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.5/dist/js/uikit.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.5/dist/js/uikit-icons.min.js"></script>
 
+        <!-- SweetAlert2 CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
         <style>
             body {
                 font-family: 'Inter', sans-serif;
@@ -78,7 +81,12 @@
                         <div class="relative">
                             <a href="{{ route('notifications') }}" class="relative inline-block p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-50 transition" title="Lihat Notifikasi">
                                 <span uk-icon="icon: bell; ratio: 0.95"></span>
-                                <span class="absolute top-1 right-1 flex h-3 w-3 items-center justify-center rounded-full bg-rose-500 text-[6px] font-bold leading-none text-white ring-[1px] ring-white">3</span>
+                                @php
+                                    $unreadNotificationsCount = auth()->check() ? \App\Models\Notification::where('user_id', auth()->id())->where('is_unread', true)->count() : 0;
+                                @endphp
+                                @if($unreadNotificationsCount > 0)
+                                    <span class="absolute top-1 right-1 flex h-3 w-3 items-center justify-center rounded-full bg-rose-500 text-[6px] font-bold leading-none text-white ring-[1px] ring-white">{{ $unreadNotificationsCount }}</span>
+                                @endif
                             </a>
                         </div>
 
@@ -151,6 +159,13 @@
                                 <a href="{{ route('student.rewards') }}" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold {{ request()->routeIs('student.rewards') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                                     <span uk-icon="icon: cart; ratio: 0.8"></span>
                                     <span>Toko Hadiah</span>
+                                </a>
+                            @endif
+
+                            @if(auth()->user()->role && auth()->user()->role->name === 'guru')
+                                <a href="{{ route('guru.my-schedule') }}" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold {{ request()->routeIs('guru.my-schedule') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                                    <span uk-icon="icon: calendar; ratio: 0.8"></span>
+                                    <span>Jadwal Mengajar</span>
                                 </a>
                             @endif
 

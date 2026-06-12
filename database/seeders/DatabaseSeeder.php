@@ -7,8 +7,19 @@ use App\Models\AcademicYear;
 use App\Models\Semester;
 use App\Models\Jurusan;
 use App\Models\Classroom;
+use App\Models\Role;
+use App\Models\Mission;
+use App\Models\Reward;
+use App\Models\Achievement;
+use App\Models\Subject;
+use App\Models\TeachingAssignment;
+use App\Models\SchoolLocation;
+use App\Models\AttendanceSession;
+use App\Models\Material;
+use App\Models\Assignment;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Carbon\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,23 +30,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // ─── Roles ───────────────────────────────────────────────────
         $roles = ['admin', 'guru', 'walikelas', 'orangtua', 'siswa'];
         foreach ($roles as $role) {
-            \App\Models\Role::create([
+            Role::create([
                 'name' => $role,
                 'display_name' => ucfirst($role)
             ]);
         }
 
-        // Admin User
+        // ─── Admin User ──────────────────────────────────────────────
         User::factory()->create([
             'name' => 'Super Admin',
             'email' => 'admin@cakrawala.com',
             'role_id' => 1,
         ]);
 
-        // Guru User
-        User::factory()->create([
+        // ─── Guru User (Bapak Budi) ──────────────────────────────────
+        $guruBudi = User::factory()->create([
             'name' => 'Bapak Budi',
             'email' => 'guru@cakrawala.com',
             'role_id' => 2,
@@ -110,7 +122,7 @@ class DatabaseSeeder extends Seeder
             'classroom_id' => $class1->id,
         ]);
 
-        // Orang Tua User
+        // ─── Orang Tua User ───────────────────────────────────────────
         $orangTua = User::factory()->create([
             'name'    => 'Ibu Maria (Orang Tua Andi)',
             'email'   => 'orangtua@cakrawala.com',
@@ -122,8 +134,7 @@ class DatabaseSeeder extends Seeder
             'name'               => 'Andi Pratama',
             'email'              => 'siswa@cakrawala.com',
             'role_id'            => 5,
-            'points'    => 150,
-
+            'points'             => 150,
             'current_level'      => 'Berkembang',
             'classroom_id'       => $class1->id,
         ]);
@@ -141,8 +152,8 @@ class DatabaseSeeder extends Seeder
         ];
         foreach ($siswasClass1 as $i => $s) {
             User::factory()->create(array_merge($s, [
-                'email'      => 'siswa.xipa1.' . ($i+1) . '@cakrawala.com',
-                'role_id'    => 5,
+                'email'        => 'siswa.xipa1.' . ($i+1) . '@cakrawala.com',
+                'role_id'      => 5,
                 'classroom_id' => $class1->id,
             ]));
         }
@@ -207,8 +218,8 @@ class DatabaseSeeder extends Seeder
             ]));
         }
 
-        // Seeding Missions
-        \App\Models\Mission::create([
+        // ─── Missions ────────────────────────────────────────────────
+        Mission::create([
             'title' => 'Hadir Tepat Waktu',
             'description' => 'Datang ke sekolah sebelum pukul 07.00 WIB dengan seragam rapi.',
             'points_reward' => 15,
@@ -216,7 +227,7 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        \App\Models\Mission::create([
+        Mission::create([
             'title' => 'Membaca Buku 15 Menit',
             'description' => 'Membaca buku non-pelajaran di perpustakaan sekolah pada jam istirahat.',
             'points_reward' => 10,
@@ -224,7 +235,7 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        \App\Models\Mission::create([
+        Mission::create([
             'title' => 'Menjadi Imam Shalat / Pemimpin Doa',
             'description' => 'Memimpin doa bersama di kelas atau menjadi imam shalat berjamaah di musholla.',
             'points_reward' => 40,
@@ -232,7 +243,7 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        \App\Models\Mission::create([
+        Mission::create([
             'title' => 'Kerja Bakti Lingkungan Kelas',
             'description' => 'Berpartisipasi aktif membersihkan dan merapikan lingkungan kelas setelah pulang sekolah.',
             'points_reward' => 30,
@@ -240,7 +251,7 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        \App\Models\Mission::create([
+        Mission::create([
             'title' => 'Panitia Event Bulan Bahasa',
             'description' => 'Menjadi panitia aktif atau koordinator acara lomba Bulan Bahasa sekolah.',
             'points_reward' => 100,
@@ -248,8 +259,8 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        // Seeding Rewards
-        \App\Models\Reward::create([
+        // ─── Rewards ─────────────────────────────────────────────────
+        Reward::create([
             'name' => 'Voucher Kantin Sehat Rp10.000',
             'description' => 'Voucher makan siang gratis di kantin sehat sekolah.',
             'points_cost' => 50,
@@ -257,7 +268,7 @@ class DatabaseSeeder extends Seeder
             'is_available' => true,
         ]);
 
-        \App\Models\Reward::create([
+        Reward::create([
             'name' => 'Buku Catatan Eksklusif CAKRAWALA',
             'description' => 'Buku catatan berkualitas tinggi dengan sampul keras bermotif CAKRAWALA.',
             'points_cost' => 120,
@@ -265,7 +276,7 @@ class DatabaseSeeder extends Seeder
             'is_available' => true,
         ]);
 
-        \App\Models\Reward::create([
+        Reward::create([
             'name' => 'Merchandise Kaos Cakrawala',
             'description' => 'Kaos katun premium CAKRAWALA - Melampaui Nilai, Membentuk Masa Depan.',
             'points_cost' => 300,
@@ -273,7 +284,7 @@ class DatabaseSeeder extends Seeder
             'is_available' => true,
         ]);
 
-        \App\Models\Reward::create([
+        Reward::create([
             'name' => 'Sertifikat Karakter Unggul Sekolah',
             'description' => 'Sertifikat penghargaan resmi karakter siswa teladan yang disahkan oleh Kepala Sekolah.',
             'points_cost' => 500,
@@ -281,8 +292,8 @@ class DatabaseSeeder extends Seeder
             'is_available' => true,
         ]);
 
-        // Seeding Achievements
-        \App\Models\Achievement::create([
+        // ─── Achievements ────────────────────────────────────────────
+        Achievement::create([
             'title' => 'Pemula Aktif',
             'description' => 'Diberikan saat siswa berhasil menyelesaikan misi pertamanya.',
             'category' => 'karakter',
@@ -290,7 +301,7 @@ class DatabaseSeeder extends Seeder
             'icon' => 'award',
         ]);
 
-        \App\Models\Achievement::create([
+        Achievement::create([
             'title' => 'Bintang Akademik',
             'description' => 'Meraih minimal 300 poin kebaikan di sekolah.',
             'category' => 'akademik',
@@ -298,7 +309,7 @@ class DatabaseSeeder extends Seeder
             'icon' => 'book-open',
         ]);
 
-        \App\Models\Achievement::create([
+        Achievement::create([
             'title' => 'Siswa Teladan',
             'description' => 'Meraih minimal 1500 poin kebaikan dan tidak memiliki poin pelanggaran.',
             'category' => 'karakter',
@@ -306,7 +317,7 @@ class DatabaseSeeder extends Seeder
             'icon' => 'shield-check',
         ]);
 
-        \App\Models\Achievement::create([
+        Achievement::create([
             'title' => 'Volunteer Tangguh',
             'description' => 'Berpartisipasi aktif dalam kegiatan gotong royong dan sosial kelas.',
             'category' => 'sosial',
@@ -314,54 +325,175 @@ class DatabaseSeeder extends Seeder
             'icon' => 'users',
         ]);
 
-        // Seeding Mata Pelajaran
-        $matematika = \App\Models\Subject::create([
+        // ─── Subjects ────────────────────────────────────────────────
+        $matematika = Subject::create([
             'name' => 'Matematika',
             'code' => 'MTK',
             'description' => 'Pembelajaran numerasi, logika, dan pemecahan masalah.',
             'is_active' => true,
         ]);
 
-        $bahasaIndonesia = \App\Models\Subject::create([
+        $bahasaIndonesia = Subject::create([
             'name' => 'Bahasa Indonesia',
             'code' => 'BIN',
             'description' => 'Pembelajaran literasi, komunikasi, dan apresiasi bahasa.',
             'is_active' => true,
         ]);
 
-        $fisika = \App\Models\Subject::create([
+        $fisika = Subject::create([
             'name' => 'Fisika',
             'code' => 'FIS',
             'description' => 'Pembelajaran sains, pengukuran, dan fenomena alam.',
             'is_active' => true,
         ]);
 
-        // Seeding Penugasan Mengajar awal untuk fondasi absensi per mapel
-        \App\Models\TeachingAssignment::create([
-            'teacher_id' => 2,
-            'subject_id' => $matematika->id,
-            'classroom_id' => $class1->id,
-            'academic_year_id' => $ta2526->id,
-            'semester_id' => $semGanjil->id,
+        $kimia = Subject::create([
+            'name' => 'Kimia',
+            'code' => 'KIM',
+            'description' => 'Pembelajaran struktur materi, reaksi, dan ikatan kimia.',
             'is_active' => true,
         ]);
 
-        \App\Models\TeachingAssignment::create([
-            'teacher_id' => 2,
-            'subject_id' => $bahasaIndonesia->id,
-            'classroom_id' => $class2->id,
-            'academic_year_id' => $ta2526->id,
-            'semester_id' => $semGanjil->id,
+        $biologi = Subject::create([
+            'name' => 'Biologi',
+            'code' => 'BIO',
+            'description' => 'Pembelajaran makhluk hidup, ekosistem, dan genetika.',
             'is_active' => true,
         ]);
 
-        \App\Models\TeachingAssignment::create([
-            'teacher_id' => $waliKelas->id,
-            'subject_id' => $fisika->id,
-            'classroom_id' => $class1->id,
-            'academic_year_id' => $ta2526->id,
-            'semester_id' => $semGanjil->id,
+        $sejarah = Subject::create([
+            'name' => 'Sejarah',
+            'code' => 'SEJ',
+            'description' => 'Pembelajaran peristiwa masa lalu, peradaban, dan nilai kebangsaan.',
             'is_active' => true,
         ]);
+
+        $bahasaInggris = Subject::create([
+            'name' => 'Bahasa Inggris',
+            'code' => 'ING',
+            'description' => 'Pembelajaran komunikasi, tata bahasa, dan literasi global.',
+            'is_active' => true,
+        ]);
+
+        // ─── Additional Teachers ──────────────────────────────────────
+        $guruSusi = User::factory()->create([
+            'name' => 'Ibu Susi',
+            'email' => 'guru.susi@cakrawala.com',
+            'role_id' => 2,
+        ]);
+
+        $guruJono = User::factory()->create([
+            'name' => 'Bapak Jono',
+            'email' => 'guru.jono@cakrawala.com',
+            'role_id' => 2,
+        ]);
+
+        // ─── School Locations ──────────────────────────────────────────
+        $locGedungUtama = SchoolLocation::create([
+            'name' => 'Gedung Utama SMA Cakrawala',
+            'latitude' => -6.200000,
+            'longitude' => 106.816666,
+            'radius' => 100,
+            'is_active' => true,
+        ]);
+
+        $locLaboratorium = SchoolLocation::create([
+            'name' => 'Laboratorium Komputer',
+            'latitude' => -6.200100,
+            'longitude' => 106.816700,
+            'radius' => 50,
+            'is_active' => true,
+        ]);
+
+        // ─── Teaching Assignments Matrix (Overlap-free KBM Schedule) ──
+        $t1 = $guruBudi->id;
+        $t2 = $waliKelas->id;
+        $t3 = $guruSusi->id;
+        $t4 = $guruJono->id;
+
+        $taId = $ta2526->id;
+        $semId = $semGanjil->id;
+
+        $matrix = [
+            // MONDAY
+            ['day' => 'Monday', 'slot' => 1, 'class' => $class1->id, 'sub' => $matematika->id, 'teacher' => $t1],
+            ['day' => 'Monday', 'slot' => 1, 'class' => $class2->id, 'sub' => $bahasaIndonesia->id, 'teacher' => $t3],
+            ['day' => 'Monday', 'slot' => 1, 'class' => $class5->id, 'sub' => $bahasaInggris->id, 'teacher' => $t4],
+
+            ['day' => 'Monday', 'slot' => 2, 'class' => $class1->id, 'sub' => $fisika->id, 'teacher' => $t2],
+            ['day' => 'Monday', 'slot' => 2, 'class' => $class3->id, 'sub' => $matematika->id, 'teacher' => $t1],
+            ['day' => 'Monday', 'slot' => 2, 'class' => $class4->id, 'sub' => $bahasaIndonesia->id, 'teacher' => $t3],
+
+            ['day' => 'Monday', 'slot' => 3, 'class' => $class2->id, 'sub' => $sejarah->id, 'teacher' => $t1],
+            ['day' => 'Monday', 'slot' => 3, 'class' => $class3->id, 'sub' => $bahasaInggris->id, 'teacher' => $t4],
+            ['day' => 'Monday', 'slot' => 3, 'class' => $class5->id, 'sub' => $bahasaIndonesia->id, 'teacher' => $t3],
+
+            ['day' => 'Monday', 'slot' => 4, 'class' => $class4->id, 'sub' => $sejarah->id, 'teacher' => $t1],
+            ['day' => 'Monday', 'slot' => 4, 'class' => $class5->id, 'sub' => $fisika->id, 'teacher' => $t2],
+
+            // TUESDAY
+            ['day' => 'Tuesday', 'slot' => 1, 'class' => $class1->id, 'sub' => $kimia->id, 'teacher' => $t3],
+            ['day' => 'Tuesday', 'slot' => 1, 'class' => $class2->id, 'sub' => $fisika->id, 'teacher' => $t2],
+
+            ['day' => 'Tuesday', 'slot' => 2, 'class' => $class1->id, 'sub' => $bahasaIndonesia->id, 'teacher' => $t2],
+            ['day' => 'Tuesday', 'slot' => 2, 'class' => $class2->id, 'sub' => $kimia->id, 'teacher' => $t3],
+            ['day' => 'Tuesday', 'slot' => 2, 'class' => $class4->id, 'sub' => $matematika->id, 'teacher' => $t1],
+
+            ['day' => 'Tuesday', 'slot' => 3, 'class' => $class3->id, 'sub' => $biologi->id, 'teacher' => $t3],
+            ['day' => 'Tuesday', 'slot' => 3, 'class' => $class4->id, 'sub' => $fisika->id, 'teacher' => $t2],
+
+            ['day' => 'Tuesday', 'slot' => 4, 'class' => $class3->id, 'sub' => $fisika->id, 'teacher' => $t2],
+
+            // WEDNESDAY
+            ['day' => 'Wednesday', 'slot' => 1, 'class' => $class1->id, 'sub' => $biologi->id, 'teacher' => $t3],
+            ['day' => 'Wednesday', 'slot' => 1, 'class' => $class2->id, 'sub' => $bahasaInggris->id, 'teacher' => $t4],
+            ['day' => 'Wednesday', 'slot' => 1, 'class' => $class5->id, 'sub' => $sejarah->id, 'teacher' => $t1],
+
+            ['day' => 'Wednesday', 'slot' => 2, 'class' => $class3->id, 'sub' => $kimia->id, 'teacher' => $t3],
+            ['day' => 'Wednesday', 'slot' => 2, 'class' => $class4->id, 'sub' => $bahasaInggris->id, 'teacher' => $t4],
+
+            ['day' => 'Wednesday', 'slot' => 4, 'class' => $class5->id, 'sub' => $kimia->id, 'teacher' => $t3],
+
+            // THURSDAY
+            ['day' => 'Thursday', 'slot' => 1, 'class' => $class1->id, 'sub' => $bahasaInggris->id, 'teacher' => $t4],
+            ['day' => 'Thursday', 'slot' => 1, 'class' => $class2->id, 'sub' => $matematika->id, 'teacher' => $t1],
+            ['day' => 'Thursday', 'slot' => 1, 'class' => $class5->id, 'sub' => $bahasaIndonesia->id, 'teacher' => $t2],
+
+            ['day' => 'Thursday', 'slot' => 2, 'class' => $class3->id, 'sub' => $bahasaIndonesia->id, 'teacher' => $t2],
+            ['day' => 'Thursday', 'slot' => 2, 'class' => $class4->id, 'sub' => $kimia->id, 'teacher' => $t3],
+
+            ['day' => 'Thursday', 'slot' => 3, 'class' => $class5->id, 'sub' => $matematika->id, 'teacher' => $t1],
+
+            // FRIDAY
+            ['day' => 'Friday', 'slot' => 1, 'class' => $class1->id, 'sub' => $sejarah->id, 'teacher' => $t1],
+
+            ['day' => 'Friday', 'slot' => 2, 'class' => $class2->id, 'sub' => $biologi->id, 'teacher' => $t3],
+            ['day' => 'Friday', 'slot' => 2, 'class' => $class3->id, 'sub' => $sejarah->id, 'teacher' => $t1],
+
+            ['day' => 'Friday', 'slot' => 3, 'class' => $class4->id, 'sub' => $biologi->id, 'teacher' => $t3],
+
+            ['day' => 'Friday', 'slot' => 4, 'class' => $class5->id, 'sub' => $biologi->id, 'teacher' => $t3],
+        ];
+
+        $slotTimes = [
+            1 => ['start' => '07:30:00', 'end' => '09:00:00'],
+            2 => ['start' => '09:15:00', 'end' => '10:45:00'],
+            3 => ['start' => '11:00:00', 'end' => '12:30:00'],
+            4 => ['start' => '13:00:00', 'end' => '14:30:00'],
+        ];
+
+        foreach ($matrix as $data) {
+            TeachingAssignment::create([
+                'teacher_id'       => $data['teacher'],
+                'subject_id'       => $data['sub'],
+                'classroom_id'     => $data['class'],
+                'academic_year_id' => $taId,
+                'semester_id'      => $semId,
+                'is_active'        => true,
+                'day_of_week'      => $data['day'],
+                'start_time'       => $slotTimes[$data['slot']]['start'],
+                'end_time'         => $slotTimes[$data['slot']]['end'],
+            ]);
+        }
     }
 }

@@ -143,7 +143,7 @@
                                             'pengembangan_diri' => 'bg-emerald-50 text-emerald-700 border-emerald-100/80',
                                             'sekolah' => 'bg-amber-50 text-amber-700 border-amber-100/80',
                                             'penghargaan' => 'bg-violet-50 text-violet-700 border-violet-100/80',
-                                            default => 'bg-slate-50 text-slate-600 border-slate-150',
+                                            default => 'bg-slate-50 text-slate-600 border-slate-200',
                                         };
                                     @endphp
                                     <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border capitalize {{ $catColors }}">
@@ -228,7 +228,7 @@
 
                                             <div class="flex items-center space-x-2 pt-2">
                                                 <input type="checkbox" name="is_available" id="is_available_{{ $reward->id }}" value="1" {{ $reward->is_available ? 'checked' : '' }}
-                                                    class="w-4 h-4 text-indigo-600 border-slate-250 rounded focus:ring-indigo-500">
+                                                    class="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500">
                                                 <label for="is_available_{{ $reward->id }}" class="text-xs font-semibold text-slate-700 select-none">Tersedia untuk ditukarkan</label>
                                             </div>
 

@@ -32,11 +32,16 @@ class StudentController extends Controller
         $cacheKeyQuest = 'ai_quest_rec_student_' . $user->id;
 
         if ($request->has('trigger_ai')) {
-            $aiInsight = $aiService->getStudentInsight($user);
-            $aiQuestRec = $aiService->getQuestRecommendation($user);
-            
-            \Illuminate\Support\Facades\Cache::put($cacheKeyInsight, $aiInsight, 60 * 24);
-            \Illuminate\Support\Facades\Cache::put($cacheKeyQuest, $aiQuestRec, 60 * 24);
+            try {
+                $aiInsight = $aiService->getStudentInsight($user);
+                $aiQuestRec = $aiService->getQuestRecommendation($user);
+                
+                \Illuminate\Support\Facades\Cache::put($cacheKeyInsight, $aiInsight, 60 * 24);
+                \Illuminate\Support\Facades\Cache::put($cacheKeyQuest, $aiQuestRec, 60 * 24);
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('AI Service Error (Student Dashboard): ' . $e->getMessage());
+                return redirect()->route('student.dashboard')->with('error', 'Layanan AI sedang sibuk atau limit kuota tercapai. Silakan coba beberapa saat lagi.');
+            }
         } else {
             $aiInsight = \Illuminate\Support\Facades\Cache::get($cacheKeyInsight);
             $aiQuestRec = \Illuminate\Support\Facades\Cache::get($cacheKeyQuest);
@@ -109,6 +114,34 @@ class StudentController extends Controller
             ->get()
             ->keyBy('id');
 
-        return view('student.class_detail', compact('user', 'assignment', 'classmates', 'subjectMissions', 'takenMissions'));
+        // Mengambil Sesi Presensi & KBM
+        $sessions = \App\Models\AttendanceSession::with(['materials', 'assignments'])
+            ->where('teaching_assignment_id', $assignment->id)
+            ->orderBy('meeting_number')
+            ->get();
+
+        // Presensi Siswa
+        $myAttendances = \App\Models\Attendance::whereIn('attendance_session_id', $sessions->pluck('id'))
+            ->where('student_id', $user->id)
+            ->get()
+            ->keyBy('attendance_session_id');
+
+        // Pengumpulan Tugas Siswa
+        $assignmentIds = $sessions->flatMap(fn($s) => $s->assignments->pluck('id'))->unique();
+        $assignmentSubmissions = \App\Models\AssignmentSubmission::whereIn('assignment_id', $assignmentIds)
+            ->where('student_id', $user->id)
+            ->get()
+            ->keyBy('assignment_id');
+
+        return view('student.class_detail', compact(
+            'user', 
+            'assignment', 
+            'classmates', 
+            'subjectMissions', 
+            'takenMissions', 
+            'sessions', 
+            'myAttendances', 
+            'assignmentSubmissions'
+        ));
     }
 }

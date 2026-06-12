@@ -48,7 +48,7 @@
             <!-- Stats Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm flex items-center p-6 soft-glow-amber">
-                    <div class="p-4 bg-amber-100 text-amber-650 rounded-xl mr-4">
+                    <div class="p-4 bg-amber-100 text-amber-600 rounded-xl mr-4">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
                     <div>
@@ -67,34 +67,61 @@
                 </div>
             </div>
 
-            <!-- Kelas & Mapel yang Diampu -->
+            <!-- Jadwal Mengajar Hari Ini -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 soft-glow-indigo">
-                <h3 class="text-lg font-bold text-slate-800 mb-2">Mata Pelajaran & Kelas yang Diampu</h3>
-                <p class="text-xs text-slate-400 mb-4 font-medium">Daftar kelas akademik dan mata pelajaran yang ditugaskan kepada Anda oleh Admin.</p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    @forelse($assignments as $assign)
-                    <a href="{{ route('guru.assignments.detail', $assign->id) }}" class="bg-slate-50/70 border border-slate-100 hover:border-indigo-200 rounded-xl p-4 flex flex-col justify-between hover:shadow-md transition group">
-                        <div>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="bg-indigo-50 text-indigo-700 group-hover:bg-indigo-600 group-hover:text-white text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider transition-colors">
-                                    {{ $assign->classroom->name }}
-                                </span>
-                                <span class="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">
-                                    {{ $assign->academicYear->name ?? '-' }}
-                                </span>
-                            </div>
-                            <h4 class="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">{{ $assign->subject->name }}</h4>
-                            <p class="text-[10px] text-slate-400 font-medium mt-1">Kode: {{ $assign->subject->code ?? '-' }} · Semester {{ $assign->semester->name ?? '-' }}</p>
-                        </div>
-                        <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-[9px] text-slate-500 font-semibold">
-                            <span>Siswa terdaftar:</span>
-                            <span class="font-bold text-slate-700 bg-white px-2 py-0.5 rounded-md border border-slate-100">{{ \App\Models\User::where('role_id', 5)->where('classroom_id', $assign->classroom_id)->count() }} Siswa</span>
-                        </div>
-                    </a>
-                    @empty
-                    <div class="col-span-3 text-center py-6 text-slate-400 text-xs font-semibold bg-slate-50/50 rounded-xl border border-dashed border-slate-150">
-                        ⚠️ Anda belum memiliki penugasan mengajar aktif. Silakan hubungi Admin.
+                <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-800 mb-1">Jadwal Mengajar Hari Ini</h3>
+                        @php
+                            $daysInd = [
+                                'Monday' => 'Senin',
+                                'Tuesday' => 'Selasa',
+                                'Wednesday' => 'Rabu',
+                                'Thursday' => 'Kamis',
+                                'Friday' => 'Jumat',
+                                'Saturday' => 'Sabtu',
+                                'Sunday' => 'Minggu'
+                            ];
+                            $todayEng = \Carbon\Carbon::now()->format('l');
+                            $todayInd = $daysInd[$todayEng] ?? $todayEng;
+                        @endphp
+                        <p class="text-xs text-slate-400 font-medium">Hari ini: <span class="font-bold text-indigo-700">{{ $todayInd }}</span>. Kelola presensi kelas langsung dari jadwal.</p>
                     </div>
+                    <div>
+                        <a href="{{ route('guru.my-schedule') }}" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center space-x-2 border border-indigo-100 shadow-sm shadow-indigo-50">
+                            <span uk-icon="icon: calendar; ratio: 0.8"></span>
+                            <span>Lihat Semua Jadwal</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    @php
+                        $todayAssigns = $assignments->filter(fn($a) => $a->day_of_week === $todayEng)->sortBy('start_time');
+                    @endphp
+                    @forelse($todayAssigns as $assign)
+                        <a href="{{ route('guru.assignments.detail', $assign->id) }}" class="bg-indigo-50/30 border border-indigo-100/60 hover:border-indigo-300 rounded-xl p-4 flex flex-col justify-between hover:shadow-md transition group">
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="bg-indigo-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">
+                                        {{ $assign->classroom->name }}
+                                    </span>
+                                    <span class="text-[10px] font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md">
+                                        {{ $assign->start_time ? substr($assign->start_time, 0, 5) . ' - ' . substr($assign->end_time, 0, 5) : '00:00' }}
+                                    </span>
+                                </div>
+                                <h4 class="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">{{ $assign->subject->name }}</h4>
+                                <p class="text-[10px] text-slate-400 font-medium mt-1">Kode: {{ $assign->subject->code ?? '-' }} · Semester {{ $assign->semester->name ?? '-' }}</p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-[9px] text-slate-500 font-semibold">
+                                <span>Siswa terdaftar:</span>
+                                <span class="font-bold text-slate-700 bg-white px-2 py-0.5 rounded-md border border-slate-100">{{ \App\Models\User::where('role_id', 5)->where('classroom_id', $assign->classroom_id)->count() }} Siswa</span>
+                            </div>
+                        </a>
+                    @empty
+                        <div class="col-span-3 text-center py-8 text-slate-400 text-xs font-semibold bg-slate-50/40 rounded-2xl border border-dashed border-slate-200">
+                            Tidak ada jadwal mengajar untuk hari ini ({{ $todayInd }}).
+                        </div>
                     @endforelse
                 </div>
             </div>
@@ -157,7 +184,7 @@
                                         data-proof-type="{{ $mission->proof_type }}"
                                         data-proof-url="{{ $mission->pivot->proof_url }}"
                                         data-proof-content="{{ $mission->pivot->proof_content }}"
-                                        class="validate-mission-btn px-3.5 py-1.5 bg-indigo-650 hover:bg-indigo-700 text-white text-[10px] font-bold rounded-xl transition shadow-sm hover:shadow-md inline-flex items-center space-x-1"
+                                        class="validate-mission-btn px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-bold rounded-xl transition shadow-sm hover:shadow-md inline-flex items-center space-x-1"
                                     >
                                         <span>Periksa Bukti</span>
                                         <span uk-icon="icon: sign-in; ratio: 0.75"></span>
@@ -237,7 +264,7 @@
                                         <button 
                                             data-user-id="{{ $siswa->id }}"
                                             data-student-name="{{ $siswa->name }}"
-                                            class="manage-badges-btn bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-150 text-[10px] font-bold px-2.5 py-1.5 rounded-xl transition flex items-center space-x-1"
+                                            class="manage-badges-btn bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-100 text-[10px] font-bold px-2.5 py-1.5 rounded-xl transition flex items-center space-x-1"
                                         >
                                             <span uk-icon="icon: star; ratio: 0.65"></span>
                                             <span>Lencana</span>
@@ -397,11 +424,12 @@
             <form action="{{ route('guru.points.adjust') }}" method="POST" class="space-y-4">
                 @csrf
                 <input type="hidden" name="user_id" id="adj-user-id">
+                <input type="hidden" name="type" id="adj-type" value="kebaikan">
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-500 mb-1">Operasi</label>
-                        <select name="operation" required class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
+                        <select name="operation" id="adj-operation" required class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
                             <option value="add">Tambah Poin (+)</option>
                             <option value="subtract">Kurang Poin (-)</option>
                         </select>
@@ -472,6 +500,8 @@
 
     <!-- Javascript bindings for modals -->
     <script>
+
+
         document.addEventListener('DOMContentLoaded', () => {
             // Mission Validation Modal Populator
             document.querySelectorAll('.validate-mission-btn').forEach(btn => {
@@ -497,7 +527,7 @@
                         proofHtml = '<span class="text-xs text-slate-500 font-medium">Tidak memerlukan bukti berkas/link.</span>';
                     } else {
                         if (proofUrl) {
-                            proofHtml += `<div class="mb-2"><span class="text-xs font-bold text-slate-400 block">Tautan Bukti:</span> <a href="${proofUrl}" target="_blank" class="text-xs font-semibold text-indigo-650 hover:underline inline-flex items-center space-x-1 mt-1"><span>Buka Tautan</span> <span uk-icon="icon: link; ratio: 0.8"></span></a></div>`;
+                            proofHtml += `<div class="mb-2"><span class="text-xs font-bold text-slate-400 block">Tautan Bukti:</span> <a href="${proofUrl}" target="_blank" class="text-xs font-semibold text-indigo-600 hover:underline inline-flex items-center space-x-1 mt-1"><span>Buka Tautan</span> <span uk-icon="icon: link; ratio: 0.8"></span></a></div>`;
                         }
                         if (proofContent) {
                             proofHtml += `<div><span class="text-xs font-bold text-slate-400 block">Konten Bukti:</span> <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-700 whitespace-pre-line font-mono mt-1">${proofContent}</div></div>`;
@@ -520,10 +550,20 @@
 
                     document.getElementById('adj-user-id').value = userId;
                     document.getElementById('adj-student-name').innerText = studentName;
+                    document.getElementById('adj-operation').value = 'add';
+                    document.getElementById('adj-type').value = 'kebaikan';
 
                     UIkit.modal('#modal-adjust-points').show();
                 });
             });
+
+            const adjOperation = document.getElementById('adj-operation');
+            const adjType = document.getElementById('adj-type');
+            if (adjOperation && adjType) {
+                adjOperation.addEventListener('change', function() {
+                    adjType.value = this.value === 'add' ? 'kebaikan' : 'pelanggaran';
+                });
+            }
 
             // Manage Achievements Modal Populator
             document.querySelectorAll('.manage-badges-btn').forEach(btn => {

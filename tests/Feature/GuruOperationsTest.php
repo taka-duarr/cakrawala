@@ -281,4 +281,57 @@ class GuruOperationsTest extends TestCase
         $response->assertSee('Kimia Organik');
         $response->assertSee('Class X-B');
     }
+
+    public function test_guru_opening_attendance_session_sends_notification_to_students()
+    {
+        $classroom = \App\Models\Classroom::create([
+            'name' => 'Class X-Notification',
+            'points' => 100,
+        ]);
+
+        $this->student->update(['classroom_id' => $classroom->id]);
+
+        $subject = \App\Models\Subject::create([
+            'name' => 'Biologi',
+            'code' => 'BIO-01',
+        ]);
+
+        $academicYear = \App\Models\AcademicYear::create([
+            'name' => '2025/2026',
+            'is_active' => true,
+        ]);
+
+        $semester = \App\Models\Semester::create([
+            'academic_year_id' => $academicYear->id,
+            'name' => 'Ganjil',
+            'is_active' => true,
+        ]);
+
+        $assignment = \App\Models\TeachingAssignment::create([
+            'teacher_id' => $this->guru->id,
+            'subject_id' => $subject->id,
+            'classroom_id' => $classroom->id,
+            'academic_year_id' => $academicYear->id,
+            'semester_id' => $semester->id,
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($this->guru)
+            ->post(route('guru.sessions.store', $assignment->id), [
+                'session_date' => now()->toDateString(),
+                'deadline' => now()->addHours(2)->format('Y-m-d\TH:i'),
+                'mode' => 'button_location',
+                'school_location_id' => null,
+            ]);
+
+        $response->assertStatus(302);
+        
+        $this->assertDatabaseHas('notifications', [
+            'user_id' => $this->student->id,
+            'title' => 'Presensi Kelas Dibuka!',
+            'category' => 'attendance',
+            'icon' => 'bell',
+            'is_unread' => true,
+        ]);
+    }
 }

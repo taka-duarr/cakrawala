@@ -31,24 +31,30 @@ class RewardController extends Controller
             return back()->with('error', 'Hadiah tidak tersedia saat ini.');
         }
 
-        if ($user->points < $reward->points_cost) {
-            return back()->with('error', 'Poin Kebaikan Anda tidak cukup untuk menukarkan hadiah ini.');
+        // Jalankan transaksi dengan row-level locking untuk mencegah race condition
+        try {
+            DB::transaction(function () use ($user, $reward, $pointService) {
+                $lockedUser = User::lockForUpdate()->findOrFail($user->id);
+
+                if ($lockedUser->points < $reward->points_cost) {
+                    throw new \Exception('Poin Kebaikan Anda tidak cukup untuk menukarkan hadiah ini.');
+                }
+
+                // Potong poin kebaikan (menggunakan nilai negatif pada addPoints)
+                $pointService->addPoints(
+                    $lockedUser, 
+                    -$reward->points_cost, 
+                    'kebaikan', 
+                    'Penukaran Hadiah', 
+                    'Menukarkan poin dengan: ' . $reward->name
+                );
+
+                // Hubungkan dengan status pending_approval
+                $lockedUser->claimedRewards()->attach($reward->id, ['status' => 'pending_approval']);
+            });
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
         }
-
-        // Jalankan transaksi
-        DB::transaction(function () use ($user, $reward, $pointService) {
-            // Potong poin kebaikan (menggunakan nilai negatif pada addPoints)
-            $pointService->addPoints(
-                $user, 
-                -$reward->points_cost, 
-                'kebaikan', 
-                'Penukaran Hadiah', 
-                'Menukarkan poin dengan: ' . $reward->name
-            );
-
-            // Hubungkan dengan status pending_approval
-            $user->claimedRewards()->attach($reward->id, ['status' => 'pending_approval']);
-        });
 
         return back()->with('success', 'Klaim hadiah berhasil diajukan! Silakan hubungi Wali Kelas untuk penyerahan.');
     }

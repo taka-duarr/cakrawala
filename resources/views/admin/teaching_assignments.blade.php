@@ -97,6 +97,8 @@
                                 <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Guru</th>
                                 <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Mapel</th>
                                 <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Kelas</th>
+                                <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Hari & Jam</th>
+                                <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Pertemuan</th>
                                 <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Periode</th>
                                 <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Status</th>
                                 <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Aksi</th>
@@ -114,6 +116,14 @@
                                         <div class="text-[10px] text-slate-400 font-semibold mt-0.5">{{ $assignment->subject->code ?? 'Tanpa kode' }}</div>
                                     </td>
                                     <td class="px-6 py-4 text-xs font-semibold text-slate-600">{{ $assignment->classroom->name ?? '-' }}</td>
+                                    <td class="px-6 py-4 text-xs font-semibold text-slate-600">
+                                        @if($assignment->day_of_week)
+                                            {{ $assignment->getDayTranslation() }} ({{ substr($assignment->start_time, 0, 5) }} - {{ substr($assignment->end_time, 0, 5) }})
+                                        @else
+                                            <span class="text-slate-400 font-medium">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 text-center text-xs font-bold text-slate-600 bg-slate-50/40">{{ $assignment->total_meetings ?? 16 }}</td>
                                     <td class="px-6 py-4">
                                         <div class="text-xs font-semibold text-slate-600">{{ $assignment->academicYear->name ?? 'Tanpa tahun ajaran' }}</div>
                                         <div class="text-[10px] text-slate-400 font-semibold mt-0.5">{{ $assignment->semester->name ?? 'Tanpa semester' }}</div>
@@ -132,7 +142,11 @@
                                                 data-classroom-id="{{ $assignment->classroom_id }}"
                                                 data-academic-year-id="{{ $assignment->academic_year_id }}"
                                                 data-semester-id="{{ $assignment->semester_id }}"
+                                                data-day-of-week="{{ $assignment->day_of_week }}"
+                                                data-start-time="{{ $assignment->start_time }}"
+                                                data-end-time="{{ $assignment->end_time }}"
                                                 data-active="{{ $assignment->is_active ? '1' : '0' }}"
+                                                data-total-meetings="{{ $assignment->total_meetings ?? 16 }}"
                                                 class="edit-assignment-btn p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition">
                                                 <span uk-icon="icon: file-edit; ratio: 0.8"></span>
                                             </button>
@@ -147,7 +161,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center py-12 text-slate-400 text-xs font-medium">
+                                    <td colspan="8" class="text-center py-12 text-slate-400 text-xs font-medium">
                                         @if(request()->hasAny(['teacher_id', 'subject_id', 'classroom_id', 'academic_year_id', 'semester_id']))
                                             Tidak ada penugasan yang cocok dengan filter saat ini. Klik Reset untuk melihat semua penugasan.
                                         @else
@@ -220,6 +234,32 @@
                     </div>
                 </div>
 
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">Hari</label>
+                        <select name="day_of_week" class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="">-- Pilih Hari --</option>
+                            <option value="Monday">Senin</option>
+                            <option value="Tuesday">Selasa</option>
+                            <option value="Wednesday">Rabu</option>
+                            <option value="Thursday">Kamis</option>
+                            <option value="Friday">Jumat</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">Jam Mulai</label>
+                        <input type="time" name="start_time" class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">Jam Selesai</label>
+                        <input type="time" name="end_time" class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">Jumlah Pertemuan</label>
+                        <input type="number" name="total_meetings" value="16" min="1" max="40" required class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                </div>
+
                 <label class="inline-flex items-center space-x-2 text-xs font-semibold text-slate-600">
                     <input type="checkbox" name="is_active" value="1" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
                     <span>Aktif</span>
@@ -277,6 +317,32 @@
                     </div>
                 </div>
 
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">Hari</label>
+                        <select id="edit-day-of-week" name="day_of_week" class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="">-- Pilih Hari --</option>
+                            <option value="Monday">Senin</option>
+                            <option value="Tuesday">Selasa</option>
+                            <option value="Wednesday">Rabu</option>
+                            <option value="Thursday">Kamis</option>
+                            <option value="Friday">Jumat</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">Jam Mulai</label>
+                        <input type="time" id="edit-start-time" name="start_time" class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">Jam Selesai</label>
+                        <input type="time" id="edit-end-time" name="end_time" class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">Jumlah Pertemuan</label>
+                        <input type="number" id="edit-total-meetings" name="total_meetings" min="1" max="40" required class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                </div>
+
                 <label class="inline-flex items-center space-x-2 text-xs font-semibold text-slate-600">
                     <input type="checkbox" id="edit-assignment-active" name="is_active" value="1" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
                     <span>Aktif</span>
@@ -300,6 +366,10 @@
                     document.getElementById('edit-classroom-id').value = this.dataset.classroomId || '';
                     document.getElementById('edit-academic-year-id').value = this.dataset.academicYearId || '';
                     document.getElementById('edit-semester-id').value = this.dataset.semesterId || '';
+                    document.getElementById('edit-day-of-week').value = this.dataset.dayOfWeek || '';
+                    document.getElementById('edit-start-time').value = this.dataset.startTime ? this.dataset.startTime.substring(0, 5) : '';
+                    document.getElementById('edit-end-time').value = this.dataset.endTime ? this.dataset.endTime.substring(0, 5) : '';
+                    document.getElementById('edit-total-meetings').value = this.dataset.totalMeetings || '16';
                     document.getElementById('edit-assignment-active').checked = this.dataset.active === '1';
                     document.getElementById('form-edit-assignment').action = `/admin/teaching-assignments/${this.dataset.id}/update`;
                     UIkit.modal('#modal-edit-assignment').show();

@@ -75,7 +75,9 @@
                     <p class="text-sm text-slate-400">Analisis AI belum dijalankan. Klik tombol di atas untuk menganalisis tingkat kerawanan kelas.</p>
                 </div>
                 @endif
-                      <!-- Pengajuan Penukaran Poin (Siswa Kelas) -->
+            </div>
+
+            <!-- Pengajuan Penukaran Poin (Siswa Kelas) -->
             <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden soft-glow-indigo">
                 <div class="p-6 border-b border-slate-100 flex justify-between items-center">
                     <div>

@@ -53,6 +53,19 @@ class GuruController extends Controller
         return view('guru.dashboard', compact('pendingMissions', 'siswas', 'achievements', 'assignments'));
     }
 
+    public function mySchedule()
+    {
+        $teacher = auth()->user();
+
+        // Ambil penugasan mengajar guru yang aktif beserta kelas dan mata pelajarannya
+        $assignments = \App\Models\TeachingAssignment::with(['classroom.jurusan', 'subject', 'academicYear', 'semester'])
+            ->where('teacher_id', $teacher->id)
+            ->where('is_active', true)
+            ->get();
+
+        return view('guru.my_schedule', compact('assignments'));
+    }
+
     public function storeMission(Request $request)
     {
         $request->validate([
@@ -162,6 +175,31 @@ class GuruController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('guru.assignment_detail', compact('assignment', 'students'));
+        $sessions = \App\Models\AttendanceSession::with([
+            'materials',
+            'assignments',
+            'attendances.student'
+        ])
+        ->withCount(['attendances as present_count' => fn($q) => $q->where('status', 'hadir')])
+        ->where('teaching_assignment_id', $assignment->id)
+        ->orderBy('meeting_number')
+        ->get();
+
+        $locations = \App\Models\SchoolLocation::where('is_active', true)->get();
+
+        $sessionIds = $sessions->pluck('id');
+        $assignmentSubmissions = \App\Models\AssignmentSubmission::with(['assignment', 'student'])
+            ->whereHas('assignment', fn($q) => $q->whereIn('attendance_session_id', $sessionIds))
+            ->where('status', 'pending')
+            ->latest()
+            ->get();
+
+        return view('guru.assignment_detail', compact(
+            'assignment', 
+            'students', 
+            'sessions', 
+            'locations', 
+            'assignmentSubmissions'
+        ));
     }
 }

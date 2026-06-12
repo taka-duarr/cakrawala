@@ -90,16 +90,30 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/point-adjust', [AdminController::class, 'pointAdjustIndex'])->name('point-adjust.index');
     Route::post('/point-adjust/store', [AdminController::class, 'pointAdjustStore'])->name('point-adjust.store');
     Route::get('/point-audit', [AdminController::class, 'pointAuditIndex'])->name('point-audit.index');
+
+    // School Locations CRUD
+    Route::get('/school-locations', [\App\Http\Controllers\SchoolLocationController::class, 'index'])->name('school-locations.index');
+    Route::post('/school-locations/store', [\App\Http\Controllers\SchoolLocationController::class, 'store'])->name('school-locations.store');
+    Route::put('/school-locations/{id}/update', [\App\Http\Controllers\SchoolLocationController::class, 'update'])->name('school-locations.update');
+    Route::delete('/school-locations/{id}/destroy', [\App\Http\Controllers\SchoolLocationController::class, 'destroy'])->name('school-locations.destroy');
 });
 
 Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(function () {
     Route::get('/dashboard', [GuruController::class, 'index'])->name('dashboard');
+    Route::get('/my-schedule', [GuruController::class, 'mySchedule'])->name('my-schedule');
     Route::post('/mission/approve/{userId}/{missionId}', [\App\Http\Controllers\MissionController::class, 'approveMission'])->name('mission.approve');
     Route::post('/missions/store', [GuruController::class, 'storeMission'])->name('missions.store');
     Route::post('/missions/validate', [GuruController::class, 'validateMission'])->name('missions.validate');
     Route::post('/points/adjust', [GuruController::class, 'adjustPoints'])->name('points.adjust');
     Route::post('/badges/toggle', [GuruController::class, 'toggleBadge'])->name('badges.toggle');
     Route::get('/assignments/{id}', [GuruController::class, 'assignmentDetail'])->name('assignments.detail');
+
+    // Attendance, Materials, and Assignments management
+    Route::post('/assignments/{id}/sessions/store', [\App\Http\Controllers\AttendanceController::class, 'storeSession'])->name('sessions.store');
+    Route::post('/sessions/{id}/close', [\App\Http\Controllers\AttendanceController::class, 'closeSession'])->name('sessions.close');
+    Route::post('/sessions/{id}/materials/store', [\App\Http\Controllers\AttendanceController::class, 'addMaterial'])->name('materials.store');
+    Route::post('/sessions/{id}/assignments/store', [\App\Http\Controllers\AttendanceController::class, 'addAssignment'])->name('assignments.store');
+    Route::post('/submissions/{id}/grade', [\App\Http\Controllers\AttendanceController::class, 'gradeSubmission'])->name('submissions.grade');
 });
 
 Route::middleware(['auth', 'role:walikelas'])->prefix('walikelas')->name('walikelas.')->group(function () {
@@ -119,9 +133,15 @@ Route::middleware(['auth', 'role:siswa'])->prefix('student')->name('student.')->
     Route::post('/rewards/{id}/claim', [\App\Http\Controllers\RewardController::class, 'claim'])->name('rewards.claim');
     Route::get('/my-classes', [StudentController::class, 'myClasses'])->name('my-classes');
     Route::get('/my-classes/{id}', [StudentController::class, 'classDetail'])->name('class-detail');
+
+    // Geolocated Attendance check-in and assignments
+    Route::post('/sessions/{id}/check-in', [\App\Http\Controllers\AttendanceController::class, 'checkIn'])->name('sessions.check-in');
+    Route::post('/attendance/scan/{token}/check-in', [\App\Http\Controllers\AttendanceController::class, 'checkInScan'])->name('sessions.scan-check-in');
+    Route::post('/assignments/{id}/submit', [\App\Http\Controllers\AttendanceController::class, 'submitAssignment'])->name('assignments.submit');
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('/student/attendance/scan/{token}', [\App\Http\Controllers\AttendanceController::class, 'scanPage'])->name('student.sessions.scan-page');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -131,6 +151,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/announcements', [\App\Http\Controllers\GeneralInfoController::class, 'announcements'])->name('announcements');
     Route::get('/help', [\App\Http\Controllers\GeneralInfoController::class, 'help'])->name('help');
     Route::get('/notifications', [\App\Http\Controllers\GeneralInfoController::class, 'notifications'])->name('notifications');
+    Route::post('/notifications/mark-all-read', [\App\Http\Controllers\GeneralInfoController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
 });
 
 require __DIR__.'/auth.php';
