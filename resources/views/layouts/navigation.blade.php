@@ -81,9 +81,15 @@
                             <span uk-icon="icon: cart; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Toko Hadiah</span>
                         </a>
+                        <a href="{{ route('student.dompet') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('student.dompet') ? 'bg-violet-600 text-white shadow-md shadow-violet-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Dompet Poin' : 'delay: 999999'">
+                            <span uk-icon="icon: credit-card; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Dompet Poin</span>
+                        </a>
                     @endif
 
-                    <!-- Guru-specific Links -->
+
                     @if($roleName === 'guru')
                         <a href="{{ route('guru.my-schedule') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('guru.my-schedule') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
@@ -93,8 +99,63 @@
                         </a>
                     @endif
 
+                    <!-- Toko-specific Links -->
+                    @if($roleName === 'toko')
+                        <a href="{{ route('toko.dashboard') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('toko.dashboard') ? 'bg-violet-600 text-white shadow-md shadow-violet-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Kasir' : 'delay: 999999'">
+                            <span uk-icon="icon: cart; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Kasir</span>
+                        </a>
+                        <a href="{{ route('toko.katalog') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('toko.katalog') ? 'bg-violet-600 text-white shadow-md shadow-violet-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Kelola Katalog' : 'delay: 999999'">
+                            <span uk-icon="icon: list; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Kelola Katalog</span>
+                        </a>
+                        <a href="{{ route('toko.withdrawals.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('toko.withdrawals.index') ? 'bg-violet-600 text-white shadow-md shadow-violet-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Penarikan Dana' : 'delay: 999999'">
+                            <span uk-icon="icon: credit-card; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Penarikan Dana</span>
+                        </a>
+                    @endif
+
                     <!-- Admin-specific Links -->
                     @if($roleName === 'admin')
+                        <!-- Data Akademik Group -->
+                        <div x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms class="pt-2">
+                            <span class="block text-[9px] text-slate-300 font-bold uppercase tracking-wider mb-2 px-3.5">Data Akademik</span>
+                        </div>
+                        <a href="{{ route('admin.academic-years.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.academic-years.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Tahun Ajaran & Semester' : 'delay: 999999'">
+                            <span uk-icon="icon: calendar; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Tahun Ajaran</span>
+                        </a>
+                        <a href="{{ route('admin.jurusans.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.jurusans.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Jurusan' : 'delay: 999999'">
+                            <span uk-icon="icon: tag; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Jurusan</span>
+                        </a>
+                        <a href="{{ route('admin.classrooms.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.classrooms.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Kelola Kelas' : 'delay: 999999'">
+                            <span uk-icon="icon: grid; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Kelola Kelas</span>
+                        </a>
+                        <a href="{{ route('admin.subjects.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.subjects.*') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Mata Pelajaran' : 'delay: 999999'">
+                            <span uk-icon="icon: bookmark; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Mata Pelajaran</span>
+                        </a>
+
+                        <!-- Manajemen Pengguna Group -->
+                        <div x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms class="pt-2">
+                            <span class="block text-[9px] text-slate-300 font-bold uppercase tracking-wider mb-2 px-3.5">Manajemen Pengguna</span>
+                        </div>
                         <a href="{{ route('admin.users.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.users.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Manajemen Sistem' : 'delay: 999999'">
@@ -119,47 +180,45 @@
                             <span uk-icon="icon: happy; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Manajemen Orang Tua</span>
                         </a>
-                        <a href="{{ route('admin.classrooms.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.classrooms.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
-                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
-                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Kelola Kelas' : 'delay: 999999'">
-                            <span uk-icon="icon: grid; ratio: 0.8"></span>
-                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Kelola Kelas</span>
-                        </a>
-                        <a href="{{ route('admin.jurusans.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.jurusans.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
-                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
-                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Jurusan' : 'delay: 999999'">
-                            <span uk-icon="icon: tag; ratio: 0.8"></span>
-                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Jurusan</span>
-                        </a>
-                        <a href="{{ route('admin.academic-years.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.academic-years.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
-                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
-                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Tahun Ajaran & Semester' : 'delay: 999999'">
-                            <span uk-icon="icon: calendar; ratio: 0.8"></span>
-                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Tahun Ajaran</span>
-                        </a>
-                        <a href="{{ route('admin.subjects.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.subjects.*') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
-                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
-                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Mata Pelajaran' : 'delay: 999999'">
-                            <span uk-icon="icon: bookmark; ratio: 0.8"></span>
-                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Mata Pelajaran</span>
-                        </a>
+
+                        <!-- Penugasan & Absensi Group -->
+                        <div x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms class="pt-2">
+                            <span class="block text-[9px] text-slate-300 font-bold uppercase tracking-wider mb-2 px-3.5">Penugasan & Lokasi</span>
+                        </div>
                         <a href="{{ route('admin.teaching-assignments.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.teaching-assignments.*') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Penugasan Mengajar' : 'delay: 999999'">
                             <span uk-icon="icon: users; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Penugasan Mengajar</span>
                         </a>
+                        <a href="{{ route('admin.school-locations.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.school-locations.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Lokasi Sekolah' : 'delay: 999999'">
+                            <span uk-icon="icon: location; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Lokasi Sekolah</span>
+                        </a>
+
+                        <!-- Ekonomi & Toko Group -->
+                        <div x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms class="pt-2">
+                            <span class="block text-[9px] text-slate-300 font-bold uppercase tracking-wider mb-2 px-3.5">Ekonomi & Toko</span>
+                        </div>
                         <a href="{{ route('admin.rewards.manage') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.rewards.manage') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Kelola Toko Hadiah' : 'delay: 999999'">
                             <span uk-icon="icon: settings; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Kelola Toko Hadiah</span>
                         </a>
-                        <a href="{{ route('admin.school-locations.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.school-locations.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('admin.toko.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.toko.*') ? 'bg-violet-600 text-white shadow-md shadow-violet-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
-                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Lokasi Sekolah' : 'delay: 999999'">
-                            <span uk-icon="icon: location; ratio: 0.8"></span>
-                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Lokasi Sekolah</span>
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Manajemen Toko' : 'delay: 999999'">
+                            <span uk-icon="icon: cart; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Manajemen Toko</span>
+                        </a>
+                        <a href="{{ route('admin.withdrawals.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.withdrawals.*') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Pencairan Dana Toko' : 'delay: 999999'">
+                            <span uk-icon="icon: credit-card; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Pencairan Dana</span>
                         </a>
 
                         <!-- Manajemen Poin Group -->

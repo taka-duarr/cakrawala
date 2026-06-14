@@ -45,6 +45,9 @@
                                 @if($classroom->semester)
                                     <span class="px-2 py-0.5 bg-indigo-100 text-indigo-700 text-[10px] font-bold rounded-full">Sem. {{ $classroom->semester->name }}</span>
                                 @endif
+                                @if($classroom->angkatan)
+                                    <span class="px-2 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-bold rounded-full">Angkatan {{ $classroom->angkatan }}</span>
+                                @endif
                                 <span class="text-[10px] text-slate-400 font-semibold">{{ $classroom->students_count }} Siswa</span>
                             </div>
                         </div>
@@ -54,7 +57,7 @@
                             <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Wali Kelas</p>
                             <p class="text-xs font-bold text-slate-700">{{ $classroom->users->first()->name ?? 'Belum diassign' }}</p>
                         </div>
-                        <button onclick="openEditKelas({{ $classroom->id }}, {{ json_encode($classroom->name) }}, {{ $classroom->grade_level ?? 'null' }}, {{ $classroom->jurusan_id ?? 'null' }}, {{ $classroom->academic_year_id ?? 'null' }}, {{ $classroom->semester_id ?? 'null' }}, {{ $classroom->users->first()->id ?? 'null' }})"
+                        <button onclick="openEditKelas({{ $classroom->id }}, {{ json_encode($classroom->name) }}, {{ $classroom->grade_level ?? 'null' }}, {{ $classroom->jurusan_id ?? 'null' }}, {{ $classroom->academic_year_id ?? 'null' }}, {{ $classroom->semester_id ?? 'null' }}, {{ $classroom->users->first()->id ?? 'null' }}, {{ json_encode($classroom->angkatan) }})"
                             class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                         </button>
@@ -163,9 +166,14 @@
             <form method="POST" action="{{ route('admin.classrooms.store') }}" class="p-6 space-y-4">
                 @csrf
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="col-span-2">
+                    <div class="col-span-1">
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">Nama Kelas <span class="text-rose-500">*</span></label>
                         <input type="text" name="name" placeholder="Contoh: X IPA 1" required
+                            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="col-span-1">
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Angkatan</label>
+                        <input type="text" name="angkatan" placeholder="Contoh: 2024"
                             class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div>
@@ -235,9 +243,14 @@
             <form id="form-edit-kelas" method="POST" class="p-6 space-y-4">
                 @csrf @method('PUT')
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="col-span-2">
+                    <div class="col-span-1">
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">Nama Kelas <span class="text-rose-500">*</span></label>
                         <input type="text" id="edit-kelas-name" name="name" required
+                            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="col-span-1">
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Angkatan</label>
+                        <input type="text" id="edit-kelas-angkatan" name="angkatan" placeholder="Contoh: 2024"
                             class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div>
@@ -301,8 +314,9 @@
             el.classList.toggle('hidden');
         }
 
-        function openEditKelas(id, name, grade, jurusanId, ayId, semId, waliId) {
+        function openEditKelas(id, name, grade, jurusanId, ayId, semId, waliId, angkatan) {
             document.getElementById('edit-kelas-name').value = name;
+            document.getElementById('edit-kelas-angkatan').value = angkatan || '';
             setSelectVal('edit-kelas-grade', grade);
             setSelectVal('edit-kelas-jurusan', jurusanId);
             setSelectVal('edit-kelas-ay', ayId);

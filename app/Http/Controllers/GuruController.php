@@ -132,11 +132,27 @@ class GuruController extends Controller
         $user = User::findOrFail($request->user_id);
         
         $points = $request->amount;
+        $type = $request->type;
+
         if ($request->operation === 'subtract') {
             $points = -$points;
+            $type = 'pelanggaran';
+        } else {
+            $type = 'kebaikan';
         }
 
-        $pointService->addPoints($user, $points, $request->type, 'Guru Manual', $request->description);
+        $source = 'Guru: ' . auth()->user()->name;
+        $pointService->addPoints($user, $points, $type, $source, $request->description);
+
+        // Catat di PointAudit agar terpantau oleh admin
+        \App\Models\PointAudit::create([
+            'actor_id'       => auth()->id(),
+            'target_user_id' => $user->id,
+            'action_type'    => 'adjust',
+            'amount'         => $points,
+            'point_type'     => $type,
+            'notes'          => 'Guru menyesuaikan poin: ' . $request->description,
+        ]);
 
         return redirect()->back()->with('success', 'Poin siswa berhasil disesuaikan.');
     }

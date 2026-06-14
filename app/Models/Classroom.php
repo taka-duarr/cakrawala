@@ -16,6 +16,7 @@ class Classroom extends Model
         'academic_year_id',
         'semester_id',
         'grade_level',
+        'angkatan',
     ];
 
     public function users()

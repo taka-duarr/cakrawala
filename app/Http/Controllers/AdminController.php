@@ -277,6 +277,7 @@ class AdminController extends Controller
             'jurusan_id'       => 'nullable|exists:jurusans,id',
             'academic_year_id' => 'nullable|exists:academic_years,id',
             'semester_id'      => 'nullable|exists:semesters,id',
+            'angkatan'         => 'nullable|string|max:10',
             'wali_kelas_id'    => 'nullable|exists:users,id',
         ]);
 
@@ -287,6 +288,7 @@ class AdminController extends Controller
             'jurusan_id'       => $request->jurusan_id,
             'academic_year_id' => $request->academic_year_id,
             'semester_id'      => $request->semester_id,
+            'angkatan'         => $request->angkatan,
         ]);
 
         if ($request->wali_kelas_id) {
@@ -307,6 +309,7 @@ class AdminController extends Controller
             'jurusan_id'       => 'nullable|exists:jurusans,id',
             'academic_year_id' => 'nullable|exists:academic_years,id',
             'semester_id'      => 'nullable|exists:semesters,id',
+            'angkatan'         => 'nullable|string|max:10',
             'wali_kelas_id'    => 'nullable|exists:users,id',
         ]);
 
@@ -316,6 +319,7 @@ class AdminController extends Controller
             'jurusan_id'       => $request->jurusan_id,
             'academic_year_id' => $request->academic_year_id,
             'semester_id'      => $request->semester_id,
+            'angkatan'         => $request->angkatan,
         ]);
 
         // Update wali kelas
@@ -855,4 +859,96 @@ class AdminController extends Controller
         $audits = $query->paginate(20);
         return view('admin.point_audit', compact('audits', 'students', 'actors'));
     }
+
+    // --- Manajemen Toko ---
+    public function tokoIndex(Request $request)
+    {
+        $tokoRole = Role::where('name', 'toko')->first();
+        if (!$tokoRole) {
+            return back()->with('error', 'Role toko tidak ditemukan.');
+        }
+
+        $search = $request->input('search');
+        $query = User::with('role')->where('role_id', $tokoRole->id);
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+        $tokos = $query->orderBy('name')->paginate(15);
+        $tokoRoleId = $tokoRole->id;
+
+        return view('admin.toko', compact('tokos', 'tokoRoleId', 'search'));
+    }
+
+    public function tokoStore(Request $request)
+    {
+        $tokoRole = Role::where('name', 'toko')->firstOrFail();
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6',
+        ]);
+
+        User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'password' => bcrypt($request->password),
+            'role_id'  => $tokoRole->id,
+            'points'   => 0,
+            'is_active'=> true,
+        ]);
+
+        return back()->with('success', 'Akun toko baru berhasil ditambahkan!');
+    }
+
+    public function tokoUpdate(Request $request, $id)
+    {
+        $toko = User::findOrFail($id);
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email,' . $id,
+            'password' => 'nullable|string|min:6',
+        ]);
+
+        $toko->name  = $request->name;
+        $toko->email = $request->email;
+        if ($request->password) {
+            $toko->password = bcrypt($request->password);
+        }
+        $toko->save();
+
+        return back()->with('success', 'Akun toko berhasil diperbarui!');
+    }
+
+    public function tokoDestroy($id)
+    {
+        User::findOrFail($id)->delete();
+        return back()->with('success', 'Akun toko berhasil dihapus.');
+    }
+
+    public function tokoTransactions(Request $request, $id)
+    {
+        $toko = User::findOrFail($id);
+        $query = \App\Models\ShopTransaction::with('student')
+            ->where('shop_user_id', $id);
+
+        if ($request->status) {
+            $query->where('status', $request->status);
+        }
+        if ($request->date_from) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+        if ($request->date_to) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        $transactions = $query->orderByDesc('created_at')->paginate(20);
+        $totalPaid    = \App\Models\ShopTransaction::where('shop_user_id', $id)->where('status', 'paid')->sum('points_amount');
+        $totalTx      = \App\Models\ShopTransaction::where('shop_user_id', $id)->where('status', 'paid')->count();
+
+        return view('admin.toko_transactions', compact('toko', 'transactions', 'totalPaid', 'totalTx'));
+    }
 }
+

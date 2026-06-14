@@ -144,4 +144,149 @@ class StudentController extends Controller
             'assignmentSubmissions'
         ));
     }
+
+    public function dompet()
+    {
+        $user = auth()->user();
+
+        // Riwayat Poin (Kebaikan/Pelanggaran/Penyesuaian)
+        $pointHistory = \App\Models\PointHistory::where('user_id', $user->id)
+            ->latest()
+            ->get();
+
+        // Riwayat Belanja di Toko
+        $shopTransactions = \App\Models\ShopTransaction::with('shop')
+            ->where('student_user_id', $user->id)
+            ->latest()
+            ->get();
+
+        return view('student.dompet', compact('user', 'pointHistory', 'shopTransactions'));
+    }
+
+    public function generateTransferQr(Request $request)
+    {
+        $request->validate([
+            'amount' => 'required|integer|min:1'
+        ]);
+
+        $user = auth()->user();
+
+        if ($user->points < $request->amount) {
+            return response()->json(['success' => false, 'message' => 'Saldo poin tidak mencukupi.'], 400);
+        }
+
+        $token = \Illuminate\Support\Str::random(32);
+        
+        \Illuminate\Support\Facades\Cache::put('transfer_qr_' . $token, [
+            'sender_id' => $user->id,
+            'amount' => $request->amount,
+            'status' => 'pending'
+        ], now()->addMinutes(10));
+
+        return response()->json([
+            'success' => true,
+            'token' => $token,
+            'qr_url' => route('student.transfer.claim.page', ['token' => $token])
+        ]);
+    }
+
+    public function cancelTransferQr($token)
+    {
+        $transfer = \Illuminate\Support\Facades\Cache::get('transfer_qr_' . $token);
+        if ($transfer && $transfer['sender_id'] == auth()->id()) {
+            \Illuminate\Support\Facades\Cache::forget('transfer_qr_' . $token);
+        }
+        return response()->json(['success' => true]);
+    }
+
+    public function checkTransferStatus($token)
+    {
+        $transfer = \Illuminate\Support\Facades\Cache::get('transfer_qr_' . $token);
+        if (!$transfer) {
+            return response()->json(['status' => 'not_found']);
+        }
+        
+        return response()->json(['status' => $transfer['status']]);
+    }
+
+    public function claimTransferPage($token)
+    {
+        $transfer = \Illuminate\Support\Facades\Cache::get('transfer_qr_' . $token);
+        
+        if (!$transfer) {
+            return redirect()->route('student.dompet')->with('error', 'QR Code transfer tidak valid atau sudah kedaluwarsa.');
+        }
+
+        $sender = \App\Models\User::find($transfer['sender_id']);
+        if (!$sender || $sender->id == auth()->id()) {
+            return redirect()->route('student.dompet')->with('error', 'Anda tidak bisa menerima poin dari diri sendiri.');
+        }
+
+        return view('student.transfer_claim', compact('transfer', 'sender', 'token'));
+    }
+
+    public function processTransferClaim(Request $request, $token)
+    {
+        // Hindari Cache::pull agar tidak terjadi race condition saat sender melakukan polling
+        $receiver = auth()->user();
+
+        $lockKey = 'lock_transfer_qr_' . $token;
+        $lock = \Illuminate\Support\Facades\Cache::lock($lockKey, 10);
+
+        if (!$lock->get()) {
+            return redirect()->route('student.dompet')->with('error', 'Transaksi sedang diproses, silakan coba lagi.');
+        }
+
+        try {
+            $transfer = \Illuminate\Support\Facades\Cache::get('transfer_qr_' . $token);
+
+            if (!$transfer || $transfer['status'] === 'claimed') {
+                $lock->release();
+                return redirect()->route('student.dompet')->with('error', 'QR Code transfer sudah tidak berlaku atau sudah diklaim.');
+            }
+
+            $sender = \App\Models\User::find($transfer['sender_id']);
+            if (!$sender || $sender->id == $receiver->id) {
+                $lock->release();
+                return redirect()->route('student.dompet')->with('error', 'Transfer dibatalkan.');
+            }
+
+            if ($sender->points < $transfer['amount']) {
+                $lock->release();
+                return redirect()->route('student.dompet')->with('error', 'Pengirim tidak memiliki poin yang cukup saat ini.');
+            }
+
+            \Illuminate\Support\Facades\DB::transaction(function () use ($sender, $receiver, $transfer) {
+                // Kurangi pengirim
+                $sender->decrement('points', $transfer['amount']);
+                \App\Models\PointHistory::create([
+                    'user_id' => $sender->id,
+                    'points' => -$transfer['amount'],
+                    'type' => 'transfer_out',
+                    'source' => 'Dompet Poin',
+                    'description' => 'Transfer Poin ke ' . $receiver->name
+                ]);
+
+                // Tambah penerima
+                $receiver->increment('points', $transfer['amount']);
+                \App\Models\PointHistory::create([
+                    'user_id' => $receiver->id,
+                    'points' => $transfer['amount'],
+                    'type' => 'transfer_in',
+                    'source' => 'Dompet Poin',
+                    'description' => 'Terima Poin dari ' . $sender->name
+                ]);
+            });
+
+            // Set status untuk polling dari device pengirim menjadi 'claimed'
+            \Illuminate\Support\Facades\Cache::put('transfer_qr_' . $token, array_merge($transfer, ['status' => 'claimed']), now()->addMinutes(1));
+
+            $lock->release();
+            return redirect()->route('student.dompet')->with('success', 'Berhasil menerima ' . $transfer['amount'] . ' poin dari ' . $sender->name . '!');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Transfer Claim Error: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+            $lock->release();
+            return redirect()->route('student.dompet')->with('error', 'Terjadi kesalahan saat memproses transfer. ' . $e->getMessage());
+        }
+    }
 }

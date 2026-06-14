@@ -392,6 +392,7 @@
                                     <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Tingkat</th>
                                     <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Kehadiran (Hadir)</th>
                                     <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Total Poin</th>
+                                    <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center w-32">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100/70">
@@ -423,6 +424,16 @@
                                         </td>
                                         <td class="px-6 py-4 text-right font-extrabold text-xs text-indigo-600">
                                             {{ number_format($student->points) }} Pts
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <button 
+                                                data-user-id="{{ $student->id }}"
+                                                data-student-name="{{ $student->name }}"
+                                                class="adjust-points-btn bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-[10px] font-bold px-2.5 py-1.5 rounded-xl transition flex items-center justify-center space-x-1 mx-auto"
+                                            >
+                                                <span uk-icon="icon: plus; ratio: 0.65"></span>
+                                                <span>Poin</span>
+                                            </button>
                                         </td>
                                     </tr>
                                 @empty
@@ -626,6 +637,54 @@
                 <div class="flex justify-end space-x-2 pt-2">
                     <button class="uk-modal-close bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-4 py-2 rounded-xl transition" type="button">Batal</button>
                     <button class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-5 py-2 rounded-xl transition shadow-md shadow-indigo-100" type="submit">Kirim Penilaian</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL SESUAIKAN POIN MANUALL -->
+    <div id="modal-adjust-points" class="uk-modal" uk-modal>
+        <div class="uk-modal-dialog uk-modal-body rounded-2xl p-6">
+            <button class="uk-modal-close-default" type="button" uk-close></button>
+            <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center space-x-2">
+                <span uk-icon="icon: plus-circle; ratio: 1.1"></span>
+                <span>Sesuaikan Poin Karakter</span>
+            </h2>
+            <p class="text-xs text-slate-400 mb-4 font-semibold">Berikan apresiasi poin atau kurangi poin siswa secara manual.</p>
+
+            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 mb-4 text-xs">
+                <span class="text-slate-400 font-medium">Siswa:</span>
+                <strong id="adj-student-name" class="text-slate-800 ml-1"></strong>
+            </div>
+
+            <form action="{{ route('guru.points.adjust') }}" method="POST" class="space-y-4">
+                @csrf
+                <input type="hidden" name="user_id" id="adj-user-id">
+                <input type="hidden" name="type" id="adj-type" value="kebaikan">
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">Operasi</label>
+                        <select name="operation" id="adj-operation" required class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="add">Tambah Poin (+)</option>
+                            <option value="subtract">Kurang Poin (-)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Jumlah Poin</label>
+                    <input type="number" name="amount" value="5" min="1" required class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Alasan Penyesuaian (Detail)</label>
+                    <input type="text" name="description" required class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Contoh: Keaktifan di kelas saat diskusi">
+                </div>
+
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button class="uk-modal-close bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-4 py-2 rounded-xl transition" type="button">Batal</button>
+                    <button class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-5 py-2 rounded-xl transition shadow-md shadow-indigo-100" type="submit">Terapkan Perubahan</button>
                 </div>
             </form>
         </div>
@@ -840,6 +899,21 @@
             document.getElementById('form-grade-submission').action = `/guru/submissions/${submission.id}/grade`;
             UIkit.modal('#modal-grade-submission').show();
         }
+
+        // Point Adjustment Modal Populator
+        document.querySelectorAll('.adjust-points-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const userId = this.getAttribute('data-user-id');
+                const studentName = this.getAttribute('data-student-name');
+
+                document.getElementById('adj-user-id').value = userId;
+                document.getElementById('adj-student-name').innerText = studentName;
+                document.getElementById('adj-operation').value = 'add';
+                document.getElementById('adj-type').value = 'kebaikan';
+
+                UIkit.modal('#modal-adjust-points').show();
+            });
+        });
 
         // Auto select first meeting on load
         document.addEventListener('DOMContentLoaded', () => {
