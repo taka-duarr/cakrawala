@@ -557,13 +557,7 @@
                 });
             });
 
-            const adjOperation = document.getElementById('adj-operation');
-            const adjType = document.getElementById('adj-type');
-            if (adjOperation && adjType) {
-                adjOperation.addEventListener('change', function() {
-                    adjType.value = this.value === 'add' ? 'kebaikan' : 'pelanggaran';
-                });
-            }
+
 
             // Manage Achievements Modal Populator
             document.querySelectorAll('.manage-badges-btn').forEach(btn => {

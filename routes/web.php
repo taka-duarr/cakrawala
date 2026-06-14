@@ -18,6 +18,7 @@ Route::get('/dashboard', function () {
     if ($role === 'walikelas') return redirect()->route('walikelas.dashboard');
     if ($role === 'orangtua') return redirect()->route('parent.dashboard');
     if ($role === 'siswa') return redirect()->route('student.dashboard');
+    if ($role === 'toko') return redirect()->route('toko.dashboard');
     
     // Default fallback
     return view('dashboard');
@@ -96,6 +97,18 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/school-locations/store', [\App\Http\Controllers\SchoolLocationController::class, 'store'])->name('school-locations.store');
     Route::put('/school-locations/{id}/update', [\App\Http\Controllers\SchoolLocationController::class, 'update'])->name('school-locations.update');
     Route::delete('/school-locations/{id}/destroy', [\App\Http\Controllers\SchoolLocationController::class, 'destroy'])->name('school-locations.destroy');
+
+    // Shop Withdrawals
+    Route::get('/withdrawals', [\App\Http\Controllers\ShopWithdrawalController::class, 'index'])->name('withdrawals.index');
+    Route::post('/withdrawals/{id}/approve', [\App\Http\Controllers\ShopWithdrawalController::class, 'approve'])->name('withdrawals.approve');
+    Route::post('/withdrawals/{id}/reject', [\App\Http\Controllers\ShopWithdrawalController::class, 'reject'])->name('withdrawals.reject');
+
+    // Toko Management Routes
+    Route::get('/toko', [AdminController::class, 'tokoIndex'])->name('toko.index');
+    Route::post('/toko/store', [AdminController::class, 'tokoStore'])->name('toko.store');
+    Route::put('/toko/{id}/update', [AdminController::class, 'tokoUpdate'])->name('toko.update');
+    Route::delete('/toko/{id}/destroy', [AdminController::class, 'tokoDestroy'])->name('toko.destroy');
+    Route::get('/toko/{id}/transactions', [AdminController::class, 'tokoTransactions'])->name('toko.transactions');
 });
 
 Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(function () {
@@ -133,6 +146,14 @@ Route::middleware(['auth', 'role:siswa'])->prefix('student')->name('student.')->
     Route::post('/rewards/{id}/claim', [\App\Http\Controllers\RewardController::class, 'claim'])->name('rewards.claim');
     Route::get('/my-classes', [StudentController::class, 'myClasses'])->name('my-classes');
     Route::get('/my-classes/{id}', [StudentController::class, 'classDetail'])->name('class-detail');
+    Route::get('/dompet', [StudentController::class, 'dompet'])->name('dompet');
+
+    // Peer to Peer Point Transfer
+    Route::post('/transfer/generate', [StudentController::class, 'generateTransferQr'])->name('transfer.generate');
+    Route::post('/transfer/cancel/{token}', [StudentController::class, 'cancelTransferQr'])->name('transfer.cancel');
+    Route::get('/transfer/status/{token}', [StudentController::class, 'checkTransferStatus'])->name('transfer.status');
+    Route::get('/transfer/claim/{token}', [StudentController::class, 'claimTransferPage'])->name('transfer.claim.page');
+    Route::post('/transfer/claim/{token}', [StudentController::class, 'processTransferClaim'])->name('transfer.claim.process');
 
     // Geolocated Attendance check-in and assignments
     Route::post('/sessions/{id}/check-in', [\App\Http\Controllers\AttendanceController::class, 'checkIn'])->name('sessions.check-in');
@@ -152,6 +173,28 @@ Route::middleware('auth')->group(function () {
     Route::get('/help', [\App\Http\Controllers\GeneralInfoController::class, 'help'])->name('help');
     Route::get('/notifications', [\App\Http\Controllers\GeneralInfoController::class, 'notifications'])->name('notifications');
     Route::post('/notifications/mark-all-read', [\App\Http\Controllers\GeneralInfoController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
+});
+
+Route::middleware(['auth', 'role:toko'])->prefix('toko')->name('toko.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\TokoController::class, 'index'])->name('dashboard');
+    Route::get('/katalog', [\App\Http\Controllers\TokoController::class, 'katalog'])->name('katalog');
+    Route::post('/qr/generate', [\App\Http\Controllers\TokoController::class, 'generateQr'])->name('qr.generate');
+    Route::post('/qr/cancel', [\App\Http\Controllers\TokoController::class, 'cancelQr'])->name('qr.cancel');
+    Route::get('/qr/{token}/status', [\App\Http\Controllers\TokoController::class, 'checkStatus'])->name('qr.status');
+    // Item catalog CRUD
+    Route::post('/items/store', [\App\Http\Controllers\TokoController::class, 'itemStore'])->name('items.store');
+    Route::put('/items/{id}/update', [\App\Http\Controllers\TokoController::class, 'itemUpdate'])->name('items.update');
+    Route::delete('/items/{id}/destroy', [\App\Http\Controllers\TokoController::class, 'itemDestroy'])->name('items.destroy');
+
+    // Withdrawals
+    Route::get('/withdrawals', [\App\Http\Controllers\ShopWithdrawalController::class, 'tokoIndex'])->name('withdrawals.index');
+    Route::post('/withdrawals', [\App\Http\Controllers\ShopWithdrawalController::class, 'store'])->name('withdrawals.store');
+});
+
+// Shop payment routes (accessible by logged-in siswa)
+Route::middleware(['auth', 'role:siswa'])->group(function () {
+    Route::get('/pay/{token}', [\App\Http\Controllers\ShopPaymentController::class, 'confirm'])->name('student.pay.confirm');
+    Route::post('/pay/{token}/process', [\App\Http\Controllers\ShopPaymentController::class, 'process'])->name('student.pay.process');
 });
 
 require __DIR__.'/auth.php';

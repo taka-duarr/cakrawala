@@ -31,12 +31,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // ─── Roles ───────────────────────────────────────────────────
-        $roles = ['admin', 'guru', 'walikelas', 'orangtua', 'siswa'];
+        $roles = ['admin', 'guru', 'walikelas', 'orangtua', 'siswa', 'toko'];
         foreach ($roles as $role) {
-            Role::create([
-                'name' => $role,
-                'display_name' => ucfirst($role)
-            ]);
+            Role::firstOrCreate(
+                ['name' => $role],
+                ['display_name' => ucfirst($role)]
+            );
         }
 
         // ─── Admin User ──────────────────────────────────────────────
@@ -51,6 +51,15 @@ class DatabaseSeeder extends Seeder
             'name' => 'Bapak Budi',
             'email' => 'guru@cakrawala.com',
             'role_id' => 2,
+        ]);
+
+        // ─── Toko User (Kantin Sekolah) ──────────────────────────────
+        $tokoRole = \App\Models\Role::where('name', 'toko')->first();
+        User::factory()->create([
+            'name'    => 'Kantin Sekolah',
+            'email'   => 'toko@cakrawala.com',
+            'role_id' => $tokoRole->id,
+            'points'  => 0,
         ]);
 
         // ─── Jurusan ─────────────────────────────────────────────────
@@ -76,6 +85,7 @@ class DatabaseSeeder extends Seeder
             'jurusan_id'       => $ipa->id,
             'academic_year_id' => $ta2526->id,
             'semester_id'      => $semGanjil->id,
+            'angkatan'         => '2024',
         ]);
 
         $class2 = Classroom::create([
@@ -85,6 +95,7 @@ class DatabaseSeeder extends Seeder
             'jurusan_id'       => $ips->id,
             'academic_year_id' => $ta2526->id,
             'semester_id'      => $semGanjil->id,
+            'angkatan'         => '2024',
         ]);
 
         $class3 = Classroom::create([
@@ -94,6 +105,7 @@ class DatabaseSeeder extends Seeder
             'jurusan_id'       => $ipa->id,
             'academic_year_id' => $ta2526->id,
             'semester_id'      => $semGanjil->id,
+            'angkatan'         => '2023',
         ]);
 
         $class4 = Classroom::create([
@@ -103,6 +115,7 @@ class DatabaseSeeder extends Seeder
             'jurusan_id'       => $ips->id,
             'academic_year_id' => $ta2526->id,
             'semester_id'      => $semGanjil->id,
+            'angkatan'         => '2023',
         ]);
 
         $class5 = Classroom::create([
@@ -112,6 +125,7 @@ class DatabaseSeeder extends Seeder
             'jurusan_id'       => $bhs->id,
             'academic_year_id' => $ta2526->id,
             'semester_id'      => $semGanjil->id,
+            'angkatan'         => '2022',
         ]);
 
         // ─── Wali Kelas ───────────────────────────────────────────────

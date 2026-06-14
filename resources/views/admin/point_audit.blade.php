@@ -110,8 +110,8 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-center font-black text-sm
-                                    {{ in_array($audit->action_type, ['transfer_in', 'adjust']) ? 'text-emerald-600' : 'text-rose-600' }}">
-                                    {{ in_array($audit->action_type, ['transfer_out', 'reset']) ? '-' : '+' }}{{ $audit->amount }}
+                                    {{ $audit->amount > 0 ? 'text-emerald-600' : 'text-rose-600' }}">
+                                    {{ $audit->amount > 0 ? '+' : '' }}{{ $audit->amount }}
                                 </td>
                                 <td class="px-6 py-4 text-xs text-slate-500 max-w-xs truncate">{{ $audit->notes ?? '-' }}</td>
                                 <td class="px-6 py-4 text-[10px] text-slate-400 font-medium">{{ $audit->created_at->format('d M Y, H:i') }}</td>

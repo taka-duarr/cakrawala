@@ -83,6 +83,11 @@ class User extends Authenticatable
         return $this->hasMany(Notification::class);
     }
 
+    public function shopTransactions()
+    {
+        return $this->hasMany(ShopTransaction::class, 'shop_user_id');
+    }
+
     /**
      * Get the attributes that should be cast.
      *
