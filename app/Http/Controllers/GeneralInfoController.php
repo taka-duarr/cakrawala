@@ -68,40 +68,17 @@ class GeneralInfoController extends Controller
 
     public function events(Request $request)
     {
-        if ($request->has('register')) {
-            $eventTitle = $request->input('event_title');
-            return back()->with('success', 'Berhasil mendaftar ke Event: "' . $eventTitle . '"! Detail tiket pendaftaran telah dikirim ke email Anda.');
+        $events = \App\Models\Event::where('is_active', true)->get();
+        
+        $completedEventIds = [];
+        if (auth()->check()) {
+            $completedEventIds = auth()->user()->events()
+                ->wherePivot('status', 'completed')
+                ->pluck('events.id')
+                ->toArray();
         }
 
-        // Seeded Event list
-        $events = [
-            [
-                'title' => 'Pekan Karakter Cakrawala 2026',
-                'description' => 'Ajang tahunan unjuk aksi kebaikan dan kreativitas karakter antarkelas. Dapatkan quest khusus poin besar!',
-                'date' => '15 - 20 Juni 2026',
-                'location' => 'Aula & Lapangan Utama Sekolah',
-                'points_bonus' => 150,
-                'category' => 'karakter'
-            ],
-            [
-                'title' => 'Cakrawala Clean & Green',
-                'description' => 'Aksi gotong royong akbar membersihkan lingkungan sekitar sekolah dan penanaman pohon bersama.',
-                'date' => '23 Juni 2026',
-                'location' => 'Area Sekitar Sekolah',
-                'points_bonus' => 80,
-                'category' => 'sosial'
-            ],
-            [
-                'title' => 'Seminar Literasi Digital',
-                'description' => 'Membangun karakter bijak ber media sosial dan menangkal hoaks demi masa depan digital yang sehat.',
-                'date' => '30 Juni 2026',
-                'location' => 'Laboratorium Multimedia',
-                'points_bonus' => 50,
-                'category' => 'akademik'
-            ],
-        ];
-
-        return view('events', compact('events'));
+        return view('events', compact('events', 'completedEventIds'));
     }
 
     public function announcements()

@@ -31,43 +31,52 @@
                     </div>
                 </div>
                 <p class="text-xs text-slate-400 mb-6">Complete your daily goal with any activity.</p>
-                
-                <!-- Quest Grid (Pastel Theme) -->
+                              <!-- Quest Grid (Pastel Theme) -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     @forelse($availableMissions as $index => $mission)
                         @php
                             $color = $cardColors[$index % count($cardColors)];
-                            $isTaken = in_array($mission->id, $takenMissionIds);
+                            $isCompleted = in_array($mission->id, $completedMissionIds);
                         @endphp
-                        <div class="shimmer-card border rounded-2xl p-6 flex flex-col justify-between transition-all duration-300 {{ $isTaken ? 'bg-slate-50 border-slate-200 opacity-60' : $color['bg'] }} hover:-translate-y-1 hover:shadow-lg">
-                            <div class="space-y-4">
-                                <div class="flex justify-between items-start">
-                                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider {{ $color['tag'] }}">
-                                        {{ $mission->type ?? 'Daily' }}
-                                    </span>
-                                    <strong class="text-sm font-bold {{ $color['points'] }}">+{{ $mission->points_reward }} Pts</strong>
+                        
+                        @if($isCompleted)
+                            <div class="shimmer-card border rounded-2xl p-6 flex flex-col justify-between transition-all duration-300 bg-emerald-50/30 border-emerald-100/50 hover:-translate-y-1 hover:shadow-lg">
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-start">
+                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                            {{ $mission->type ?? 'Daily' }}
+                                        </span>
+                                        <strong class="text-sm font-bold text-emerald-600">+{{ $mission->points_reward }} Pts</strong>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-extrabold text-slate-850 text-base leading-tight mb-2">{{ $mission->title }}</h4>
+                                        <p class="text-xs text-slate-500 leading-relaxed">{{ $mission->description }}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h4 class="font-extrabold text-slate-800 text-base leading-tight mb-2">{{ $mission->title }}</h4>
-                                    <p class="text-xs text-slate-500 leading-relaxed">{{ $mission->description }}</p>
+                                <div class="mt-6 flex items-center justify-center space-x-1.5 py-2.5 bg-emerald-50 border border-emerald-100 text-emerald-700 rounded-xl text-xs font-bold">
+                                    <span uk-icon="icon: check; ratio: 0.8"></span>
+                                    <span>Selesai</span>
                                 </div>
                             </div>
-
-                            <div class="mt-6">
-                                @if($isTaken)
-                                    <button disabled class="w-full py-2 bg-slate-200 text-slate-400 rounded-xl text-xs font-bold cursor-not-allowed">
-                                        ✓ Sudah Diambil
-                                    </button>
-                                @else
-                                    <form method="POST" action="{{ route('student.mission.take', $mission->id) }}" onsubmit="let btn = this.querySelector('button[type=submit]'); if(btn) { btn.disabled = true; btn.innerHTML = '<span class=\'animate-spin inline-block w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full mr-1.5 align-middle\'></span> Mengambil...'; }">
-                                        @csrf
-                                        <button type="submit" class="w-full py-2.5 rounded-xl text-xs font-bold transition {{ $color['btn'] }} shadow-sm">
-                                            Ambil Misi
-                                        </button>
-                                    </form>
-                                @endif
+                        @else
+                            <div class="shimmer-card border rounded-2xl p-6 flex flex-col justify-between transition-all duration-300 {{ $color['bg'] }} hover:-translate-y-1 hover:shadow-lg">
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-start">
+                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider {{ $color['tag'] }}">
+                                            {{ $mission->type ?? 'Daily' }}
+                                        </span>
+                                        <strong class="text-sm font-bold {{ $color['points'] }}">+{{ $mission->points_reward }} Pts</strong>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-extrabold text-slate-800 text-base leading-tight mb-2">{{ $mission->title }}</h4>
+                                        <p class="text-xs text-slate-500 leading-relaxed">{{ $mission->description }}</p>
+                                    </div>
+                                </div>
+                                <div class="mt-6 flex items-center justify-center py-2.5 bg-slate-100/80 text-slate-400 border border-slate-200/30 rounded-xl text-xs font-bold">
+                                    <span>Belum Tercapai</span>
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     @empty
                     <div class="col-span-3 text-center py-12 text-slate-400">
                         <svg class="w-12 h-12 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
@@ -76,65 +85,6 @@
                     @endforelse
                 </div>
             </div>
-
-            <!-- Active & Pending Missions Progress -->
-            @if($activeMissions->count() > 0)
-            <div class="bg-white rounded-2xl border border-slate-100 p-6 soft-glow-indigo">
-                <div class="flex justify-between items-center mb-1">
-                    <h3 class="text-lg font-bold text-slate-800">Misi Aktif & Syarat Pengerjaan</h3>
-                    <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-full">
-                        {{ $activeMissions->count() }} Misi Berjalan
-                    </span>
-                </div>
-                <p class="text-xs text-slate-400 mb-6">Berikut adalah misi yang telah Anda ambil beserta syarat/deskripsi pengerjaannya. Silakan kirimkan link bukti jika sudah selesai.</p>
-                
-                <div class="space-y-4">
-                    @foreach($activeMissions as $mission)
-                    <div class="p-4 bg-slate-50/50 border border-slate-100 rounded-xl flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-                        <div class="flex-1 w-full">
-                            <div class="flex items-center space-x-2">
-                                <span class="px-2 py-0.5 rounded bg-slate-200/60 text-slate-600 text-[10px] font-bold uppercase tracking-wider">{{ $mission->type }}</span>
-                                <span class="text-[10px] font-extrabold text-indigo-600">Reward: +{{ $mission->points_reward }} Pts</span>
-                            </div>
-                            <h4 class="font-bold text-sm text-slate-800 mt-1.5">{{ $mission->title }}</h4>
-                            <div class="mt-2 p-3 bg-white border border-slate-100 rounded-xl text-xs text-slate-500 leading-relaxed shadow-sm">
-                                <span class="font-bold text-slate-700 block mb-1 flex items-center">
-                                    <svg class="w-4 h-4 text-indigo-600 mr-1.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                    Syarat & Langkah Pengerjaan:
-                                </span>
-                                {{ $mission->description }}
-                            </div>
-                        </div>
-                        @if($mission->pivot->status === 'taken')
-                        <form method="POST" action="{{ route('student.mission.submit', $mission->id) }}" enctype="multipart/form-data" class="flex flex-col sm:flex-row w-full lg:w-auto gap-2 items-end sm:items-center" onsubmit="let btn = this.querySelector('button[type=submit]'); if(btn) { btn.disabled = true; btn.innerHTML = '<span class=\'animate-spin inline-block w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full align-middle\'></span>'; }">
-                            @csrf
-                            @if($mission->proof_type === 'file')
-                                <input type="file" name="proof_file" required
-                                    class="w-full sm:w-48 text-xs border border-slate-200 rounded-xl px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
-                            @elseif($mission->proof_type === 'text')
-                                <input type="text" name="proof_text" placeholder="Tulis deskripsi bukti..." required
-                                    class="w-full sm:w-48 border border-slate-200 rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
-                            @elseif($mission->proof_type === 'link')
-                                <input type="url" name="proof_url" placeholder="Masukkan Link Bukti (https://...)" required
-                                    class="w-full sm:w-48 border border-slate-200 rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
-                            @else
-                                <span class="text-[10px] text-slate-400 font-semibold px-2">Tanpa Bukti</span>
-                            @endif
-                            <button type="submit" class="w-full sm:w-auto px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition shadow-sm hover:shadow-md h-[32px] flex items-center justify-center min-w-[70px]">
-                                Kirim
-                            </button>
-                        </form>
-                        @else
-                        <span class="px-3 py-1 bg-amber-50 border border-amber-100 text-amber-700 text-xs font-semibold rounded-lg flex items-center space-x-1">
-                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-                            <span>⏳ Menunggu Verifikasi Guru</span>
-                        </span>
-                        @endif
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-            @endif
 
             <!-- Aktivitas Terbaru (Recent Activities) Table -->
             <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden soft-glow-indigo">

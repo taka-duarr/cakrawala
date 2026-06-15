@@ -43,6 +43,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Mission::class)->withPivot('status', 'proof_url', 'proof_content', 'notes')->withTimestamps();
     }
 
+    public function events()
+    {
+        return $this->belongsToMany(Event::class)->withPivot('status')->withTimestamps();
+    }
+
     public function children()
     {
         return $this->belongsToMany(User::class, 'parent_student', 'parent_id', 'student_id')->withTimestamps();

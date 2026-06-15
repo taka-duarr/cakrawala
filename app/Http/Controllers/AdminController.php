@@ -950,5 +950,206 @@ class AdminController extends Controller
 
         return view('admin.toko_transactions', compact('toko', 'transactions', 'totalPaid', 'totalTx'));
     }
+
+    // --- Dynamic Events CRUD & Awarding ---
+    public function eventsIndex(Request $request)
+    {
+        $events = \App\Models\Event::latest()->paginate(15);
+        return view('admin.events', compact('events'));
+    }
+
+    public function eventsStore(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'event_date' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'points_bonus' => 'required|integer|min:1',
+            'category' => 'required|in:karakter,akademik,sosial',
+        ]);
+
+        \App\Models\Event::create($request->all());
+
+        return back()->with('success', 'Event baru berhasil dibuat!');
+    }
+
+    public function eventsUpdate(Request $request, $id)
+    {
+        $event = \App\Models\Event::findOrFail($id);
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'event_date' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'points_bonus' => 'required|integer|min:1',
+            'category' => 'required|in:karakter,akademik,sosial',
+        ]);
+
+        $event->update($request->all());
+
+        return back()->with('success', 'Event berhasil diperbarui!');
+    }
+
+    public function eventsDestroy($id)
+    {
+        \App\Models\Event::findOrFail($id)->delete();
+        return back()->with('success', 'Event berhasil dihapus.');
+    }
+
+    public function showAwardEvent($id)
+    {
+        $event = \App\Models\Event::findOrFail($id);
+        $classrooms = \App\Models\Classroom::with(['students' => function ($q) {
+            $q->where('role_id', 5);
+        }])->get();
+
+        $noClassStudents = \App\Models\User::where('role_id', 5)
+            ->whereNull('classroom_id')
+            ->get();
+
+        $completedStudentIds = \Illuminate\Support\Facades\DB::table('event_user')
+            ->where('event_id', $event->id)
+            ->where('status', 'completed')
+            ->pluck('user_id')
+            ->toArray();
+
+        return view('admin.award_event', compact('event', 'classrooms', 'noClassStudents', 'completedStudentIds'));
+    }
+
+    public function awardEvent(Request $request, $id, \App\Services\PointService $pointService)
+    {
+        $event = \App\Models\Event::findOrFail($id);
+        $studentIds = $request->input('student_ids', []);
+
+        $completedStudentIds = \Illuminate\Support\Facades\DB::table('event_user')
+            ->where('event_id', $event->id)
+            ->where('status', 'completed')
+            ->pluck('user_id')
+            ->toArray();
+
+        $awardedCount = 0;
+        foreach ($studentIds as $studentId) {
+            if (!in_array($studentId, $completedStudentIds)) {
+                $student = \App\Models\User::findOrFail($studentId);
+                
+                $student->events()->attach($event->id, [
+                    'status' => 'completed'
+                ]);
+
+                $pointService->addPoints($student, $event->points_bonus, 'kebaikan', 'Event: ' . $event->title, 'Reward partisipasi event manual');
+                $awardedCount++;
+            }
+        }
+
+        return redirect()->back()->with('success', "Berhasil memberikan reward event kepada {$awardedCount} siswa.");
+    }
+
+    // --- Dynamic Missions CRUD & Awarding ---
+    public function missionsIndex(Request $request)
+    {
+        $missions = \App\Models\Mission::latest()->paginate(15);
+        return view('admin.missions', compact('missions'));
+    }
+
+    public function missionsStore(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'points_reward' => 'required|integer|min:1',
+            'type' => 'required|in:daily,weekly,class,school,special',
+            'deadline' => 'nullable|date',
+            'proof_type' => 'required|in:file,link,text,none',
+        ]);
+
+        \App\Models\Mission::create($request->all());
+
+        return back()->with('success', 'Misi baru berhasil dibuat!');
+    }
+
+    public function missionsUpdate(Request $request, $id)
+    {
+        $mission = \App\Models\Mission::findOrFail($id);
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'points_reward' => 'required|integer|min:1',
+            'type' => 'required|in:daily,weekly,class,school,special',
+            'deadline' => 'nullable|date',
+            'proof_type' => 'required|in:file,link,text,none',
+        ]);
+
+        $mission->update($request->all());
+
+        return back()->with('success', 'Misi berhasil diperbarui!');
+    }
+
+    public function missionsDestroy($id)
+    {
+        \App\Models\Mission::findOrFail($id)->delete();
+        return back()->with('success', 'Misi berhasil dihapus.');
+    }
+
+    public function showAwardMission($id)
+    {
+        $mission = \App\Models\Mission::findOrFail($id);
+        $classrooms = \App\Models\Classroom::with(['students' => function ($q) {
+            $q->where('role_id', 5);
+        }])->get();
+
+        $noClassStudents = \App\Models\User::where('role_id', 5)
+            ->whereNull('classroom_id')
+            ->get();
+
+        $query = \Illuminate\Support\Facades\DB::table('mission_user')
+            ->where('mission_id', $mission->id)
+            ->where('status', 'approved');
+        if ($mission->type === 'daily') {
+            $query->whereDate('updated_at', now()->toDateString());
+        }
+        $completedStudentIds = $query->pluck('user_id')->toArray();
+
+        return view('admin.award_mission', compact('mission', 'classrooms', 'noClassStudents', 'completedStudentIds'));
+    }
+
+    public function awardMission(Request $request, $id, \App\Services\PointService $pointService)
+    {
+        $mission = \App\Models\Mission::findOrFail($id);
+        $studentIds = $request->input('student_ids', []);
+
+        $query = \Illuminate\Support\Facades\DB::table('mission_user')
+            ->where('mission_id', $mission->id)
+            ->where('status', 'approved');
+        if ($mission->type === 'daily') {
+            $query->whereDate('updated_at', now()->toDateString());
+        }
+        $completedStudentIds = $query->pluck('user_id')->toArray();
+
+        $awardedCount = 0;
+        foreach ($studentIds as $studentId) {
+            if (!in_array($studentId, $completedStudentIds)) {
+                $student = \App\Models\User::findOrFail($studentId);
+
+                $existing = $student->missions()->where('mission_id', $mission->id)->first();
+                if (!$existing) {
+                    $student->missions()->attach($mission->id, [
+                        'status' => 'approved',
+                        'notes' => 'Reward manual oleh Admin'
+                    ]);
+                } else {
+                    $student->missions()->updateExistingPivot($mission->id, [
+                        'status' => 'approved',
+                        'notes' => 'Reward manual oleh Admin'
+                    ]);
+                }
+
+                $pointService->addPoints($student, $mission->points_reward, 'kebaikan', 'Misi: ' . $mission->title, 'Verifikasi manual oleh Admin');
+                $awardedCount++;
+            }
+        }
+
+        return redirect()->back()->with('success', "Berhasil memberikan reward misi kepada {$awardedCount} siswa.");
+    }
 }
 

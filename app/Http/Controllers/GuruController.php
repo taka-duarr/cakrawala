@@ -218,4 +218,120 @@ class GuruController extends Controller
             'assignmentSubmissions'
         ));
     }
+
+    public function missionsIndex()
+    {
+        $missions = \App\Models\Mission::latest()->get();
+        $events = \App\Models\Event::latest()->get();
+        return view('guru.missions_events', compact('missions', 'events'));
+    }
+
+    public function showAwardMission($id)
+    {
+        $mission = \App\Models\Mission::findOrFail($id);
+        $classrooms = \App\Models\Classroom::with(['students' => function ($q) {
+            $q->where('role_id', 5);
+        }])->get();
+
+        $noClassStudents = \App\Models\User::where('role_id', 5)
+            ->whereNull('classroom_id')
+            ->get();
+
+        $query = \Illuminate\Support\Facades\DB::table('mission_user')
+            ->where('mission_id', $mission->id)
+            ->where('status', 'approved');
+        if ($mission->type === 'daily') {
+            $query->whereDate('updated_at', now()->toDateString());
+        }
+        $completedStudentIds = $query->pluck('user_id')->toArray();
+
+        return view('guru.award_mission', compact('mission', 'classrooms', 'noClassStudents', 'completedStudentIds'));
+    }
+
+    public function awardMission(Request $request, $id, PointService $pointService)
+    {
+        $mission = \App\Models\Mission::findOrFail($id);
+        $studentIds = $request->input('student_ids', []);
+
+        $query = \Illuminate\Support\Facades\DB::table('mission_user')
+            ->where('mission_id', $mission->id)
+            ->where('status', 'approved');
+        if ($mission->type === 'daily') {
+            $query->whereDate('updated_at', now()->toDateString());
+        }
+        $completedStudentIds = $query->pluck('user_id')->toArray();
+
+        $awardedCount = 0;
+        foreach ($studentIds as $studentId) {
+            if (!in_array($studentId, $completedStudentIds)) {
+                $student = \App\Models\User::findOrFail($studentId);
+
+                $existing = $student->missions()->where('mission_id', $mission->id)->first();
+                if (!$existing) {
+                    $student->missions()->attach($mission->id, [
+                        'status' => 'approved',
+                        'notes' => 'Reward manual oleh Guru'
+                    ]);
+                } else {
+                    $student->missions()->updateExistingPivot($mission->id, [
+                        'status' => 'approved',
+                        'notes' => 'Reward manual oleh Guru'
+                    ]);
+                }
+
+                $pointService->addPoints($student, $mission->points_reward, 'kebaikan', 'Misi: ' . $mission->title, 'Verifikasi manual oleh Guru');
+                $awardedCount++;
+            }
+        }
+
+        return redirect()->back()->with('success', "Berhasil memberikan reward misi kepada {$awardedCount} siswa.");
+    }
+
+    public function showAwardEvent($id)
+    {
+        $event = \App\Models\Event::findOrFail($id);
+        $classrooms = \App\Models\Classroom::with(['students' => function ($q) {
+            $q->where('role_id', 5);
+        }])->get();
+
+        $noClassStudents = \App\Models\User::where('role_id', 5)
+            ->whereNull('classroom_id')
+            ->get();
+
+        $completedStudentIds = \Illuminate\Support\Facades\DB::table('event_user')
+            ->where('event_id', $event->id)
+            ->where('status', 'completed')
+            ->pluck('user_id')
+            ->toArray();
+
+        return view('guru.award_event', compact('event', 'classrooms', 'noClassStudents', 'completedStudentIds'));
+    }
+
+    public function awardEvent(Request $request, $id, PointService $pointService)
+    {
+        $event = \App\Models\Event::findOrFail($id);
+        $studentIds = $request->input('student_ids', []);
+
+        $completedStudentIds = \Illuminate\Support\Facades\DB::table('event_user')
+            ->where('event_id', $event->id)
+            ->where('status', 'completed')
+            ->pluck('user_id')
+            ->toArray();
+
+        $awardedCount = 0;
+        foreach ($studentIds as $studentId) {
+            if (!in_array($studentId, $completedStudentIds)) {
+                $student = \App\Models\User::findOrFail($studentId);
+                
+                $student->events()->attach($event->id, [
+                    'status' => 'completed'
+                ]);
+
+                $pointService->addPoints($student, $event->points_bonus, 'kebaikan', 'Event: ' . $event->title, 'Reward partisipasi event manual');
+                $awardedCount++;
+            }
+        }
+
+        return redirect()->back()->with('success', "Berhasil memberikan reward event kepada {$awardedCount} siswa.");
+    }
 }

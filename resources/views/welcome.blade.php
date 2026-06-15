@@ -11,7 +11,7 @@
         <!-- Fonts (Outfit for Headers, Inter for Body) -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
 
         <!-- Tailwind & Vite -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -44,28 +44,28 @@
     <body class="smooth-scroll font-sans antialiased bg-slate-50/30 text-slate-800">
         
         <!-- Navigation (Sticky Glassmorphism) -->
-        <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center h-16">
-                    <div class="flex items-center space-x-3">
-                        <img src="{{ asset('logo.png') }}" alt="Logo" class="h-10 w-10 object-contain rounded-xl shadow-sm bg-slate-50 p-1 border border-slate-100">
-                        <span class="text-lg font-black tracking-tight text-slate-900">
+        <header class="bg-white/90 backdrop-blur-lg border-b border-slate-100 sticky top-0 z-50 shadow-sm shadow-slate-100/50">
+            <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
+                <div class="flex justify-between items-center h-20">
+                    <div class="flex items-center gap-x-3">
+                        <img src="{{ asset('logo.png') }}" alt="Logo" class="h-11 w-11 object-contain rounded-2xl shadow-sm bg-slate-50 p-1 border border-slate-100">
+                        <span class="text-xl font-black tracking-tight text-slate-900">
                             CAKRAWALA
                         </span>
                     </div>
-                    <nav class="hidden md:flex space-x-8">
-                        <a href="#tentang" class="text-xs font-semibold text-slate-500 hover:text-indigo-600 transition">Tentang</a>
-                        <a href="#fitur" class="text-xs font-semibold text-slate-500 hover:text-indigo-600 transition">Fitur Utama</a>
-                        <a href="#statistik" class="text-xs font-semibold text-slate-500 hover:text-indigo-600 transition">Statistik</a>
+                    <nav class="hidden md:flex items-center gap-x-8">
+                        <a href="#tentang" class="text-sm font-semibold text-slate-500 hover:text-indigo-600 transition">Tentang</a>
+                        <a href="#fitur" class="text-sm font-semibold text-slate-500 hover:text-indigo-600 transition">Fitur Utama</a>
+                        <a href="#statistik" class="text-sm font-semibold text-slate-500 hover:text-indigo-600 transition">Statistik</a>
                     </nav>
-                    <div class="flex items-center space-x-4">
+                    <div class="flex items-center gap-x-4">
                         @if (Route::has('login'))
                             @auth
-                                <a href="{{ url('/dashboard') }}" class="px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl text-xs font-bold transition border border-indigo-100/50">
+                                <a href="{{ url('/dashboard') }}" class="px-6 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-2xl text-xs font-bold transition border border-indigo-100/50">
                                     Dashboard
                                 </a>
                             @else
-                                <a href="{{ route('login') }}" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition shadow-md shadow-indigo-100">
+                                <a href="{{ route('login') }}" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-xs font-bold transition shadow-md shadow-indigo-500/10">
                                     Masuk
                                 </a>
                             @endauth
@@ -77,43 +77,43 @@
 
         <!-- Hero Section -->
         <main>
-            <div class="relative pt-16 pb-24 lg:pt-24 lg:pb-32 overflow-hidden">
+            <div class="relative pt-20 pb-28 lg:pt-32 lg:pb-40 overflow-hidden">
                 <!-- Glowing Abstract Vector Background -->
                 <div class="absolute inset-0 -z-10">
-                    <div class="absolute left-[-5%] top-[-5%] w-[45rem] h-[45rem] bg-indigo-100/30 rounded-full blur-3xl"></div>
-                    <div class="absolute right-[-5%] bottom-[-5%] w-[45rem] h-[45rem] bg-emerald-50/30 rounded-full blur-3xl"></div>
+                    <div class="absolute left-[-5%] top-[-5%] w-[45rem] h-[45rem] bg-indigo-100/20 rounded-full blur-3xl"></div>
+                    <div class="absolute right-[-5%] bottom-[-5%] w-[45rem] h-[45rem] bg-emerald-50/20 rounded-full blur-3xl"></div>
                 </div>
 
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="flex flex-col lg:flex-row items-center justify-between gap-12">
+                <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
+                    <div class="flex flex-col lg:flex-row items-center justify-between gap-16">
                         <!-- Hero Content -->
-                        <div class="w-full lg:w-1/2 space-y-6 text-center lg:text-left">
+                        <div class="w-full lg:w-1/2 space-y-8 text-center lg:text-left">
                             <span class="inline-flex items-center px-4 py-1.5 bg-indigo-50 text-indigo-700 rounded-full text-xs font-bold border border-indigo-100 uppercase tracking-wider">
                                 🚀 Pengembangan Karakter Era Baru
                             </span>
                             
-                            <h1 class="text-4xl font-black tracking-tight text-slate-900 sm:text-6xl leading-tight">
+                            <h1 class="text-4xl font-black tracking-tight text-slate-900 sm:text-6xl leading-[1.15]">
                                 Melampaui Nilai, <br>
-                                <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-indigo-750 to-purple-800">Membentuk Masa Depan.</span>
+                                <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-800">Membentuk Masa Depan.</span>
                             </h1>
                             
-                            <p class="text-sm sm:text-base text-slate-555 leading-relaxed max-w-xl mx-auto lg:mx-0 font-medium">
+                            <p class="text-sm sm:text-base text-slate-500 leading-relaxed max-w-xl mx-auto lg:mx-0 font-medium">
                                 Platform pendidikan berbasis gamifikasi yang mengapresiasi kontribusi, kedisiplinan, dan kepemimpinan siswa. Kami membantu guru, orang tua, dan sekolah berkolaborasi membentuk karakter tangguh generasi mendatang.
                             </p>
 
                             <div class="pt-4 flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
                                 @if (Route::has('login'))
                                     @auth
-                                        <a href="{{ url('/dashboard') }}" class="px-8 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-xs font-bold transition shadow-md shadow-indigo-100 flex items-center justify-center space-x-2">
+                                        <a href="{{ url('/dashboard') }}" class="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-xs font-bold transition shadow-md shadow-indigo-500/10 flex items-center justify-center gap-x-2">
                                             <span>Kembali ke Dashboard</span>
                                             <span uk-icon="icon: arrow-right; ratio: 0.8"></span>
                                         </a>
                                     @else
-                                        <a href="{{ route('login') }}" class="px-8 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-xs font-bold transition shadow-lg shadow-indigo-150/50 flex items-center justify-center space-x-2">
+                                        <a href="{{ route('login') }}" class="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-xs font-bold transition shadow-lg shadow-indigo-500/10 flex items-center justify-center gap-x-2">
                                             <span>Mulai Sekarang</span>
                                             <span uk-icon="icon: sign-in; ratio: 0.8"></span>
                                         </a>
-                                        <a href="#tentang" class="px-8 py-3.5 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-2xl text-xs font-bold transition shadow-sm flex items-center justify-center space-x-2">
+                                        <a href="#tentang" class="px-8 py-4 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-2xl text-xs font-bold transition shadow-sm flex items-center justify-center gap-x-2">
                                             <span>Pelajari Selengkapnya</span>
                                         </a>
                                     @endauth
@@ -123,9 +123,9 @@
 
                         <!-- Hero Image (Interactive/Float) -->
                         <div class="w-full lg:w-1/2 flex justify-center">
-                            <div class="relative w-full max-w-lg lg:max-w-none">
+                            <div class="relative w-full max-w-xl">
                                 <!-- Background card-glow decoration -->
-                                <div class="absolute -inset-1.5 bg-gradient-to-r from-indigo-600 to-emerald-500 rounded-3xl blur-2xl opacity-15"></div>
+                                <div class="absolute -inset-1.5 bg-gradient-to-r from-indigo-600 to-emerald-500 rounded-3xl blur-2xl opacity-15 animate-pulse"></div>
                                 <img src="{{ asset('cakrawala_hero.png') }}" alt="Cakrawala Hero Illustration" class="relative rounded-3xl shadow-2xl border border-slate-100/50 animate-float w-full object-contain">
                             </div>
                         </div>
@@ -134,42 +134,42 @@
             </div>
 
             <!-- Features Section -->
-            <div id="tentang" class="py-24 bg-white border-t border-slate-100 relative">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="text-center mb-16 max-w-2xl mx-auto space-y-3">
-                        <h2 class="text-3xl font-black tracking-tight text-slate-800 sm:text-4xl">Mengapa CAKRAWALA?</h2>
-                        <p class="text-xs sm:text-sm text-slate-450 leading-relaxed font-semibold">Kami percaya bahwa pendidikan sejati adalah keseimbangan yang harmonis antara kecerdasan akademis dan budi pekerti yang mulia.</p>
+            <div id="tentang" class="py-28 bg-white border-t border-slate-100 relative scroll-mt-24">
+                <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
+                    <div class="text-center mb-20 max-w-2xl mx-auto space-y-4">
+                        <h2 class="text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">Mengapa CAKRAWALA?</h2>
+                        <p class="text-sm text-slate-500 leading-relaxed font-semibold">Kami percaya bahwa pendidikan sejati adalah keseimbangan yang harmonis antara kecerdasan akademis dan budi pekerti yang mulia.</p>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="fitur">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10" id="fitur" class="scroll-mt-24">
                         <!-- Card 1 -->
-                        <div class="bg-slate-50/50 border border-slate-100 hover:border-indigo-200 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-xl hover:shadow-indigo-100/20 group">
+                        <div class="bg-slate-50/50 border border-slate-100 hover:border-indigo-200 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1.5 hover:bg-white hover:shadow-xl hover:shadow-indigo-500/5 group">
                             <div class="w-12 h-12 bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white rounded-2xl flex items-center justify-center mb-6 shadow-sm border border-indigo-100/50 transition-all">
                                 <span uk-icon="icon: heart; ratio: 1.2"></span>
                             </div>
-                            <h3 class="text-lg font-extrabold text-slate-800 mb-3 group-hover:text-indigo-700 transition-colors">Sistem Poin Karakter</h3>
+                            <h3 class="text-lg font-extrabold text-slate-900 mb-3 group-hover:text-indigo-700 transition-colors">Sistem Poin Karakter</h3>
                             <p class="text-xs text-slate-500 leading-relaxed font-medium">
                                 Setiap perbuatan baik, kontribusi kepedulian sosial, keaktifan di kelas, dan kedisiplinan dihargai secara transparan menggunakan skor poin keaktifan.
                             </p>
                         </div>
 
                         <!-- Card 2 -->
-                        <div class="bg-slate-50/50 border border-slate-100 hover:border-emerald-200 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-xl hover:shadow-emerald-100/20 group">
+                        <div class="bg-slate-50/50 border border-slate-100 hover:border-emerald-200 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1.5 hover:bg-white hover:shadow-xl hover:shadow-emerald-550/5 group">
                             <div class="w-12 h-12 bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white rounded-2xl flex items-center justify-center mb-6 shadow-sm border border-emerald-100/50 transition-all">
                                 <span uk-icon="icon: check; ratio: 1.2"></span>
                             </div>
-                            <h3 class="text-lg font-extrabold text-slate-800 mb-3 group-hover:text-emerald-700 transition-colors">Misi Harian & Mingguan</h3>
+                            <h3 class="text-lg font-extrabold text-slate-900 mb-3 group-hover:text-emerald-700 transition-colors">Misi Harian & Mingguan</h3>
                             <p class="text-xs text-slate-500 leading-relaxed font-medium">
                                 Guru dapat membuat tantangan karakter seperti memimpin doa, gotong royong, atau membaca buku di perpustakaan sebagai quest gamifikasi yang terukur.
                             </p>
                         </div>
 
                         <!-- Card 3 -->
-                        <div class="bg-slate-50/50 border border-slate-100 hover:border-indigo-200 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-xl hover:shadow-indigo-100/20 group">
+                        <div class="bg-slate-50/50 border border-slate-100 hover:border-indigo-200 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1.5 hover:bg-white hover:shadow-xl hover:shadow-indigo-500/5 group">
                             <div class="w-12 h-12 bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white rounded-2xl flex items-center justify-center mb-6 shadow-sm border border-indigo-100/50 transition-all">
-                                <span uk-icon="icon: cloud; ratio: 1.2"></span>
+                                <span uk-icon="icon: star; ratio: 1.2"></span>
                             </div>
-                            <h3 class="text-lg font-extrabold text-slate-800 mb-3 group-hover:text-indigo-700 transition-colors">Rekomendasi Pintar AI</h3>
+                            <h3 class="text-lg font-extrabold text-slate-900 mb-3 group-hover:text-indigo-700 transition-colors">Rekomendasi Pintar AI</h3>
                             <p class="text-xs text-slate-500 leading-relaxed font-medium">
                                 Rekomendasi misi berbasis AI mendeteksi minat, bakat, dan area perkembangan siswa, memberikan umpan balik (Early Warning) yang bernilai bagi orang tua.
                             </p>
@@ -179,29 +179,29 @@
             </div>
 
             <!-- Statistics Section -->
-            <div id="statistik" class="py-20 bg-slate-900 text-white relative overflow-hidden" style="background-color: #0f172a;">
+            <div id="statistik" class="py-24 bg-slate-900 text-white relative overflow-hidden scroll-mt-24" style="background-color: #0f172a;">
                 <div class="absolute inset-0 -z-10">
                     <div class="absolute left-[10%] top-[-10%] w-[35rem] h-[35rem] bg-indigo-500/10 rounded-full blur-3xl"></div>
                     <div class="absolute right-[10%] bottom-[-10%] w-[35rem] h-[35rem] bg-emerald-500/10 rounded-full blur-3xl"></div>
                 </div>
 
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                        <div class="space-y-2">
+                <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-8 text-center">
+                        <div class="space-y-3">
                             <strong class="text-4xl md:text-5xl font-black block text-indigo-400">10,000+</strong>
-                            <span class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Poin Dikumpulkan</span>
+                            <span class="text-xs text-slate-400 uppercase tracking-wider font-bold">Poin Dikumpulkan</span>
                         </div>
-                        <div class="space-y-2">
+                        <div class="space-y-3">
                             <strong class="text-4xl md:text-5xl font-black block text-emerald-400">1,500+</strong>
-                            <span class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Misi Terselesaikan</span>
+                            <span class="text-xs text-slate-400 uppercase tracking-wider font-bold">Misi Terselesaikan</span>
                         </div>
-                        <div class="space-y-2">
+                        <div class="space-y-3">
                             <strong class="text-4xl md:text-5xl font-black block text-indigo-400">50+</strong>
-                            <span class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Lencana Karakter</span>
+                            <span class="text-xs text-slate-400 uppercase tracking-wider font-bold">Lencana Karakter</span>
                         </div>
-                        <div class="space-y-2">
+                        <div class="space-y-3">
                             <strong class="text-4xl md:text-5xl font-black block text-emerald-400">100%</strong>
-                            <span class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Terintegrasi GPS</span>
+                            <span class="text-xs text-slate-400 uppercase tracking-wider font-bold">Terintegrasi GPS</span>
                         </div>
                     </div>
                 </div>
@@ -209,19 +209,20 @@
         </main>
         
         <!-- Footer -->
-        <footer class="bg-slate-950 py-16 border-t border-slate-900" style="background-color: #020617;">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-center space-y-4">
-                <div class="flex items-center space-x-3">
-                    <img src="{{ asset('logo.png') }}" alt="Logo" class="h-10 w-10 object-contain rounded-xl bg-white/10 p-1">
-                    <span class="text-lg font-black tracking-tight text-white">CAKRAWALA</span>
+        <footer class="bg-slate-950 py-20 border-t border-slate-900" style="background-color: #020617;">
+            <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 text-center flex flex-col items-center justify-center space-y-6">
+                <div class="flex items-center gap-x-3">
+                    <img src="{{ asset('logo.png') }}" alt="Logo" class="h-11 w-11 object-contain rounded-xl bg-white/10 p-1">
+                    <span class="text-xl font-black tracking-tight text-white">CAKRAWALA</span>
                 </div>
-                <p class="text-xs text-slate-400 max-w-md font-medium">
+                <p class="text-sm text-slate-400 max-w-md font-medium leading-relaxed">
                     Melampaui Nilai Akademik biasa. Menanamkan akhlak, kepedulian sosial, dan kedisiplinan nyata demi mempersiapkan generasi pemimpin masa depan.
                 </p>
-                <div class="pt-4 border-t border-slate-900 w-full max-w-sm text-[10px] text-slate-500 font-bold tracking-wider">
+                <div class="pt-6 border-t border-slate-900 w-full max-w-sm text-xs text-slate-500 font-bold tracking-wider">
                     © 2026 CAKRAWALA. ALL RIGHTS RESERVED.
                 </div>
             </div>
         </footer>
     </body>
 </html>
+

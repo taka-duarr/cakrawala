@@ -18,13 +18,15 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+        @livewireStyles
+
         <!-- Shadcn UI CDN (Franken UI) -->
         <link rel="stylesheet" href="https://unpkg.com/franken-ui@0.0.12/dist/css/core.min.css" />
-        <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.5/dist/js/uikit.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.5/dist/js/uikit-icons.min.js"></script>
+        <script data-navigate-once src="https://cdn.jsdelivr.net/npm/uikit@3.21.5/dist/js/uikit.min.js"></script>
+        <script data-navigate-once src="https://cdn.jsdelivr.net/npm/uikit@3.21.5/dist/js/uikit-icons.min.js"></script>
 
         <!-- SweetAlert2 CDN -->
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script data-navigate-once src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <style>
             body {
@@ -34,9 +36,22 @@
                 font-family: 'Outfit', sans-serif;
             }
         </style>
+
+        <!-- Alpine Global Store for Sidebar -->
+        <script data-navigate-once>
+            document.addEventListener('alpine:init', () => {
+                Alpine.store('sidebar', {
+                    collapsed: localStorage.getItem('sidebarCollapsed') === 'true',
+                    toggle() {
+                        this.collapsed = !this.collapsed;
+                        localStorage.setItem('sidebarCollapsed', this.collapsed);
+                    }
+                });
+            });
+        </script>
     </head>
     <body class="font-sans antialiased bg-slate-50/50 text-slate-800">
-        <div class="min-h-screen flex flex-col lg:flex-row" x-data="{ sidebarCollapsed: localStorage.getItem('sidebarCollapsed') === 'true' }">
+        <div class="min-h-screen flex flex-col lg:flex-row" x-data>
             
             <!-- Left Sidebar Navigation (Desktop) -->
             @include('layouts.navigation')
@@ -52,8 +67,8 @@
                         </button>
                         
                         <!-- Desktop Sidebar Toggle Button -->
-                        <button @click="sidebarCollapsed = !sidebarCollapsed; localStorage.setItem('sidebarCollapsed', sidebarCollapsed)" class="hidden lg:flex p-2 -ml-2 text-slate-400 hover:text-indigo-600 rounded-xl hover:bg-slate-50 mr-4 transition" title="Toggle Sidebar">
-                            <svg class="w-5 h-5 transition-transform duration-300" :class="sidebarCollapsed ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <button @click="$store.sidebar.toggle()" class="hidden lg:flex p-2 -ml-2 text-slate-400 hover:text-indigo-600 rounded-xl hover:bg-slate-50 mr-4 transition" title="Toggle Sidebar">
+                            <svg class="w-5 h-5 transition-transform duration-300" :class="$store.sidebar.collapsed ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 9l-3 3m0 0l3 3m-3-3h7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </button>
@@ -69,17 +84,17 @@
                     <div class="flex items-center space-x-6">
                         <!-- Quick Links -->
                         <div class="hidden md:flex items-center space-x-5 text-xs font-semibold text-slate-500">
-                            <a href="{{ route('dashboard') }}" class="hover:text-indigo-600 transition">Quest</a>
+                            <a href="{{ route('dashboard') }}" wire:navigate class="hover:text-indigo-600 transition">Quest</a>
                             @if(auth()->user()->role && auth()->user()->role->name === 'siswa')
-                                <a href="{{ route('student.my-classes') }}" class="hover:text-indigo-600 transition">Kelas Saya</a>
-                                <a href="{{ route('student.rewards') }}" class="hover:text-indigo-600 transition">Reward Store</a>
+                                <a href="{{ route('student.my-classes') }}" wire:navigate class="hover:text-indigo-600 transition">Kelas Saya</a>
+                                <a href="{{ route('student.rewards') }}" wire:navigate class="hover:text-indigo-600 transition">Reward Store</a>
                             @endif
-                            <a href="{{ route('leaderboard') }}" class="hover:text-indigo-600 transition">Leaderboard</a>
+                            <a href="{{ route('leaderboard') }}" wire:navigate class="hover:text-indigo-600 transition">Leaderboard</a>
                         </div>
 
                         <!-- Notifications -->
                         <div class="relative">
-                            <a href="{{ route('notifications') }}" class="relative inline-block p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-50 transition" title="Lihat Notifikasi">
+                            <a href="{{ route('notifications') }}" wire:navigate class="relative inline-block p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-50 transition" title="Lihat Notifikasi">
                                 <span uk-icon="icon: bell; ratio: 0.95"></span>
                                 @php
                                     $unreadNotificationsCount = auth()->check() ? \App\Models\Notification::where('user_id', auth()->id())->where('is_unread', true)->count() : 0;
@@ -144,71 +159,71 @@
             </div>
             
             <nav class="flex-1 px-4 py-6 space-y-2">
-                <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ (request()->routeIs('dashboard') || request()->routeIs('*.dashboard')) ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                <a href="{{ route('dashboard') }}" wire:navigate class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ (request()->routeIs('dashboard') || request()->routeIs('*.dashboard')) ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                     <span uk-icon="icon: home; ratio: 0.9"></span>
                     <span>Dashboard</span>
                 </a>
                 
-                <a href="{{ route('leaderboard') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('leaderboard') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                <a href="{{ route('leaderboard') }}" wire:navigate class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('leaderboard') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                     <span uk-icon="icon: star; ratio: 0.9"></span>
                     <span>Leaderboard</span>
                 </a>
                 
                 @if(auth()->user()->role && auth()->user()->role->name === 'siswa')
-                    <a href="{{ route('student.my-classes') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('student.my-classes') || request()->routeIs('student.class-detail') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                    <a href="{{ route('student.my-classes') }}" wire:navigate class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('student.my-classes') || request()->routeIs('student.class-detail') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                         <span uk-icon="icon: grid; ratio: 0.9"></span>
                         <span>Kelas Saya</span>
                     </a>
-                    <a href="{{ route('student.rewards') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('student.rewards') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                    <a href="{{ route('student.rewards') }}" wire:navigate class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('student.rewards') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                         <span uk-icon="icon: cart; ratio: 0.9"></span>
                         <span>Toko Hadiah</span>
                     </a>
-                    <a href="{{ route('student.dompet') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('student.dompet') ? 'bg-violet-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                    <a href="{{ route('student.dompet') }}" wire:navigate class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('student.dompet') ? 'bg-violet-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                         <span uk-icon="icon: credit-card; ratio: 0.9"></span>
                         <span>Dompet Poin</span>
                     </a>
                 @endif
 
                 @if(auth()->user()->role && auth()->user()->role->name === 'guru')
-                    <a href="{{ route('guru.my-schedule') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('guru.my-schedule') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                    <a href="{{ route('guru.my-schedule') }}" wire:navigate class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('guru.my-schedule') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                         <span uk-icon="icon: calendar; ratio: 0.9"></span>
                         <span>Jadwal Mengajar</span>
                     </a>
                 @endif
 
                 @if(auth()->user()->role && auth()->user()->role->name === 'admin')
-                    <a href="{{ route('admin.rewards.manage') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('admin.rewards.manage') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                    <a href="{{ route('admin.rewards.manage') }}" wire:navigate class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('admin.rewards.manage') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                         <span uk-icon="icon: settings; ratio: 0.9"></span>
                         <span>Kelola Toko Hadiah</span>
                     </a>
-                    <a href="{{ route('admin.subjects.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('admin.subjects.*') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                    <a href="{{ route('admin.subjects.index') }}" wire:navigate class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('admin.subjects.*') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                         <span uk-icon="icon: bookmark; ratio: 0.9"></span>
                         <span>Mata Pelajaran</span>
                     </a>
-                    <a href="{{ route('admin.teaching-assignments.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('admin.teaching-assignments.*') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                    <a href="{{ route('admin.teaching-assignments.index') }}" wire:navigate class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('admin.teaching-assignments.*') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                         <span uk-icon="icon: users; ratio: 0.9"></span>
                         <span>Penugasan Mengajar</span>
                     </a>
-                    <a href="{{ route('admin.toko.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('admin.toko.*') ? 'bg-violet-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                    <a href="{{ route('admin.toko.index') }}" wire:navigate class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('admin.toko.*') ? 'bg-violet-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                         <span uk-icon="icon: cart; ratio: 0.9"></span>
                         <span>Manajemen Toko</span>
                     </a>
-                    <a href="{{ route('admin.withdrawals.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('admin.withdrawals.*') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                    <a href="{{ route('admin.withdrawals.index') }}" wire:navigate class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('admin.withdrawals.*') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                         <span uk-icon="icon: credit-card; ratio: 0.9"></span>
                         <span>Pencairan Dana</span>
                     </a>
                 @endif
 
                 @if(auth()->user()->role && auth()->user()->role->name === 'toko')
-                    <a href="{{ route('toko.dashboard') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('toko.dashboard') ? 'bg-violet-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                    <a href="{{ route('toko.dashboard') }}" wire:navigate class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('toko.dashboard') ? 'bg-violet-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                         <span uk-icon="icon: cart; ratio: 0.9"></span>
                         <span>Kasir</span>
                     </a>
-                    <a href="{{ route('toko.katalog') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('toko.katalog') ? 'bg-violet-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                    <a href="{{ route('toko.katalog') }}" wire:navigate class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('toko.katalog') ? 'bg-violet-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                         <span uk-icon="icon: list; ratio: 0.9"></span>
                         <span>Kelola Katalog</span>
                     </a>
-                    <a href="{{ route('toko.withdrawals.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('toko.withdrawals.index') ? 'bg-violet-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                    <a href="{{ route('toko.withdrawals.index') }}" wire:navigate class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('toko.withdrawals.index') ? 'bg-violet-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                         <span uk-icon="icon: credit-card; ratio: 0.9"></span>
                         <span>Penarikan Dana</span>
                     </a>
@@ -218,15 +233,15 @@
                     <span class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider px-4">Lainnya</span>
                 </div>
 
-                <a href="{{ route('events') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('events') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                <a href="{{ route('events') }}" wire:navigate class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('events') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                     <span uk-icon="icon: calendar; ratio: 0.9"></span>
                     <span>Event</span>
                 </a>
-                <a href="{{ route('announcements') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('announcements') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                <a href="{{ route('announcements') }}" wire:navigate class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('announcements') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                     <span uk-icon="icon: info; ratio: 0.9"></span>
                     <span>Pengumuman</span>
                 </a>
-                <a href="{{ route('help') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('help') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                <a href="{{ route('help') }}" wire:navigate class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('help') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                     <span uk-icon="icon: question; ratio: 0.9"></span>
                     <span>Bantuan</span>
                 </a>
@@ -256,5 +271,7 @@
                 }, 300); // match transition duration
             }
         </script>
+
+        @livewireScripts
     </body>
 </html>

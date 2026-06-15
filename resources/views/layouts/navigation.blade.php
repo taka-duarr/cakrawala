@@ -21,13 +21,13 @@
     $pct = $levelMax > 0 ? min(100, ($user->points / $levelMax) * 100) : 100;
 @endphp
 
-<aside class="hidden lg:flex bg-white border-r border-slate-100 flex-col h-screen sticky top-0 z-35 overflow-hidden transition-all duration-300"
+<aside x-data="{ get sidebarCollapsed() { return $store.sidebar.collapsed } }" class="hidden lg:flex bg-white border-r border-slate-100 flex-col h-screen sticky top-0 z-35 overflow-hidden transition-all duration-300"
     :class="sidebarCollapsed ? 'w-20 p-4' : 'w-72 p-6'">
     <!-- Top Sidebar Section (Logo & Menu) -->
     <div class="flex-1 overflow-y-auto space-y-8 pr-1 -mr-1">
         <!-- Logo -->
         <div class="border-b border-slate-100/80 transition-all duration-300" :class="sidebarCollapsed ? 'pb-3 text-center' : 'pb-5'">
-            <a href="{{ route('dashboard') }}" class="flex items-center text-decoration-none" :class="sidebarCollapsed ? 'flex-col space-y-2 justify-center' : 'space-x-3'">
+            <a href="{{ route('dashboard') }}" wire:navigate class="flex items-center text-decoration-none" :class="sidebarCollapsed ? 'flex-col space-y-2 justify-center' : 'space-x-3'">
                 <img src="{{ asset('logo.png') }}" alt="Logo" class="object-contain rounded-xl shadow-sm bg-slate-50 p-1 transition-all duration-300" :class="sidebarCollapsed ? 'h-11 w-11' : 'h-14 w-14'">
                 <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-250" x-transition:enter-start="opacity-0 transform -translate-x-2" x-transition:enter-end="opacity-100 transform translate-x-0" class="text-xl font-extrabold tracking-tight text-slate-800">
                     CAKRAWALA
@@ -46,7 +46,7 @@
                 </span>
                 <nav class="space-y-1">
                     <!-- Dashboard Link -->
-                    <a href="{{ route('dashboard') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ (request()->routeIs('dashboard') || request()->routeIs('*.dashboard')) ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                    <a href="{{ route('dashboard') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ (request()->routeIs('dashboard') || request()->routeIs('*.dashboard')) ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                        :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                        :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Dashboard' : 'delay: 999999'">
                         <span uk-icon="icon: home; ratio: 0.8"></span>
@@ -54,7 +54,7 @@
                     </a>
 
                     <!-- Leaderboard Link -->
-                    <a href="{{ route('leaderboard') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('leaderboard') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                    <a href="{{ route('leaderboard') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('leaderboard') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                        :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                        :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Leaderboard' : 'delay: 999999'">
                         <span uk-icon="icon: star; ratio: 0.8"></span>
@@ -63,25 +63,25 @@
 
                     <!-- Siswa-specific Links -->
                     @if($roleName === 'siswa')
-                        <a href="{{ route('dashboard') }}#quest" class="sidebar-link flex items-center rounded-xl text-xs font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition"
+                        <a href="{{ route('dashboard') }}#quest" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Quest Board' : 'delay: 999999'">
                             <span uk-icon="icon: list; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Quest Board</span>
                         </a>
-                        <a href="{{ route('student.my-classes') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('student.my-classes') || request()->routeIs('student.class-detail') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('student.my-classes') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('student.my-classes') || request()->routeIs('student.class-detail') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Kelas Saya' : 'delay: 999999'">
                             <span uk-icon="icon: grid; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Kelas Saya</span>
                         </a>
-                        <a href="{{ route('student.rewards') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('student.rewards') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('student.rewards') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('student.rewards') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Toko Hadiah' : 'delay: 999999'">
                             <span uk-icon="icon: cart; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Toko Hadiah</span>
                         </a>
-                        <a href="{{ route('student.dompet') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('student.dompet') ? 'bg-violet-600 text-white shadow-md shadow-violet-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('student.dompet') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('student.dompet') ? 'bg-violet-600 text-white shadow-md shadow-violet-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Dompet Poin' : 'delay: 999999'">
                             <span uk-icon="icon: credit-card; ratio: 0.8"></span>
@@ -91,29 +91,35 @@
 
 
                     @if($roleName === 'guru')
-                        <a href="{{ route('guru.my-schedule') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('guru.my-schedule') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('guru.my-schedule') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('guru.my-schedule') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Jadwal Mengajar' : 'delay: 999999'">
                             <span uk-icon="icon: calendar; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Jadwal Mengajar</span>
                         </a>
+                        <a href="{{ route('guru.missions.index') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('guru.missions.*') || request()->routeIs('guru.events.*') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Misi & Event' : 'delay: 999999'">
+                            <span uk-icon="icon: check; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Misi & Event</span>
+                        </a>
                     @endif
 
                     <!-- Toko-specific Links -->
                     @if($roleName === 'toko')
-                        <a href="{{ route('toko.dashboard') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('toko.dashboard') ? 'bg-violet-600 text-white shadow-md shadow-violet-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('toko.dashboard') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('toko.dashboard') ? 'bg-violet-600 text-white shadow-md shadow-violet-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Kasir' : 'delay: 999999'">
                             <span uk-icon="icon: cart; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Kasir</span>
                         </a>
-                        <a href="{{ route('toko.katalog') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('toko.katalog') ? 'bg-violet-600 text-white shadow-md shadow-violet-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('toko.katalog') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('toko.katalog') ? 'bg-violet-600 text-white shadow-md shadow-violet-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Kelola Katalog' : 'delay: 999999'">
                             <span uk-icon="icon: list; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Kelola Katalog</span>
                         </a>
-                        <a href="{{ route('toko.withdrawals.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('toko.withdrawals.index') ? 'bg-violet-600 text-white shadow-md shadow-violet-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('toko.withdrawals.index') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('toko.withdrawals.index') ? 'bg-violet-600 text-white shadow-md shadow-violet-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Penarikan Dana' : 'delay: 999999'">
                             <span uk-icon="icon: credit-card; ratio: 0.8"></span>
@@ -127,25 +133,25 @@
                         <div x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms class="pt-2">
                             <span class="block text-[9px] text-slate-300 font-bold uppercase tracking-wider mb-2 px-3.5">Data Akademik</span>
                         </div>
-                        <a href="{{ route('admin.academic-years.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.academic-years.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('admin.academic-years.index') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.academic-years.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Tahun Ajaran & Semester' : 'delay: 999999'">
                             <span uk-icon="icon: calendar; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Tahun Ajaran</span>
                         </a>
-                        <a href="{{ route('admin.jurusans.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.jurusans.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('admin.jurusans.index') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.jurusans.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Jurusan' : 'delay: 999999'">
                             <span uk-icon="icon: tag; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Jurusan</span>
                         </a>
-                        <a href="{{ route('admin.classrooms.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.classrooms.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('admin.classrooms.index') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.classrooms.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Kelola Kelas' : 'delay: 999999'">
                             <span uk-icon="icon: grid; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Kelola Kelas</span>
                         </a>
-                        <a href="{{ route('admin.subjects.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.subjects.*') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('admin.subjects.index') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.subjects.*') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Mata Pelajaran' : 'delay: 999999'">
                             <span uk-icon="icon: bookmark; ratio: 0.8"></span>
@@ -156,25 +162,25 @@
                         <div x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms class="pt-2">
                             <span class="block text-[9px] text-slate-300 font-bold uppercase tracking-wider mb-2 px-3.5">Manajemen Pengguna</span>
                         </div>
-                        <a href="{{ route('admin.users.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.users.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('admin.users.index') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.users.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Manajemen Sistem' : 'delay: 999999'">
                             <span uk-icon="icon: cog; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Manajemen Sistem</span>
                         </a>
-                        <a href="{{ route('admin.teachers.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.teachers.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('admin.teachers.index') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.teachers.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Manajemen Guru' : 'delay: 999999'">
                             <span uk-icon="icon: receiver; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Manajemen Guru</span>
                         </a>
-                        <a href="{{ route('admin.students.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.students.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('admin.students.index') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.students.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Manajemen Siswa' : 'delay: 999999'">
                             <span uk-icon="icon: users; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Manajemen Siswa</span>
                         </a>
-                        <a href="{{ route('admin.parents.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.parents.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('admin.parents.index') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.parents.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Manajemen Orang Tua' : 'delay: 999999'">
                             <span uk-icon="icon: happy; ratio: 0.8"></span>
@@ -185,36 +191,53 @@
                         <div x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms class="pt-2">
                             <span class="block text-[9px] text-slate-300 font-bold uppercase tracking-wider mb-2 px-3.5">Penugasan & Lokasi</span>
                         </div>
-                        <a href="{{ route('admin.teaching-assignments.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.teaching-assignments.*') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('admin.teaching-assignments.index') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.teaching-assignments.*') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Penugasan Mengajar' : 'delay: 999999'">
                             <span uk-icon="icon: users; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Penugasan Mengajar</span>
                         </a>
-                        <a href="{{ route('admin.school-locations.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.school-locations.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('admin.school-locations.index') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.school-locations.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Lokasi Sekolah' : 'delay: 999999'">
                             <span uk-icon="icon: location; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Lokasi Sekolah</span>
                         </a>
 
+                        <!-- Misi & Event Group -->
+                        <div x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms class="pt-2">
+                            <span class="block text-[9px] text-slate-300 font-bold uppercase tracking-wider mb-2 px-3.5">Misi & Event</span>
+                        </div>
+                        <a href="{{ route('admin.missions.index') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.missions.*') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Kelola Misi' : 'delay: 999999'">
+                            <span uk-icon="icon: list; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Kelola Misi</span>
+                        </a>
+                        <a href="{{ route('admin.events.index') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.events.*') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
+                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Kelola Event' : 'delay: 999999'">
+                            <span uk-icon="icon: calendar; ratio: 0.8"></span>
+                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Kelola Event</span>
+                        </a>
+
                         <!-- Ekonomi & Toko Group -->
                         <div x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms class="pt-2">
                             <span class="block text-[9px] text-slate-300 font-bold uppercase tracking-wider mb-2 px-3.5">Ekonomi & Toko</span>
                         </div>
-                        <a href="{{ route('admin.rewards.manage') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.rewards.manage') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('admin.rewards.manage') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.rewards.manage') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Kelola Toko Hadiah' : 'delay: 999999'">
                             <span uk-icon="icon: settings; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Kelola Toko Hadiah</span>
                         </a>
-                        <a href="{{ route('admin.toko.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.toko.*') ? 'bg-violet-600 text-white shadow-md shadow-violet-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('admin.toko.index') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.toko.*') ? 'bg-violet-600 text-white shadow-md shadow-violet-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Manajemen Toko' : 'delay: 999999'">
                             <span uk-icon="icon: cart; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Manajemen Toko</span>
                         </a>
-                        <a href="{{ route('admin.withdrawals.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.withdrawals.*') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('admin.withdrawals.index') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.withdrawals.*') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Pencairan Dana Toko' : 'delay: 999999'">
                             <span uk-icon="icon: credit-card; ratio: 0.8"></span>
@@ -225,25 +248,25 @@
                         <div x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms class="pt-2">
                             <span class="block text-[9px] text-slate-300 font-bold uppercase tracking-wider mb-2 px-3.5">Manajemen Poin</span>
                         </div>
-                        <a href="{{ route('admin.currency-settings.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.currency-settings.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('admin.currency-settings.index') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.currency-settings.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Pengaturan Poin' : 'delay: 999999'">
                             <span uk-icon="icon: credit-card; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Pengaturan Poin</span>
                         </a>
-                        <a href="{{ route('admin.point-history.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.point-history.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('admin.point-history.index') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.point-history.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Histori Transaksi' : 'delay: 999999'">
                             <span uk-icon="icon: history; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Histori Transaksi</span>
                         </a>
-                        <a href="{{ route('admin.point-adjust.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.point-adjust.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('admin.point-adjust.index') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.point-adjust.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Penyesuaian Poin' : 'delay: 999999'">
                             <span uk-icon="icon: plus-circle; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Penyesuaian Poin</span>
                         </a>
-                        <a href="{{ route('admin.point-audit.index') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.point-audit.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                        <a href="{{ route('admin.point-audit.index') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.point-audit.index') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Audit Poin' : 'delay: 999999'">
                             <span uk-icon="icon: search; ratio: 0.8"></span>
@@ -252,7 +275,7 @@
                     @endif
 
                     <!-- Profile Link -->
-                    <a href="{{ route('profile.edit') }}" class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('profile.edit') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                    <a href="{{ route('profile.edit') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('profile.edit') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                        :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                        :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Profil Saya' : 'delay: 999999'">
                         <span uk-icon="icon: user; ratio: 0.8"></span>
@@ -267,19 +290,19 @@
                     Lainnya
                 </span>
                 <nav class="space-y-1 text-xs font-semibold text-slate-500">
-                    <a href="{{ route('events') }}" class="sidebar-link flex items-center rounded-xl transition {{ request()->routeIs('events') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                    <a href="{{ route('events') }}" wire:navigate class="sidebar-link flex items-center rounded-xl transition {{ request()->routeIs('events') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                        :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                        :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Event' : 'delay: 999999'">
                         <span uk-icon="icon: calendar; ratio: 0.8"></span>
                         <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Event</span>
                     </a>
-                    <a href="{{ route('announcements') }}" class="sidebar-link flex items-center rounded-xl transition {{ request()->routeIs('announcements') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                    <a href="{{ route('announcements') }}" wire:navigate class="sidebar-link flex items-center rounded-xl transition {{ request()->routeIs('announcements') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                        :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                        :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Pengumuman' : 'delay: 999999'">
                         <span uk-icon="icon: info; ratio: 0.8"></span>
                         <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Pengumuman</span>
                     </a>
-                    <a href="{{ route('help') }}" class="sidebar-link flex items-center rounded-xl transition {{ request()->routeIs('help') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                    <a href="{{ route('help') }}" wire:navigate class="sidebar-link flex items-center rounded-xl transition {{ request()->routeIs('help') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
                        :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                        :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Bantuan' : 'delay: 999999'">
                         <span uk-icon="icon: question; ratio: 0.8"></span>

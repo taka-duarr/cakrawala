@@ -80,6 +80,9 @@ class ShopPaymentController extends Controller
             'paid_at'          => now(),
         ]);
 
+        // Auto mission trigger
+        app(\App\Services\AutoMissionService::class)->triggerStoreTransaction($student, $tx->points_amount);
+
         return redirect()->route('student.dompet')
             ->with('success', 'Pembayaran berhasil! ' . $tx->points_amount . ' poin telah dibayarkan ke Toko ' . $tx->shop->name . ' untuk "' . $tx->item_name . '".');
     }

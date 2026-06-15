@@ -35,7 +35,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     @foreach($events as $event)
                         @php
-                            $catColors = match($event['category']) {
+                            $catColors = match($event->category) {
                                 'akademik' => 'bg-indigo-100 text-indigo-700',
                                 'sosial' => 'bg-emerald-100 text-emerald-700',
                                 'karakter' => 'bg-amber-100 text-amber-700',
@@ -43,40 +43,49 @@
                             };
                         @endphp
                         <div class="event-card shimmer-card bg-slate-50/50 border border-slate-100 rounded-2xl p-6 flex flex-col justify-between transition hover:-translate-y-1 hover:bg-white hover:shadow-lg hover:shadow-indigo-50"
-                             data-title="{{ strtolower($event['title']) }}" data-description="{{ strtolower($event['description']) }}">
+                             data-title="{{ strtolower($event->title) }}" data-description="{{ strtolower($event->description) }}">
                             <div class="space-y-4">
                                 <div class="flex justify-between items-start">
                                     <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider {{ $catColors }}">
-                                        {{ $event['category'] }}
+                                        {{ $event->category }}
                                     </span>
-                                    <span class="text-xs font-bold text-emerald-600">+{{ $event['points_bonus'] }} Pts Bonus</span>
+                                    <span class="text-xs font-bold text-emerald-600">+{{ $event->points_bonus }} Pts Bonus</span>
                                 </div>
                                 
                                 <div>
-                                    <h4 class="font-extrabold text-slate-800 text-base leading-tight mb-2">{{ $event['title'] }}</h4>
-                                    <p class="text-xs text-slate-500 leading-relaxed">{{ $event['description'] }}</p>
+                                    <h4 class="font-extrabold text-slate-800 text-base leading-tight mb-2">{{ $event->title }}</h4>
+                                    <p class="text-xs text-slate-500 leading-relaxed">{{ $event->description }}</p>
                                 </div>
 
                                 <div class="space-y-2 pt-2 border-t border-slate-100 text-[11px] text-slate-400 font-semibold">
                                     <div class="flex items-center space-x-1.5">
                                         <span uk-icon="icon: calendar; ratio: 0.7"></span>
-                                        <span>{{ $event['date'] }}</span>
+                                        <span>{{ $event->event_date }}</span>
                                     </div>
                                     <div class="flex items-center space-x-1.5">
                                         <span uk-icon="icon: location; ratio: 0.7"></span>
-                                        <span>{{ $event['location'] }}</span>
+                                        <span>{{ $event->location }}</span>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="mt-6">
-                                <form method="GET" action="{{ route('events') }}" onsubmit="let btn = this.querySelector('button[type=submit]'); if(btn) { btn.disabled = true; btn.innerHTML = '<span class=\'animate-spin inline-block w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full mr-1.5 align-middle\'></span> Mendaftarkan...'; }">
-                                    <input type="hidden" name="register" value="1">
-                                    <input type="hidden" name="event_title" value="{{ $event['title'] }}">
-                                    <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition shadow-sm hover:shadow-md">
-                                        Ikuti Event
-                                    </button>
-                                </form>
+                                @if(auth()->check() && auth()->user()->role->name === 'siswa')
+                                    @if(in_array($event->id, $completedEventIds))
+                                        <div class="w-full py-2.5 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-xs font-bold text-center flex items-center justify-center space-x-1.5">
+                                            <span uk-icon="icon: check; ratio: 0.8"></span>
+                                            <span>Diikuti (+{{ $event->points_bonus }} Pts)</span>
+                                        </div>
+                                    @else
+                                        <div class="w-full py-2.5 bg-slate-100 text-slate-400 border border-slate-200/50 rounded-xl text-xs font-bold text-center">
+                                            Tersedia
+                                        </div>
+                                    @endif
+                                @else
+                                    <div class="w-full py-2.5 bg-slate-100 text-slate-450 border border-slate-200 rounded-xl text-xs font-bold text-center">
+                                        Aktif
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     @endforeach

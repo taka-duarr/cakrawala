@@ -109,6 +109,22 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::put('/toko/{id}/update', [AdminController::class, 'tokoUpdate'])->name('toko.update');
     Route::delete('/toko/{id}/destroy', [AdminController::class, 'tokoDestroy'])->name('toko.destroy');
     Route::get('/toko/{id}/transactions', [AdminController::class, 'tokoTransactions'])->name('toko.transactions');
+
+    // Event CRUD & Awarding Routes
+    Route::get('/events', [AdminController::class, 'eventsIndex'])->name('events.index');
+    Route::post('/events/store', [AdminController::class, 'eventsStore'])->name('events.store');
+    Route::put('/events/{id}/update', [AdminController::class, 'eventsUpdate'])->name('events.update');
+    Route::delete('/events/{id}/destroy', [AdminController::class, 'eventsDestroy'])->name('events.destroy');
+    Route::get('/events/{id}/award', [AdminController::class, 'showAwardEvent'])->name('events.award.show');
+    Route::post('/events/{id}/award', [AdminController::class, 'awardEvent'])->name('events.award.process');
+
+    // Mission CRUD & Awarding Routes
+    Route::get('/missions', [AdminController::class, 'missionsIndex'])->name('missions.index');
+    Route::post('/missions/store', [AdminController::class, 'missionsStore'])->name('missions.store');
+    Route::put('/missions/{id}/update', [AdminController::class, 'missionsUpdate'])->name('missions.update');
+    Route::delete('/missions/{id}/destroy', [AdminController::class, 'missionsDestroy'])->name('missions.destroy');
+    Route::get('/missions/{id}/award', [AdminController::class, 'showAwardMission'])->name('missions.award.show');
+    Route::post('/missions/{id}/award', [AdminController::class, 'awardMission'])->name('missions.award.process');
 });
 
 Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(function () {
@@ -120,6 +136,13 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
     Route::post('/points/adjust', [GuruController::class, 'adjustPoints'])->name('points.adjust');
     Route::post('/badges/toggle', [GuruController::class, 'toggleBadge'])->name('badges.toggle');
     Route::get('/assignments/{id}', [GuruController::class, 'assignmentDetail'])->name('assignments.detail');
+
+    // Mission & Event manual awarding for Guru
+    Route::get('/missions', [GuruController::class, 'missionsIndex'])->name('missions.index');
+    Route::get('/missions/{id}/award', [GuruController::class, 'showAwardMission'])->name('missions.award.show');
+    Route::post('/missions/{id}/award', [GuruController::class, 'awardMission'])->name('missions.award.process');
+    Route::get('/events/{id}/award', [GuruController::class, 'showAwardEvent'])->name('events.award.show');
+    Route::post('/events/{id}/award', [GuruController::class, 'awardEvent'])->name('events.award.process');
 
     // Attendance, Materials, and Assignments management
     Route::post('/assignments/{id}/sessions/store', [\App\Http\Controllers\AttendanceController::class, 'storeSession'])->name('sessions.store');

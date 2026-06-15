@@ -13,13 +13,18 @@ class StudentController extends Controller
         // Semua misi tersedia
         $availableMissions = \App\Models\Mission::where('is_active', true)->get();
         
-        // ID misi yang sudah diambil
-        $takenMissionIds = $user->missions()->pluck('mission_id')->toArray();
-        
-        // Misi yang sedang berjalan (sudah diambil tapi belum approved)
-        $activeMissions = $user->missions()
-            ->whereIn('mission_user.status', ['taken', 'pending_approval'])
-            ->get();
+        // ID misi yang sudah disetujui / diselesaikan (untuk harian, disaring hanya hari ini)
+        $completedMissionIds = $user->missions()
+            ->wherePivot('status', 'approved')
+            ->get()
+            ->filter(function($mission) {
+                if ($mission->type === 'daily') {
+                    return \Carbon\Carbon::parse($mission->pivot->updated_at)->isToday();
+                }
+                return true;
+            })
+            ->pluck('id')
+            ->toArray();
         
         // Riwayat poin
         $pointHistory = \App\Models\PointHistory::where('user_id', $user->id)
@@ -53,8 +58,7 @@ class StudentController extends Controller
         return view('student.dashboard', compact(
             'user', 
             'availableMissions', 
-            'takenMissionIds', 
-            'activeMissions', 
+            'completedMissionIds', 
             'pointHistory',
             'aiInsight',
             'aiQuestRec',
@@ -277,6 +281,9 @@ class StudentController extends Controller
                     'description' => 'Terima Poin dari ' . $sender->name
                 ]);
             });
+
+            // Trigger transfer mission for the sender
+            app(\App\Services\AutoMissionService::class)->triggerTransfer($sender);
 
             // Set status untuk polling dari device pengirim menjadi 'claimed'
             \Illuminate\Support\Facades\Cache::put('transfer_qr_' . $token, array_merge($transfer, ['status' => 'claimed']), now()->addMinutes(1));
