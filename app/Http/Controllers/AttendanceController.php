@@ -317,6 +317,9 @@ class AttendanceController extends Controller
         // Award Points
         $pointService->addPoints($student, $points, 'kebaikan', 'Presensi', 'Hadir tepat waktu pertemuan ' . $session->meeting_number);
 
+        // Auto mission trigger
+        app(\App\Services\AutoMissionService::class)->triggerAttendance($student);
+
         return response()->json([
             'success' => true, 
             'message' => "Absen Berhasil! Anda terverifikasi di lokasi {$locCheck['location']->name} (Jarak: {$locCheck['distance']}m) dan mendapatkan +{$points} poin disiplin."
@@ -389,6 +392,9 @@ class AttendanceController extends Controller
         }
 
         $pointService->addPoints($student, $points, 'kebaikan', 'Presensi QR', 'Hadir via QR code pertemuan ' . $session->meeting_number);
+
+        // Auto mission trigger
+        app(\App\Services\AutoMissionService::class)->triggerAttendance($student);
 
         return redirect()->route('student.class-detail', $session->teaching_assignment_id)
             ->with('success', "Absen QR Berhasil! Anda berada di lokasi {$locCheck['location']->name} (Jarak: {$locCheck['distance']}m) dan mendapatkan +{$points} Pts.");

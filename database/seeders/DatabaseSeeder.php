@@ -306,6 +306,37 @@ class DatabaseSeeder extends Seeder
             'is_available' => true,
         ]);
 
+        // ─── Events ──────────────────────────────────────────────────
+        \App\Models\Event::create([
+            'title' => 'Pekan Karakter Cakrawala 2026',
+            'description' => 'Ajang tahunan unjuk aksi kebaikan dan kreativitas karakter antarkelas. Dapatkan quest khusus poin besar!',
+            'event_date' => '15 - 20 Juni 2026',
+            'location' => 'Aula & Lapangan Utama Sekolah',
+            'points_bonus' => 150,
+            'category' => 'karakter',
+            'is_active' => true,
+        ]);
+
+        \App\Models\Event::create([
+            'title' => 'Cakrawala Clean & Green',
+            'description' => 'Aksi gotong royong akbar membersihkan lingkungan sekitar sekolah dan penanaman pohon bersama.',
+            'event_date' => '23 Juni 2026',
+            'location' => 'Area Sekitar Sekolah',
+            'points_bonus' => 80,
+            'category' => 'sosial',
+            'is_active' => true,
+        ]);
+
+        \App\Models\Event::create([
+            'title' => 'Seminar Literasi Digital',
+            'description' => 'Membangun karakter bijak ber media sosial dan menangkal hoaks demi masa depan digital yang sehat.',
+            'event_date' => '30 Juni 2026',
+            'location' => 'Laboratorium Multimedia',
+            'points_bonus' => 50,
+            'category' => 'akademik',
+            'is_active' => true,
+        ]);
+
         // ─── Achievements ────────────────────────────────────────────
         Achievement::create([
             'title' => 'Pemula Aktif',
