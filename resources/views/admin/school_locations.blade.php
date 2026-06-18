@@ -1,10 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h2 class="font-bold text-2xl text-slate-800 leading-tight">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+            <h2 class="font-black text-2xl text-slate-950 leading-tight uppercase tracking-tight">
                 {{ __('Kelola Lokasi Sekolah') }}
             </h2>
-            <button onclick="UIkit.modal('#modal-add-location').show()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md shadow-indigo-100 transition flex items-center space-x-2">
+            <button onclick="UIkit.modal('#modal-add-location').show()" class="bg-[#E4FF1A] hover:bg-slate-950 text-slate-950 hover:text-white text-xs font-black px-4 py-2.5 rounded-xl border-2 border-slate-950 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_rgba(15,23,42,1)] transition-all uppercase tracking-wider flex items-center space-x-2">
                 <span uk-icon="icon: plus; ratio: 0.8"></span>
                 <span>Tambah Lokasi</span>
             </button>
@@ -19,32 +19,33 @@
         #map-add, #map-edit, #map-preview {
             height: 320px;
             width: 100%;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            border: 2px solid #0f172a;
             z-index: 10;
+            box-shadow: 3px 3px 0px 0px rgba(15,23,42,1);
         }
         #map-preview {
             height: 400px;
         }
     </style>
 
-    <div class="py-12 bg-slate-50 min-h-screen">
+    <div class="py-12 bg-slate-100/30 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
             @if(session('success'))
-                <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow-sm">
+                <div class="bg-[#EAFCEF] border-2 border-slate-950 text-emerald-800 px-4 py-3 rounded-xl text-xs font-black flex items-center space-x-2 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)]">
                     <span uk-icon="icon: check; ratio: 0.9"></span>
-                    <span>{{ session('success') }}</span>
+                    <span class="uppercase tracking-wider">{{ session('success') }}</span>
                 </div>
             @endif
 
             @if($errors->any())
-                <div class="bg-rose-50 border border-rose-200 text-rose-705 px-4 py-3 rounded-xl text-xs font-semibold space-y-1 shadow-sm">
+                <div class="bg-[#FFEAEA] border-2 border-slate-950 text-rose-800 px-4 py-3 rounded-xl text-xs font-black space-y-1 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)]">
                     <div class="flex items-center space-x-2">
                         <span uk-icon="icon: warning; ratio: 0.9"></span>
-                        <span class="font-bold">Terjadi kesalahan input:</span>
+                        <span class="font-black">TERJADI KESALAHAN INPUT:</span>
                     </div>
-                    <ul class="list-disc pl-5 space-y-0.5 mt-1 font-medium">
+                    <ul class="list-disc pl-5 space-y-0.5 mt-1 font-bold">
                         @foreach($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
@@ -53,17 +54,17 @@
             @endif
 
             <!-- Map Preview Card (Above Table) -->
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden soft-glow-indigo mb-6">
-                <div class="p-6 border-b border-slate-100">
-                    <h3 class="text-base font-bold text-slate-800 flex items-center space-x-2">
+            <div class="bg-white rounded-3xl border-4 border-slate-950 overflow-hidden shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] mb-6">
+                <div class="p-6 border-b-4 border-slate-950 bg-slate-50">
+                    <h3 class="text-base font-black text-slate-950 flex items-center space-x-2 uppercase tracking-tight">
                         <span uk-icon="icon: location; ratio: 0.95"></span>
                         <span>Peta Pemantau Lokasi Sekolah (Preview)</span>
                     </h3>
-                    <p class="text-[10px] text-slate-400 mt-1 uppercase font-bold tracking-wider">Pemantauan visual seluruh titik absensi aktif beserta radius jangkauannya</p>
+                    <p class="text-xs text-slate-400 font-bold mt-1 uppercase tracking-wider">Pemantauan visual seluruh titik absensi aktif beserta radius jangkauannya</p>
                 </div>
                 <div class="p-4">
-                    <div id="map-preview" class="w-full rounded-xl border border-slate-200 shadow-inner"></div>
-                    <div class="mt-4 bg-slate-50 border border-slate-100 rounded-xl p-3 text-[10px] text-slate-550 font-semibold leading-relaxed flex items-start space-x-2">
+                    <div id="map-preview" class="w-full"></div>
+                    <div class="mt-4 bg-slate-50 border-2 border-slate-950 rounded-xl p-3 text-[10px] text-slate-650 font-bold uppercase tracking-wider leading-relaxed flex items-start space-x-2 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
                         <span uk-icon="icon: info; ratio: 0.75" class="mt-0.5 text-indigo-500"></span>
                         <span>Petunjuk: Klik pada baris di tabel bawah atau tombol preview (<span uk-icon="icon: shrink; ratio: 0.7"></span>) untuk memfokuskan peta ke lokasi tertentu.</span>
                     </div>
@@ -71,40 +72,41 @@
             </div>
 
             <!-- Location Table Card (Below Map) -->
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden soft-glow-indigo">
-                <div class="p-6 border-b border-slate-100">
-                    <h3 class="text-base font-bold text-slate-800">Daftar Titik Koordinat Absensi</h3>
-                    <p class="text-[10px] text-slate-400 mt-1 uppercase font-bold tracking-wider">Titik lokasi referensi GPS untuk membatasi wilayah presensi siswa (Multi-Lokasi)</p>
+            <div class="bg-white rounded-3xl border-4 border-slate-950 overflow-hidden shadow-[8px_8px_0px_0px_rgba(15,23,42,1)]">
+                <div class="p-6 border-b-4 border-slate-950 bg-slate-50">
+                    <h3 class="text-base font-black text-slate-950 uppercase tracking-tight">Daftar Titik Koordinat Absensi</h3>
+                    <p class="text-xs text-slate-400 font-bold mt-1 uppercase tracking-wider">Titik lokasi referensi GPS untuk membatasi wilayah presensi siswa (Multi-Lokasi)</p>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-slate-50/70 border-b border-slate-100/80">
-                                <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nama Titik Lokasi</th>
-                                <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Lintang (Latitude)</th>
-                                <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Bujur (Longitude)</th>
-                                <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Radius Jangkauan</th>
-                                <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Status</th>
-                                <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Aksi</th>
+                            <tr class="bg-slate-50 border-b-2 border-slate-950">
+                                <th class="px-6 py-4 text-xs font-black text-slate-950 uppercase tracking-wider">Nama Titik Lokasi</th>
+                                <th class="px-6 py-4 text-xs font-black text-slate-950 uppercase tracking-wider">Lintang (Latitude)</th>
+                                <th class="px-6 py-4 text-xs font-black text-slate-950 uppercase tracking-wider">Bujur (Longitude)</th>
+                                <th class="px-6 py-4 text-xs font-black text-slate-950 uppercase tracking-wider text-center">Radius Jangkauan</th>
+                                <th class="px-6 py-4 text-xs font-black text-slate-950 uppercase tracking-wider text-center">Status</th>
+                                <th class="px-6 py-4 text-xs font-black text-slate-950 uppercase tracking-wider text-right">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100/70">
+                        <tbody class="divide-y-2 divide-slate-950">
                             @forelse($locations as $loc)
-                            <tr data-id="{{ $loc->id }}" data-lat="{{ $loc->latitude }}" data-lng="{{ $loc->longitude }}" class="location-row cursor-pointer hover:bg-slate-50/30 transition-colors">
-                                <td class="px-6 py-4 font-bold text-slate-800 text-xs">
+                            <tr data-id="{{ $loc->id }}" data-lat="{{ $loc->latitude }}" data-lng="{{ $loc->longitude }}" class="location-row cursor-pointer hover:bg-slate-50/50 transition-colors">
+                                <td class="px-6 py-4 font-black text-slate-950 text-xs uppercase tracking-tight">
                                     {{ $loc->name }}
                                 </td>
-                                <td class="px-6 py-4 font-mono text-xs text-slate-600">
+                                <td class="px-6 py-4 font-mono text-xs font-bold text-slate-700">
                                     {{ $loc->latitude }}
                                 </td>
-                                <td class="px-6 py-4 font-mono text-xs text-slate-600">
+                                <td class="px-6 py-4 font-mono text-xs font-bold text-slate-700">
                                     {{ $loc->longitude }}
                                 </td>
-                                <td class="px-6 py-4 text-center text-xs font-semibold text-slate-700">
+                                <td class="px-6 py-4 text-center text-xs font-bold text-slate-950">
                                     {{ $loc->radius }} meter
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold {{ $loc->is_active ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : 'bg-slate-100 text-slate-600' }}">
+                                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border-2 border-slate-950
+                                        {{ $loc->is_active ? 'bg-[#EAFCEF] text-emerald-800' : 'bg-slate-100 text-slate-600' }}">
                                         {{ $loc->is_active ? 'Aktif' : 'Nonaktif' }}
                                     </span>
                                 </td>
@@ -114,7 +116,7 @@
                                         data-id="{{ $loc->id }}"
                                         data-lat="{{ $loc->latitude }}"
                                         data-lng="{{ $loc->longitude }}"
-                                        class="preview-location-btn text-xs font-bold text-emerald-600 hover:bg-emerald-50 px-2 py-1.5 rounded-xl transition"
+                                        class="preview-location-btn text-xs font-black p-1.5 rounded-lg border-2 border-slate-950 bg-white text-emerald-800 hover:bg-[#EAFCEF] shadow-[1px_1px_0px_0px_rgba(15,23,42,1)] active:translate-y-0.5 active:shadow-[0px_0px_0px_0px_rgba(15,23,42,1)] transition-all"
                                         title="Preview di Peta"
                                     >
                                         <span uk-icon="icon: shrink; ratio: 0.85"></span>
@@ -128,7 +130,7 @@
                                         data-lng="{{ $loc->longitude }}"
                                         data-radius="{{ $loc->radius }}"
                                         data-active="{{ $loc->is_active ? '1' : '0' }}"
-                                        class="edit-location-btn text-xs font-bold text-indigo-600 hover:bg-indigo-50 px-2 py-1.5 rounded-xl transition"
+                                        class="edit-location-btn text-xs font-black p-1.5 rounded-lg border-2 border-slate-950 bg-white text-indigo-600 hover:bg-indigo-50 shadow-[1px_1px_0px_0px_rgba(15,23,42,1)] active:translate-y-0.5 active:shadow-[0px_0px_0px_0px_rgba(15,23,42,1)] transition-all"
                                         title="Ubah"
                                     >
                                         <span uk-icon="icon: file-edit; ratio: 0.85"></span>
@@ -138,7 +140,7 @@
                                     <form action="{{ route('admin.school-locations.destroy', $loc->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus titik lokasi ini?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" onclick="event.stopPropagation();" class="text-xs font-bold text-rose-600 hover:bg-rose-50 px-2 py-1.5 rounded-xl transition" title="Hapus">
+                                        <button type="submit" onclick="event.stopPropagation();" class="text-xs font-black p-1.5 rounded-lg border-2 border-slate-950 bg-rose-500 text-white hover:bg-slate-950 shadow-[1px_1px_0px_0px_rgba(15,23,42,1)] active:translate-y-0.5 active:shadow-[0px_0px_0px_0px_rgba(15,23,42,1)] transition-all" title="Hapus">
                                             <span uk-icon="icon: trash; ratio: 0.85"></span>
                                         </button>
                                     </form>
@@ -146,7 +148,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="6" class="text-center py-12 text-slate-400 text-xs font-medium">Belum ada titik kordinat sekolah yang terdaftar.</td>
+                                <td colspan="6" class="text-center py-12 text-slate-400 text-xs font-bold uppercase">Belum ada titik kordinat sekolah yang terdaftar.</td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -159,9 +161,9 @@
 
     <!-- MODAL ADD LOCATION -->
     <div id="modal-add-location" class="uk-modal" uk-modal>
-        <div class="uk-modal-dialog uk-modal-body rounded-2xl p-6" style="width: 1000px; max-width: 95%;">
+        <div class="uk-modal-dialog uk-modal-body border-4 border-slate-950 rounded-3xl shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] p-6 bg-white" style="width: 1000px; max-width: 95%;">
             <button class="uk-modal-close-default" type="button" uk-close></button>
-            <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center space-x-2">
+            <h2 class="text-lg font-black text-slate-950 mb-4 flex items-center space-x-2 uppercase tracking-tight border-b-2 border-slate-950 pb-2">
                 <span uk-icon="icon: plus-circle; ratio: 1.1"></span>
                 <span>Tambah Titik Lokasi Baru</span>
             </h2>
@@ -171,56 +173,56 @@
                     @csrf
                     <!-- Search Input (Paling Atas) -->
                     <div class="relative">
-                        <label class="block text-xs font-bold text-slate-500 mb-1">Cari Alamat / Lokasi</label>
-                        <input type="text" id="search-add" class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Ketik nama tempat/alamat untuk mencari..." autocomplete="off">
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Cari Alamat / Lokasi</label>
+                        <input type="text" id="search-add" class="w-full border-2 border-slate-950 rounded-xl px-4 py-2.5 text-xs focus:ring-2 focus:ring-slate-950 focus:border-slate-950 bg-white font-bold" placeholder="Ketik nama tempat/alamat untuk mencari..." autocomplete="off">
                         <!-- Dropdown Hasil Pencarian -->
-                        <div id="results-add" class="absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg z-[9999] hidden max-h-60 overflow-y-auto"></div>
+                        <div id="results-add" class="absolute left-0 right-0 mt-1 bg-white border-2 border-slate-950 rounded-xl shadow-lg z-[9999] hidden max-h-60 overflow-y-auto font-bold text-xs"></div>
                     </div>
 
                     <!-- Nama Lokasi / Gedung -->
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-1">Nama Lokasi / Gedung</label>
-                        <input type="text" name="name" id="add-name" required class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Contoh: Gedung Utama, Lab RPL">
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Nama Lokasi / Gedung</label>
+                        <input type="text" name="name" id="add-name" required class="w-full border-2 border-slate-950 rounded-xl px-4 py-2.5 text-xs focus:ring-2 focus:ring-slate-950 focus:border-slate-950 bg-white font-bold" placeholder="Contoh: Gedung Utama, Lab RPL">
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-bold text-slate-500 mb-1">Latitude (Lintang)</label>
-                            <input type="number" step="any" name="latitude" id="add-lat-val" required class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Contoh: -6.2088">
+                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Latitude (Lintang)</label>
+                            <input type="number" step="any" name="latitude" id="add-lat-val" required class="w-full border-2 border-slate-950 rounded-xl px-4 py-2.5 text-xs focus:ring-2 focus:ring-slate-950 focus:border-slate-950 bg-white font-bold" placeholder="Contoh: -6.2088">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-500 mb-1">Longitude (Bujur)</label>
-                            <input type="number" step="any" name="longitude" id="add-lng-val" required class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Contoh: 106.8456">
+                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Longitude (Bujur)</label>
+                            <input type="number" step="any" name="longitude" id="add-lng-val" required class="w-full border-2 border-slate-950 rounded-xl px-4 py-2.5 text-xs focus:ring-2 focus:ring-slate-950 focus:border-slate-950 bg-white font-bold" placeholder="Contoh: 106.8456">
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-1">Radius Jangkauan (Meter)</label>
-                        <input type="number" name="radius" id="add-radius-val" value="50" min="5" required class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Radius Jangkauan (Meter)</label>
+                        <input type="number" name="radius" id="add-radius-val" value="50" min="5" required class="w-full border-2 border-slate-950 rounded-xl px-4 py-2.5 text-xs focus:ring-2 focus:ring-slate-950 focus:border-slate-950 bg-white font-bold">
                     </div>
 
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
-                            <input type="checkbox" name="is_active" value="1" checked id="add-active" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 mr-2">
-                            <label for="add-active" class="text-xs font-semibold text-slate-600">Aktifkan lokasi</label>
+                            <input type="checkbox" name="is_active" value="1" checked id="add-active" class="rounded border-2 border-slate-950 text-slate-950 focus:ring-slate-950 mr-2">
+                            <label for="add-active" class="text-xs font-bold text-slate-700">Aktifkan lokasi</label>
                         </div>
-                        <button type="button" onclick="useCurrentLocation('add')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-bold px-3 py-1.5 rounded-xl border border-slate-200 transition flex items-center space-x-1">
+                        <button type="button" onclick="useCurrentLocation('add')" class="bg-white hover:bg-slate-100 text-slate-950 text-[10px] font-black px-3 py-1.5 rounded-xl border-2 border-slate-950 shadow-[1px_1px_0px_0px_rgba(15,23,42,1)] active:translate-y-0.5 active:shadow-[0px_0px_0px_0px_rgba(15,23,42,1)] transition-all uppercase tracking-wider flex items-center space-x-1">
                             <span uk-icon="icon: location; ratio: 0.7"></span>
                             <span>Gunakan Lokasi Saya</span>
                         </button>
                     </div>
 
-                    <div class="flex justify-end space-x-2 pt-2">
-                        <button class="uk-modal-close bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-4 py-2 rounded-xl transition" type="button">Batal</button>
-                        <button class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-5 py-2 rounded-xl transition shadow-md shadow-indigo-100" type="submit">Simpan</button>
+                    <div class="flex justify-end space-x-3 pt-4 border-t-2 border-slate-950">
+                        <button class="uk-modal-close bg-white hover:bg-slate-100 text-slate-950 font-black rounded-xl border-2 border-slate-950 text-xs transition uppercase tracking-wider" type="button">Batal</button>
+                        <button class="bg-[#E4FF1A] hover:bg-slate-950 text-slate-950 hover:text-white font-black rounded-xl border-2 border-slate-950 text-xs shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_rgba(15,23,42,1)] transition-all uppercase tracking-wider" type="submit">Simpan</button>
                     </div>
                 </form>
 
                 <!-- Right: Map -->
                 <div class="flex flex-col justify-between">
-                    <span class="text-xs font-bold text-slate-500 mb-1 block">Tinjauan Peta</span>
-                    <div id="map-add" class="w-full rounded-xl border border-slate-200 shadow-inner"></div>
-                    <span class="text-[9px] text-slate-400 mt-1 block leading-relaxed">* Klik pada peta atau seret marker untuk memindahkan posisi koordinat secara akurat.</span>
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 block">Tinjauan Peta</span>
+                    <div id="map-add" class="w-full"></div>
+                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-2 block leading-relaxed">* Klik pada peta atau seret marker untuk memindahkan posisi koordinat secara akurat.</span>
                 </div>
             </div>
         </div>
@@ -228,9 +230,9 @@
 
     <!-- MODAL EDIT LOCATION -->
     <div id="modal-edit-location" class="uk-modal" uk-modal>
-        <div class="uk-modal-dialog uk-modal-body rounded-2xl p-6" style="width: 1000px; max-width: 95%;">
+        <div class="uk-modal-dialog uk-modal-body border-4 border-slate-950 rounded-3xl shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] p-6 bg-white" style="width: 1000px; max-width: 95%;">
             <button class="uk-modal-close-default" type="button" uk-close></button>
-            <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center space-x-2">
+            <h2 class="text-lg font-black text-slate-950 mb-4 flex items-center space-x-2 uppercase tracking-tight border-b-2 border-slate-950 pb-2">
                 <span uk-icon="icon: file-edit; ratio: 1.1"></span>
                 <span>Sunting Titik Lokasi</span>
             </h2>
@@ -241,56 +243,56 @@
                     @method('PUT')
                     <!-- Search Input (Paling Atas) -->
                     <div class="relative">
-                        <label class="block text-xs font-bold text-slate-500 mb-1">Cari Alamat / Lokasi</label>
-                        <input type="text" id="search-edit" class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Ketik nama tempat/alamat untuk mencari..." autocomplete="off">
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Cari Alamat / Lokasi</label>
+                        <input type="text" id="search-edit" class="w-full border-2 border-slate-950 rounded-xl px-4 py-2.5 text-xs focus:ring-2 focus:ring-slate-950 focus:border-slate-950 bg-white font-bold" placeholder="Ketik nama tempat/alamat untuk mencari..." autocomplete="off">
                         <!-- Dropdown Hasil Pencarian -->
-                        <div id="results-edit" class="absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg z-[9999] hidden max-h-60 overflow-y-auto"></div>
+                        <div id="results-edit" class="absolute left-0 right-0 mt-1 bg-white border-2 border-slate-950 rounded-xl shadow-lg z-[9999] hidden max-h-60 overflow-y-auto font-bold text-xs"></div>
                     </div>
 
                     <!-- Nama Lokasi / Gedung -->
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-1">Nama Lokasi / Gedung</label>
-                        <input type="text" name="name" id="edit-name" required class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Nama Lokasi / Gedung</label>
+                        <input type="text" name="name" id="edit-name" required class="w-full border-2 border-slate-950 rounded-xl px-4 py-2.5 text-xs focus:ring-2 focus:ring-slate-950 focus:border-slate-950 bg-white font-bold">
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-bold text-slate-500 mb-1">Latitude (Lintang)</label>
-                            <input type="number" step="any" name="latitude" id="edit-lat" required class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
+                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Latitude (Lintang)</label>
+                            <input type="number" step="any" name="latitude" id="edit-lat" required class="w-full border-2 border-slate-950 rounded-xl px-4 py-2.5 text-xs focus:ring-2 focus:ring-slate-950 focus:border-slate-950 bg-white font-bold">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-500 mb-1">Longitude (Bujur)</label>
-                            <input type="number" step="any" name="longitude" id="edit-lng" required class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
+                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Longitude (Bujur)</label>
+                            <input type="number" step="any" name="longitude" id="edit-lng" required class="w-full border-2 border-slate-950 rounded-xl px-4 py-2.5 text-xs focus:ring-2 focus:ring-slate-950 focus:border-slate-950 bg-white font-bold">
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-1">Radius Jangkauan (Meter)</label>
-                        <input type="number" name="radius" id="edit-radius" min="5" required class="w-full text-xs rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500">
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Radius Jangkauan (Meter)</label>
+                        <input type="number" name="radius" id="edit-radius" min="5" required class="w-full border-2 border-slate-950 rounded-xl px-4 py-2.5 text-xs focus:ring-2 focus:ring-slate-950 focus:border-slate-950 bg-white font-bold">
                     </div>
 
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
-                            <input type="checkbox" name="is_active" value="1" id="edit-active" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 mr-2">
-                            <label for="edit-active" class="text-xs font-semibold text-slate-600">Lokasi Aktif</label>
+                            <input type="checkbox" name="is_active" value="1" id="edit-active" class="rounded border-2 border-slate-950 text-slate-950 focus:ring-slate-950 mr-2">
+                            <label for="edit-active" class="text-xs font-bold text-slate-700">Lokasi Aktif</label>
                         </div>
-                        <button type="button" onclick="useCurrentLocation('edit')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-bold px-3 py-1.5 rounded-xl border border-slate-200 transition flex items-center space-x-1">
+                        <button type="button" onclick="useCurrentLocation('edit')" class="bg-white hover:bg-slate-100 text-slate-950 text-[10px] font-black px-3 py-1.5 rounded-xl border-2 border-slate-950 shadow-[1px_1px_0px_0px_rgba(15,23,42,1)] active:translate-y-0.5 active:shadow-[0px_0px_0px_0px_rgba(15,23,42,1)] transition-all uppercase tracking-wider flex items-center space-x-1">
                             <span uk-icon="icon: location; ratio: 0.7"></span>
                             <span>Gunakan Lokasi Saya</span>
                         </button>
                     </div>
 
-                    <div class="flex justify-end space-x-2 pt-2">
-                        <button class="uk-modal-close bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-4 py-2 rounded-xl transition" type="button">Batal</button>
-                        <button class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-5 py-2 rounded-xl transition shadow-md shadow-indigo-100" type="submit">Simpan Perubahan</button>
+                    <div class="flex justify-end space-x-3 pt-4 border-t-2 border-slate-950">
+                        <button class="uk-modal-close bg-white hover:bg-slate-100 text-slate-950 font-black rounded-xl border-2 border-slate-950 text-xs transition uppercase tracking-wider" type="button">Batal</button>
+                        <button class="bg-[#E4FF1A] hover:bg-slate-950 text-slate-950 hover:text-white font-black rounded-xl border-2 border-slate-950 text-xs shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_rgba(15,23,42,1)] transition-all uppercase tracking-wider" type="submit">Simpan Perubahan</button>
                     </div>
                 </form>
 
                 <!-- Right: Map -->
                 <div class="flex flex-col justify-between">
-                    <span class="text-xs font-bold text-slate-500 mb-1 block">Tinjauan Peta</span>
-                    <div id="map-edit" class="w-full rounded-xl border border-slate-200 shadow-inner"></div>
-                    <span class="text-[9px] text-slate-400 mt-1 block leading-relaxed">* Klik pada peta atau seret marker untuk memindahkan posisi koordinat secara akurat.</span>
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 block">Tinjauan Peta</span>
+                    <div id="map-edit" class="w-full"></div>
+                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-2 block leading-relaxed">* Klik pada peta atau seret marker untuk memindahkan posisi koordinat secara akurat.</span>
                 </div>
             </div>
         </div>
@@ -326,20 +328,21 @@
                     const marker = L.marker([lat, lng]).addTo(mapPreview);
                     marker.bindPopup(`
                         <div class="p-1.5">
-                            <h4 class="font-bold text-xs text-slate-800 m-0 mb-1">${loc.name}</h4>
+                            <h4 class="font-black text-xs text-slate-950 uppercase tracking-tight m-0 mb-1">${loc.name}</h4>
                             <p class="text-[10px] text-slate-500 m-0">Lat: ${lat.toFixed(6)}</p>
                             <p class="text-[10px] text-slate-500 m-0">Lng: ${lng.toFixed(6)}</p>
-                            <p class="text-[10px] font-bold text-indigo-600 m-0 mt-1">Radius: ${radius}m</p>
+                            <p class="text-[10px] font-black text-indigo-600 m-0 mt-1">Radius: ${radius}m</p>
                         </div>
                     `);
 
                     // Circle
                     const circle = L.circle([lat, lng], {
-                        color: '#6366f1',
-                        fillColor: '#6366f1',
-                        fillOpacity: 0.12,
+                        color: '#0f172a',
+                        fillColor: '#E4FF1A',
+                        fillOpacity: 0.25,
+                        weight: 2,
                         radius: radius
-                    }).addTo(mapPreview);
+                     }).addTo(mapPreview);
 
                     previewMarkers[loc.id] = marker;
                     previewCircles[loc.id] = circle;
@@ -404,9 +407,10 @@
                 
                 const radius = parseFloat(document.getElementById('add-radius-val').value) || 50;
                 circleAdd = L.circle([defaultLat, defaultLng], {
-                    color: '#6366f1',
-                    fillColor: '#6366f1',
-                    fillOpacity: 0.18,
+                    color: '#0f172a',
+                    fillColor: '#E4FF1A',
+                    fillOpacity: 0.25,
+                    weight: 2,
                     radius: radius
                 }).addTo(mapAdd);
 
@@ -480,9 +484,10 @@
 
                 markerEdit = L.marker([lat, lng], { draggable: true }).addTo(mapEdit);
                 circleEdit = L.circle([lat, lng], {
-                    color: '#6366f1',
-                    fillColor: '#6366f1',
-                    fillOpacity: 0.18,
+                    color: '#0f172a',
+                    fillColor: '#E4FF1A',
+                    fillOpacity: 0.25,
+                    weight: 2,
                     radius: radius
                 }).addTo(mapEdit);
 
@@ -614,7 +619,7 @@
                                 const div = document.createElement('div');
                                 div.className = 'p-3 text-xs hover:bg-slate-50/80 cursor-pointer border-b border-slate-100/70 last:border-0 transition-colors duration-150';
                                 div.innerHTML = `
-                                    <div class="font-bold text-slate-700 flex items-center space-x-1">
+                                    <div class="font-bold text-slate-755 flex items-center space-x-1 uppercase tracking-tight">
                                         <span uk-icon="icon: location; ratio: 0.6" class="text-indigo-500"></span>
                                         <span>${namePart}</span>
                                     </div>
@@ -671,7 +676,7 @@
                         icon: 'error',
                         title: 'Browser Tidak Didukung',
                         text: 'Geolocation tidak didukung oleh browser Anda.',
-                        confirmButtonColor: '#4f46e5'
+                        confirmButtonColor: '#0f172a'
                     });
                     return;
                 }
@@ -710,7 +715,7 @@
                             icon: 'error',
                             title: 'Gagal Mendeteksi Lokasi',
                             text: msg,
-                            confirmButtonColor: '#4f46e5'
+                            confirmButtonColor: '#0f172a'
                         });
                     },
                     { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
@@ -719,5 +724,3 @@
         });
     </script>
 </x-app-layout>
-
-

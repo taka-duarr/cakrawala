@@ -13,7 +13,7 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -27,67 +27,59 @@
             }
         </style>
     </head>
-    <body class="font-sans text-slate-800 antialiased bg-slate-50/30">
-        <div class="min-h-screen flex flex-col lg:flex-row relative">
+    <body class="font-sans text-slate-950 antialiased bg-[#EAF5FF] selection:bg-slate-950 selection:text-white flex items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8">
+        
+        <!-- Large Centered Card Wrapper -->
+        <div class="w-full max-w-5xl bg-white border-4 border-slate-950 shadow-[10px_10px_0px_0px_rgba(15,23,42,1)] rounded-[2.5rem] p-6 lg:p-8 flex flex-col lg:flex-row items-stretch gap-8">
             
-            <!-- Left Side: Visual/Branding (Hidden on mobile) -->
-            <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-950 text-white p-12 flex-col justify-between relative overflow-hidden" style="background: linear-gradient(135deg, #1e1b4b, #0f172a);">
-                <!-- Glowing effect -->
-                <div class="absolute inset-0 -z-10">
-                    <div class="absolute left-[-10%] top-[-10%] w-[40rem] h-[40rem] bg-indigo-500/10 rounded-full blur-3xl"></div>
-                    <div class="absolute right-[-10%] bottom-[-10%] w-[40rem] h-[40rem] bg-emerald-500/10 rounded-full blur-3xl"></div>
-                </div>
-
+            <!-- Left Side: Form Slot -->
+            <div class="w-full lg:w-1/2 flex flex-col justify-between py-4">
                 <!-- Branding Header -->
-                <div class="flex items-center space-x-3 z-10">
-                    <img src="{{ asset('logo.png') }}" alt="Logo" class="h-10 w-10 object-contain rounded-xl bg-white/10 p-1 backdrop-blur border border-white/10">
-                    <span class="text-xl font-extrabold tracking-tight">CAKRAWALA</span>
+                <div class="flex items-center space-x-3 mb-6">
+                    <img src="{{ asset('logo.png') }}" alt="Logo" class="h-10 w-10 object-contain rounded-xl bg-white p-1 border-2 border-slate-950 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+                    <span class="text-xl font-black tracking-tight text-slate-950">CAKRAWALA</span>
                 </div>
 
-                <!-- Graphic/Illustration -->
-                <div class="flex items-center justify-center py-12 z-10 flex-grow">
-                    <img src="{{ asset('cakrawala_login.png') }}" alt="Achievement Graphic" class="max-w-xs object-contain rounded-3xl shadow-2xl border border-white/10 hover:scale-[1.02] transition-transform duration-500">
-                </div>
-
-                <!-- Testimonial/Message -->
-                <div class="z-10">
-                    <blockquote class="text-base font-medium leading-relaxed text-indigo-150">
-                        "Karakter sejati terbentuk dari kebiasaan-kebiasaan kecil yang baik setiap hari."
-                    </blockquote>
-                    <p class="text-[10px] text-indigo-300 font-bold mt-2 uppercase tracking-wider">
-                        — Filosofi CAKRAWALA
-                    </p>
-                </div>
-            </div>
-
-            <!-- Right Side: Login Form -->
-            <div class="w-full lg:w-1/2 min-h-screen flex flex-col justify-center items-center py-12 px-6 relative">
-                <!-- Glowing Soft Pastel Circles on Right Side for mobile/lg -->
-                <div class="absolute inset-0 -z-10 lg:hidden">
-                    <div class="absolute left-[-10%] top-[-10%] w-[25rem] h-[25rem] bg-indigo-100/30 rounded-full blur-3xl"></div>
-                    <div class="absolute right-[-10%] bottom-[-10%] w-[25rem] h-[25rem] bg-emerald-50/30 rounded-full blur-3xl"></div>
-                </div>
-
-                <!-- Logo & Title for mobile/tablet (Hidden on Desktop) -->
-                <div class="mb-8 flex flex-col items-center text-center lg:hidden">
-                    <a href="/" class="flex flex-col items-center space-y-3">
-                        <img src="{{ asset('logo.png') }}" alt="Logo" class="h-14 w-14 object-contain rounded-2xl shadow-sm bg-white p-2 border border-slate-100">
-                        <span class="text-2xl font-black tracking-tight text-slate-850 block">CAKRAWALA</span>
-                    </a>
-                </div>
-
-                <!-- Login Card Wrapper -->
-                <div class="w-full sm:max-w-md px-8 py-8 bg-white border border-slate-100 shadow-xl shadow-indigo-100/10 rounded-2xl">
+                <!-- Form content -->
+                <div class="flex-grow flex flex-col justify-center">
                     {{ $slot }}
                 </div>
 
-                <!-- Back to Landing Link -->
-                <p class="text-xs text-slate-400 font-medium mt-6">
-                    <a href="/" class="hover:text-indigo-600 transition flex items-center space-x-1.5 font-semibold">
-                        <span>← Kembali ke Halaman Utama</span>
+                <!-- Back Link & Footer -->
+                <div class="mt-6 pt-4 border-t border-slate-150 flex justify-between items-center text-xs">
+                    <a href="/" class="hover:text-slate-700 transition font-bold flex items-center gap-x-1">
+                        <span>← Kembali ke Beranda</span>
                     </a>
-                </p>
+                    <span class="text-slate-400 font-semibold">CAKRAWALA © 2026</span>
+                </div>
             </div>
+
+            <!-- Right Side: Graphic/Illustration Panel (Hidden on Mobile) -->
+            <div class="hidden lg:flex lg:w-1/2 relative bg-[#E4FF1A] border-4 border-slate-950 p-8 flex-col justify-between overflow-hidden" style="border-radius: 6rem 1.5rem 6rem 1.5rem;">
+                <!-- Glowing Overlay -->
+                <div class="absolute inset-0 bg-gradient-to-b from-white/10 to-black/5 pointer-events-none"></div>
+
+                <!-- Text Overlay at Top Right -->
+                <div class="text-right z-10">
+                    <p class="text-xs font-black uppercase tracking-wider text-slate-950">CAKRAWALA EKOSISTEM</p>
+                    <p class="text-sm font-extrabold text-slate-900 mt-1 max-w-xs ml-auto leading-normal">
+                        Melampaui Nilai Akademik Biasa, Membentuk Karakter Unggul Masa Depan.
+                    </p>
+                </div>
+
+                <!-- Image Illustration -->
+                <div class="flex items-center justify-center py-6 z-10 flex-grow">
+                    <img src="{{ asset('cakrawala_login.png') }}" alt="Achievement Illustration" class="max-h-[310px] object-contain rounded-3xl border-2 border-slate-950 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-1 hover:translate-x-0.5 hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] transition-all duration-200">
+                </div>
+
+                <!-- Bottom Quote Card -->
+                <div class="z-10 bg-white border-2 border-slate-950 rounded-xl p-4 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] text-center">
+                    <span class="text-[9px] font-black text-slate-950 uppercase tracking-widest block">Filosofi Karakter</span>
+                    <span class="text-xs font-bold text-slate-800 mt-1 block">"Karakter sejati terbentuk dari kebiasaan baik setiap hari."</span>
+                </div>
+            </div>
+
         </div>
+
     </body>
 </html>

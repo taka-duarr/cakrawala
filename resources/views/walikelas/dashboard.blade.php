@@ -1,91 +1,86 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-2xl text-slate-800 leading-tight">
+        <h2 class="font-black text-2xl text-slate-950 leading-tight uppercase tracking-tight">
             {{ __('Dashboard Wali Kelas') }}
         </h2>
     </x-slot>
 
-    <div class="py-12 bg-slate-50 min-h-screen">
+    <div class="py-12 bg-slate-100/40 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
             @if(isset($error))
-            <div class="bg-amber-50 border border-amber-200 text-amber-800 rounded-xl p-6 shadow-sm">
-                <p class="font-medium text-sm">{{ $error }}</p>
-            </div>
+                <div class="bg-[#FFEAEA] border-2 border-slate-950 text-rose-800 p-6 rounded-3xl shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]">
+                    <p class="font-black text-xs uppercase tracking-wider">{{ $error }}</p>
+                </div>
             @else
             
             <!-- Welcome Banner -->
-            <div class="bg-gradient-to-r from-slate-700 to-indigo-950 rounded-2xl shadow-md p-8 text-white">
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                    <div>
-                        <h1 class="text-3xl font-bold mb-2">Selamat Datang, {{ $wali->name }}!</h1>
-                        <p class="text-slate-200 text-sm">Wali Kelas untuk: <strong class="text-indigo-200">{{ $className }}</strong> · Pantau perkembangan karakter dan prestasi kelas Anda di sini.</p>
-                    </div>
-                    <div class="mt-4 md:mt-0 bg-white/10 backdrop-blur border border-white/20 rounded-xl px-5 py-3 text-right">
-                        <span class="text-xs text-indigo-200 block">Peringkat Kelas</span>
-                        <div class="flex items-center justify-end space-x-1.5 mt-0.5">
-                            <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15a3 3 0 100-6 3 3 0 000 6zM19.5 8.25c0-1.518-1.232-2.75-2.75-2.75h-.75V3H8v2.5h-.75C5.732 5.5 4.5 6.732 4.5 8.25v.75c0 1.518 1.232 2.75 2.75 2.75h.75M19.5 8.25v.75c0 1.518-1.232 2.75-2.75 2.75h-.75M9 21h6M12 15v6"></path></svg>
-                            <strong class="text-2xl text-white font-extrabold">Ke-{{ $myRank }}</strong>
-                        </div>
-                    </div>
+            <div class="bg-[#E4FF1A] border-4 border-slate-950 rounded-3xl shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] p-8 text-slate-950 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div>
+                    <h1 class="text-3xl font-black mb-2 uppercase tracking-tight">Selamat Datang, {{ $wali->name }}!</h1>
+                    <p class="text-slate-800 text-xs font-bold uppercase tracking-wider">Wali Kelas untuk: <strong class="text-slate-950 underline">{{ $className }}</strong> · Pantau perkembangan karakter dan prestasi kelas Anda di sini.</p>
+                </div>
+                <div class="bg-white border-2 border-slate-950 rounded-2xl p-5 min-w-[180px] text-right self-start md:self-auto shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]">
+                    <span class="text-[9px] text-slate-400 block uppercase font-bold tracking-wider mb-1">Peringkat Kelas</span>
+                    <strong class="text-2xl text-slate-950 font-black block uppercase tracking-tight">Ke-{{ $myRank }}</strong>
                 </div>
             </div>
 
             <!-- Stats Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div class="bg-white rounded-2xl border border-slate-100 p-6 soft-glow-indigo">
-                    <span class="text-xs font-semibold text-slate-500 block mb-1">Total Siswa</span>
-                    <strong class="text-3xl text-slate-800 font-bold">{{ $students->count() }}</strong>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-2xl border-2 border-slate-950 p-6 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]">
+                    <span class="text-[10px] font-black text-slate-400 block mb-1.5 uppercase tracking-wider">Total Siswa</span>
+                    <strong class="text-3xl text-slate-950 font-black block">{{ $students->count() }}</strong>
                 </div>
-                <div class="bg-white rounded-2xl border border-slate-100 p-6 soft-glow-emerald">
-                    <span class="text-xs font-semibold text-slate-500 block mb-1">Total Poin Kelas</span>
-                    <strong class="text-3xl text-emerald-600 font-bold">{{ $totalKebaikan }}</strong>
+                <div class="bg-[#E4FF1A]/20 rounded-2xl border-2 border-slate-950 p-6 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]">
+                    <span class="text-[10px] font-black text-slate-400 block mb-1.5 uppercase tracking-wider">Total Poin Kelas</span>
+                    <strong class="text-3xl text-slate-950 font-black block">{{ number_format($totalKebaikan) }}</strong>
                 </div>
-                <div class="bg-white rounded-2xl border border-slate-100 p-6 soft-glow-indigo">
-                    <span class="text-xs font-semibold text-slate-500 block mb-1">Rata-rata Kebaikan Kelas</span>
-                    <strong class="text-3xl text-indigo-600 font-bold">{{ $avgKebaikan }} Pts</strong>
+                <div class="bg-white rounded-2xl border-2 border-slate-950 p-6 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]">
+                    <span class="text-[10px] font-black text-slate-400 block mb-1.5 uppercase tracking-wider">Rata-rata Kebaikan Kelas</span>
+                    <strong class="text-3xl text-slate-950 font-black block">{{ number_format($avgKebaikan) }} Pts</strong>
                 </div>
             </div>
 
             <!-- AI Early Warning Card -->
-            <div class="bg-white rounded-2xl border border-slate-100 p-8 soft-glow-indigo">
-                <div class="flex justify-between items-start mb-6">
+            <div class="bg-white rounded-3xl border-4 border-slate-950 p-8 shadow-[8px_8px_0px_0px_rgba(15,23,42,1)]">
+                <div class="flex flex-col sm:flex-row sm:items-start justify-between mb-6 gap-4 border-b-2 border-slate-950 pb-4">
                     <div class="flex-1">
-                        <h3 class="text-xl font-bold text-slate-800 flex items-center">
-                            <svg class="w-6 h-6 text-rose-500 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        <h3 class="text-lg font-black text-slate-950 uppercase tracking-tight flex items-center space-x-2">
+                            <span uk-icon="icon: warning; ratio: 0.95" class="text-rose-600"></span>
                             <span>AI Early Warning System</span>
                         </h3>
-                        <p class="text-sm text-slate-500 mt-1">Menganalisis tren keaktifan siswa untuk mendeteksi penurunan motivasi secara dini.</p>
+                        <p class="text-xs text-slate-400 font-bold uppercase tracking-wider mt-1">Menganalisis tren keaktifan siswa untuk mendeteksi penurunan motivasi secara dini.</p>
                     </div>
                     <form method="GET" action="{{ route('walikelas.dashboard') }}" onsubmit="let btn = this.querySelector('button[type=submit]'); if(btn) { btn.disabled = true; btn.innerHTML = '<span class=\'animate-spin inline-block w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full mr-1.5 align-middle\'></span> Menganalisis...'; }">
                         <input type="hidden" name="trigger_ai" value="1">
-                        <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold transition flex items-center justify-center">
-                            <svg class="w-4 h-4 text-white mr-1.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"></path></svg>
+                        <button type="submit" class="px-4 py-2.5 bg-white hover:bg-[#E4FF1A] text-slate-950 border-2 border-slate-950 text-xs font-black rounded-xl transition shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_rgba(15,23,42,1)] uppercase tracking-wider flex items-center justify-center space-x-1.5">
+                            <span uk-icon="icon: bolt; ratio: 0.8"></span>
                             <span>Jalankan Analisis AI</span>
                         </button>
                     </form>
                 </div>
 
                 @if($aiWarning)
-                <div class="bg-slate-50 border border-slate-100 rounded-2xl p-6 text-sm text-slate-700 leading-relaxed font-sans whitespace-pre-line shadow-inner">
-                    {{ $aiWarning }}
-                </div>
+                    <div class="bg-[#E4FF1A]/10 border-2 border-slate-950 rounded-2xl p-6 text-xs text-slate-950 font-bold uppercase tracking-wide leading-relaxed shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] whitespace-pre-line">
+                        {{ $aiWarning }}
+                    </div>
                 @else
-                <div class="text-center py-8 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
-                    <p class="text-sm text-slate-400">Analisis AI belum dijalankan. Klik tombol di atas untuk menganalisis tingkat kerawanan kelas.</p>
-                </div>
+                    <div class="text-center py-8 bg-slate-50 border-2 border-dashed border-slate-950 rounded-2xl text-xs font-bold uppercase tracking-wider text-slate-400">
+                        Analisis AI belum dijalankan. Klik tombol di atas untuk menganalisis tingkat kerawanan kelas.
+                    </div>
                 @endif
             </div>
 
             <!-- Pengajuan Penukaran Poin (Siswa Kelas) -->
-            <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden soft-glow-indigo">
-                <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+            <div class="bg-white rounded-3xl border-4 border-slate-950 overflow-hidden shadow-[8px_8px_0px_0px_rgba(15,23,42,1)]">
+                <div class="p-6 border-b-4 border-slate-950 bg-[#E4FF1A]/10 flex justify-between items-center flex-wrap gap-4">
                     <div>
-                        <h3 class="text-lg font-bold text-slate-800">Pengajuan Penukaran Poin Kelas Anda</h3>
-                        <p class="text-xs text-slate-400 mt-1 font-medium">Setujui penukaran hadiah untuk siswa di kelas {{ $className }}.</p>
+                        <h3 class="text-lg font-black text-slate-950 uppercase tracking-tight">Pengajuan Penukaran Poin Kelas Anda</h3>
+                        <p class="text-xs text-slate-400 font-bold uppercase tracking-wider mt-1">Setujui penukaran hadiah untuk siswa di kelas {{ $className }}.</p>
                     </div>
                     @if($pendingClaims->count() > 0)
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-100 animate-pulse">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded border-2 border-slate-950 text-[10px] font-black bg-amber-100 text-slate-950 shadow-[1px_1px_0px_0px_rgba(15,23,42,1)] uppercase tracking-wider animate-pulse">
                             {{ $pendingClaims->count() }} Menunggu
                         </span>
                     @endif
@@ -93,36 +88,40 @@
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-slate-50/70 border-b border-slate-100/80">
-                                <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Siswa</th>
-                                <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Hadiah</th>
-                                <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Biaya Poin</th>
-                                <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Aksi</th>
+                            <tr class="bg-slate-950 text-white border-b-2 border-slate-950">
+                                <th class="px-6 py-4 text-[10px] font-black uppercase tracking-wider">Siswa</th>
+                                <th class="px-6 py-4 text-[10px] font-black uppercase tracking-wider">Hadiah</th>
+                                <th class="px-6 py-4 text-[10px] font-black uppercase tracking-wider text-center">Biaya Poin</th>
+                                <th class="px-6 py-4 text-[10px] font-black uppercase tracking-wider text-right">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100/70">
+                        <tbody class="divide-y divide-slate-950">
                             @forelse($pendingClaims as $claim)
-                            <tr class="hover:bg-slate-50/50 transition-colors">
+                            <tr class="hover:bg-slate-50 transition-colors bg-white">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center space-x-3">
-                                        <div class="w-8 h-8 bg-indigo-50 border border-indigo-100/30 rounded-full flex items-center justify-center font-extrabold text-indigo-700 text-xs shadow-inner">
+                                        <div class="w-8 h-8 bg-white border-2 border-slate-950 rounded-full flex items-center justify-center font-black text-slate-950 text-xs shadow-[1px_1px_0px_0px_rgba(15,23,42,1)]">
                                             {{ substr($claim->student_name, 0, 1) }}
                                         </div>
                                         <div>
-                                            <div class="font-bold text-slate-800 text-xs leading-none mb-1">{{ $claim->student_name }}</div>
-                                            <div class="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Kelas: {{ $claim->class_name }}</div>
+                                            <div class="font-black text-slate-950 text-xs uppercase tracking-tight mb-0.5">{{ $claim->student_name }}</div>
+                                            <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Kelas: {{ $claim->class_name }}</div>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <div class="text-xs font-semibold text-slate-800 mb-0.5">{{ $claim->reward_name }}</div>
-                                    <div class="text-[10px] text-slate-400 font-medium">{{ \Carbon\Carbon::parse($claim->created_at)->diffForHumans() }}</div>
+                                    <div class="text-xs font-black text-slate-950 uppercase tracking-tight mb-0.5">{{ $claim->reward_name }}</div>
+                                    <div class="text-[9px] text-slate-400 font-black uppercase tracking-wider">{{ \Carbon\Carbon::parse($claim->created_at)->diffForHumans() }}</div>
                                 </td>
-                                <td class="px-6 py-4 text-center font-extrabold text-xs text-emerald-600">{{ $claim->points_cost }} Pts</td>
+                                <td class="px-6 py-4 text-center">
+                                    <span class="bg-[#E4FF1A] border-2 border-slate-950 text-slate-950 text-[10px] font-black px-2.5 py-1 rounded shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] uppercase tracking-wider">
+                                        {{ number_format($claim->points_cost) }} Pts
+                                    </span>
+                                </td>
                                 <td class="px-6 py-4 text-right">
-                                    <form method="POST" action="{{ route('walikelas.rewards.approve', $claim->id) }}" onsubmit="let btn = this.querySelector('button[type=submit]'); if(btn) { btn.disabled = true; btn.innerHTML = '<span class=\'animate-spin inline-block w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full align-middle\'></span>'; }">
+                                    <form method="POST" action="{{ route('walikelas.rewards.approve', $claim->id) }}" onsubmit="let btn = this.querySelector('button[type=submit]'); if(btn) { btn.disabled = true; btn.innerHTML = '<span class=\'animate-spin inline-block w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full align-middle\'></span>'; }" class="inline-block">
                                         @csrf
-                                        <button type="submit" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold rounded-xl transition shadow-sm hover:shadow-md min-w-[110px] flex items-center justify-center">
+                                        <button type="submit" class="px-3.5 py-1.5 bg-[#E4FF1A] hover:bg-slate-950 text-slate-950 hover:text-white border-2 border-slate-950 text-[10px] font-black rounded-lg transition shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_rgba(15,23,42,1)] min-w-[110px] flex items-center justify-center uppercase tracking-wider">
                                             Setujui & Serahkan
                                         </button>
                                     </form>
@@ -130,7 +129,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="4" class="text-center py-12 text-slate-400 text-xs font-medium">Tidak ada klaim hadiah pending dari kelas Anda.</td>
+                                <td colspan="4" class="text-center py-12 text-slate-400 text-xs font-bold uppercase tracking-wider bg-slate-50/20">Tidak ada klaim hadiah pending dari kelas Anda.</td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -140,74 +139,80 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- Siswa Berisiko (Poin Minus) -->
-                <div class="bg-white rounded-2xl border border-slate-100 p-6 soft-glow-rose lg:col-span-1">
-                    <h3 class="text-lg font-bold text-slate-800 mb-4">Siswa Membutuhkan Perhatian</h3>
-                    <div class="space-y-3">
-                        @forelse($atRiskStudents as $student)
-                        <div class="p-3 bg-rose-50 border border-rose-100 rounded-xl flex items-center justify-between">
-                            <div>
-                                <div class="font-semibold text-rose-800 text-sm mb-0.5">{{ $student->name }}</div>
-                                <div class="text-[10px] text-rose-500 font-bold bg-rose-100/50 px-2 py-0.5 rounded-full inline-block">Level: {{ $student->current_level }}</div>
+                <div class="bg-white rounded-3xl border-4 border-slate-950 p-6 shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] lg:col-span-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg font-black text-slate-950 uppercase tracking-tight mb-4 border-b-2 border-slate-950 pb-2">Butuh Perhatian</h3>
+                        <div class="space-y-3">
+                            @forelse($atRiskStudents as $student)
+                            <div class="p-3 bg-rose-50 border-2 border-slate-950 rounded-xl flex items-center justify-between shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+                                <div>
+                                    <div class="font-black text-rose-800 text-xs uppercase tracking-tight mb-0.5">{{ $student->name }}</div>
+                                    <div class="text-[9px] text-rose-500 font-bold bg-rose-100/50 px-2 py-0.5 rounded border border-rose-200 uppercase tracking-wider inline-block">Level: {{ $student->current_level }}</div>
+                                </div>
+                                <span class="font-black text-[9px] bg-rose-200 text-rose-800 px-2.5 py-1 rounded border-2 border-slate-950 shadow-[1px_1px_0px_0px_rgba(15,23,42,1)] uppercase tracking-wider">
+                                    {{ $student->points }} Pts
+                                </span>
                             </div>
-                            <span class="font-bold text-[10px] bg-rose-200 text-rose-800 px-2.5 py-1 rounded-full border border-rose-300/30">
-                                {{ $student->points }} Pts
-                            </span>
+                            @empty
+                            <div class="text-center py-6 text-slate-400 text-xs font-bold uppercase tracking-wider bg-slate-50 border-2 border-dashed border-slate-950 rounded-xl">
+                                ✅ Semua siswa di kelas beraktivitas secara positif.
+                            </div>
+                            @endforelse
                         </div>
-                        @empty
-                        <div class="text-center py-6 text-slate-400 text-xs font-medium bg-slate-50/50 rounded-xl border border-dashed border-slate-200">
-                            ✅ Semua siswa di kelas beraktivitas secara positif.
-                        </div>
-                        @endforelse
                     </div>
                 </div>
 
                 <!-- Monitoring Siswa Kelas -->
-                <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden soft-glow-indigo lg:col-span-2">
-                    <div class="p-6 border-b border-slate-100">
-                        <h3 class="text-lg font-bold text-slate-800">Daftar Anggota Kelas ({{ $className }})</h3>
-                        <p class="text-xs text-slate-400 mt-1 font-medium">Gunakan daftar ini untuk meninjau detail poin per siswa.</p>
+                <div class="bg-white rounded-3xl border-4 border-slate-950 overflow-hidden shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] lg:col-span-2">
+                    <div class="p-6 border-b-4 border-slate-950 bg-[#E4FF1A]/10">
+                        <h3 class="text-lg font-black text-slate-950 uppercase tracking-tight">Daftar Anggota Kelas ({{ $className }})</h3>
+                        <p class="text-xs text-slate-400 font-bold uppercase tracking-wider mt-1">Gunakan daftar ini untuk meninjau detail poin per siswa.</p>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="bg-slate-50/70 border-b border-slate-100/80">
-                                    <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center w-16">No</th>
-                                    <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nama Siswa</th>
-                                    <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Level</th>
-                                    <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Status Keaktifan</th>
-                                    <th class="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Total Poin</th>
+                                <tr class="bg-slate-950 text-white border-b-2 border-slate-950">
+                                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-wider text-center w-16">No</th>
+                                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-wider">Nama Siswa</th>
+                                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-wider">Level</th>
+                                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-wider text-center">Status Keaktifan</th>
+                                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-wider text-center">Total Poin</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-100/70">
+                            <tbody class="divide-y divide-slate-950 bg-white">
                                 @forelse($students as $index => $student)
-                                <tr class="hover:bg-slate-50/50 transition-colors">
-                                    <td class="px-6 py-4 text-center text-slate-400 font-bold text-xs">{{ $index + 1 }}</td>
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-6 py-4 text-center text-slate-400 font-black text-xs">{{ $index + 1 }}</td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center space-x-3">
-                                            <div class="w-8 h-8 bg-indigo-50 border border-indigo-100/30 rounded-full flex items-center justify-center font-extrabold text-indigo-700 text-xs shadow-inner">
+                                            <div class="w-8 h-8 bg-white border-2 border-slate-950 rounded-full flex items-center justify-center font-black text-slate-950 text-xs shadow-[1px_1px_0px_0px_rgba(15,23,42,1)]">
                                                 {{ substr($student->name, 0, 1) }}
                                             </div>
                                             <div>
-                                                <div class="font-bold text-slate-800 text-xs leading-none mb-1">{{ $student->name }}</div>
-                                                <div class="text-[9px] text-slate-400 font-semibold">{{ $student->email }}</div>
+                                                <div class="font-black text-slate-950 text-xs uppercase tracking-tight mb-0.5">{{ $student->name }}</div>
+                                                <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">{{ $student->email }}</div>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-100/80">
+                                        <span class="px-2.5 py-1 bg-white border-2 border-slate-950 rounded text-[9px] font-black uppercase tracking-wider shadow-[1px_1px_0px_0px_rgba(15,23,42,1)]">
                                             {{ $student->current_level }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 text-center">
-                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border {{ $student->activity_color }}">
+                                        <span class="px-2.5 py-1.5 rounded border-2 border-slate-950 text-[9px] font-black uppercase tracking-wider shadow-[1px_1px_0px_0px_rgba(15,23,42,1)] {{ $student->activity_color }}">
                                             {{ $student->activity_status }}
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 text-center font-extrabold text-xs text-emerald-600">{{ $student->points }} Pts</td>
+                                    <td class="px-6 py-4 text-center">
+                                        <span class="bg-[#E4FF1A] border-2 border-slate-950 text-slate-950 text-[10px] font-black px-2.5 py-1 rounded shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] uppercase tracking-wider">
+                                            {{ number_format($student->points) }} Pts
+                                        </span>
+                                    </td>
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="5" class="text-center py-12 text-slate-400 text-xs font-medium">Belum ada siswa yang terdaftar di kelas ini.</td>
+                                    <td colspan="5" class="text-center py-12 text-slate-400 text-xs font-bold uppercase tracking-wider bg-slate-50/20">Belum ada siswa yang terdaftar di kelas ini.</td>
                                 </tr>
                                 @endforelse
                             </tbody>
@@ -221,4 +226,3 @@
         </div>
     </div>
 </x-app-layout>
-
