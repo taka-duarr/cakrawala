@@ -9,7 +9,7 @@ use App\Models\Jurusan;
 use App\Models\Classroom;
 use App\Models\Role;
 use App\Models\Mission;
-use App\Models\Reward;
+
 use App\Models\Achievement;
 use App\Models\Subject;
 use App\Models\TeachingAssignment;
@@ -58,6 +58,20 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name'    => 'Kantin Sekolah',
             'email'   => 'toko@cakrawala.com',
+            'role_id' => $tokoRole->id,
+            'points'  => 0,
+        ]);
+
+        User::factory()->create([
+            'name'    => 'Koperasi Serba Ada',
+            'email'   => 'koperasi@cakrawala.com',
+            'role_id' => $tokoRole->id,
+            'points'  => 0,
+        ]);
+
+        User::factory()->create([
+            'name'    => 'Toko Buku Pintar',
+            'email'   => 'tokobuku@cakrawala.com',
             'role_id' => $tokoRole->id,
             'points'  => 0,
         ]);
@@ -273,38 +287,7 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        // ─── Rewards ─────────────────────────────────────────────────
-        Reward::create([
-            'name' => 'Voucher Kantin Sehat Rp10.000',
-            'description' => 'Voucher makan siang gratis di kantin sehat sekolah.',
-            'points_cost' => 50,
-            'category' => 'sekolah',
-            'is_available' => true,
-        ]);
 
-        Reward::create([
-            'name' => 'Buku Catatan Eksklusif CAKRAWALA',
-            'description' => 'Buku catatan berkualitas tinggi dengan sampul keras bermotif CAKRAWALA.',
-            'points_cost' => 120,
-            'category' => 'akademik',
-            'is_available' => true,
-        ]);
-
-        Reward::create([
-            'name' => 'Merchandise Kaos Cakrawala',
-            'description' => 'Kaos katun premium CAKRAWALA - Melampaui Nilai, Membentuk Masa Depan.',
-            'points_cost' => 300,
-            'category' => 'sekolah',
-            'is_available' => true,
-        ]);
-
-        Reward::create([
-            'name' => 'Sertifikat Karakter Unggul Sekolah',
-            'description' => 'Sertifikat penghargaan resmi karakter siswa teladan yang disahkan oleh Kepala Sekolah.',
-            'points_cost' => 500,
-            'category' => 'penghargaan',
-            'is_available' => true,
-        ]);
 
         // ─── Events ──────────────────────────────────────────────────
         \App\Models\Event::create([
@@ -540,5 +523,7 @@ class DatabaseSeeder extends Seeder
                 'end_time'         => $slotTimes[$data['slot']]['end'],
             ]);
         }
+
+        $this->call(ShopItemSeeder::class);
     }
 }

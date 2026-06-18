@@ -75,12 +75,7 @@
                             <span uk-icon="icon: grid; ratio: 0.8"></span>
                             <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Kelas Saya</span>
                         </a>
-                        <a href="{{ route('student.rewards') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('student.rewards') ? 'bg-[#E4FF1A] text-slate-950 border-2 border-slate-950 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] font-black' : 'text-slate-700 hover:bg-slate-100 border-2 border-transparent hover:border-slate-950 hover:text-slate-950 hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]' }}"
-                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
-                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Toko Hadiah' : 'delay: 999999'">
-                            <span uk-icon="icon: cart; ratio: 0.8"></span>
-                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Toko Hadiah</span>
-                        </a>
+
                         <a href="{{ route('student.dompet') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('student.dompet') ? 'bg-[#E4FF1A] text-slate-950 border-2 border-slate-950 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] font-black' : 'text-slate-700 hover:bg-slate-100 border-2 border-transparent hover:border-slate-950 hover:text-slate-950 hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Dompet Poin' : 'delay: 999999'">
@@ -225,12 +220,7 @@
                         <div x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms class="pt-2">
                             <span class="block text-[9px] text-slate-300 font-bold uppercase tracking-wider mb-2 px-3.5">Ekonomi & Toko</span>
                         </div>
-                        <a href="{{ route('admin.rewards.manage') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.rewards.manage') ? 'bg-[#E4FF1A] text-slate-950 border-2 border-slate-950 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] font-black' : 'text-slate-700 hover:bg-slate-100 border-2 border-transparent hover:border-slate-950 hover:text-slate-950 hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]' }}"
-                           :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
-                           :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Kelola Toko Hadiah' : 'delay: 999999'">
-                            <span uk-icon="icon: settings; ratio: 0.8"></span>
-                            <span x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Kelola Toko Hadiah</span>
-                        </a>
+
                         <a href="{{ route('admin.toko.index') }}" wire:navigate class="sidebar-link flex items-center rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.toko.*') ? 'bg-[#E4FF1A] text-slate-950 border-2 border-slate-950 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] font-black' : 'text-slate-700 hover:bg-slate-100 border-2 border-transparent hover:border-slate-950 hover:text-slate-950 hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]' }}"
                            :class="sidebarCollapsed ? 'justify-center px-0 py-2.5' : 'space-x-3 px-3.5 py-2.5'"
                            :uk-tooltip="sidebarCollapsed ? 'pos: right; title: Manajemen Toko' : 'delay: 999999'">
