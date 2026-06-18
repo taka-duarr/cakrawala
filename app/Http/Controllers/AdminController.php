@@ -813,7 +813,7 @@ class AdminController extends Controller
         PointHistory::create([
             'user_id'     => $student->id,
             'points'      => $isAdd ? $amount : -$amount,
-            'type'        => 'adjust',
+            'type'        => $isAdd ? 'kebaikan' : 'pelanggaran',
             'source'      => 'Penyesuaian Admin',
             'description' => ($isAdd ? 'Penambahan poin' : 'Pengurangan poin') . ($request->notes ? ': ' . $request->notes : ''),
         ]);
