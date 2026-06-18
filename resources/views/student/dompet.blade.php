@@ -56,7 +56,7 @@
                         </button>
                     </div>
 
-                    <div id="scan-active" style="display: none;" class="flex-col items-center">
+                    <div id="scan-active" class="hidden flex-col items-center">
                         <div class="w-full max-w-xs rounded-2xl overflow-hidden border-4 border-slate-950 aspect-square relative bg-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]" id="reader-container">
                             <div id="reader" class="w-full h-full"></div>
                         </div>
