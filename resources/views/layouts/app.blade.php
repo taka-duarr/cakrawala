@@ -50,7 +50,7 @@
             });
         </script>
     </head>
-    <body class="font-sans antialiased bg-slate-50/50 text-slate-800">
+    <body class="font-sans antialiased bg-slate-100/40 text-slate-900">
         <div class="min-h-screen flex flex-col lg:flex-row" x-data>
             
             <!-- Left Sidebar Navigation (Desktop) -->
@@ -59,7 +59,7 @@
             <!-- Main Content Area -->
             <div class="flex-1 flex flex-col min-h-screen overflow-x-clip">
                 <!-- Top Navbar -->
-                <header class="bg-white border-b border-slate-100 h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-40">
+                <header class="bg-white border-b-2 border-slate-950 h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-40">
                     <!-- Left: Search / Mobile Toggle -->
                     <div class="flex items-center flex-1">
                         <button class="lg:hidden p-2 -ml-2 text-slate-500 hover:text-slate-700 mr-2" onclick="openMobileMenu()" type="button">
@@ -67,13 +67,13 @@
                         </button>
                         
                         <!-- Desktop Sidebar Toggle Button -->
-                        <button @click="$store.sidebar.toggle()" class="hidden lg:flex p-2 -ml-2 text-slate-400 hover:text-indigo-600 rounded-xl hover:bg-slate-50 mr-4 transition" title="Toggle Sidebar">
+                        <button @click="$store.sidebar.toggle()" class="hidden lg:flex p-2 -ml-2 text-slate-400 hover:text-[#E4FF1A] rounded-xl hover:bg-slate-950 mr-4 transition" title="Toggle Sidebar">
                             <svg class="w-5 h-5 transition-transform duration-300" :class="$store.sidebar.collapsed ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 9l-3 3m0 0l3 3m-3-3h7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </button>
                         
-                        <div class="hidden sm:flex items-center bg-slate-100/60 border border-slate-100 rounded-xl px-3.5 py-1.5 w-80">
+                        <div class="hidden sm:flex items-center bg-white border-2 border-slate-950 rounded-xl px-3.5 py-1.5 w-80 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] focus-within:shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] transition-all">
                             <span uk-icon="icon: search; ratio: 0.8" class="text-slate-400 mr-2"></span>
                             <input type="text" placeholder="Cari misi, teman, lencana..." 
                                 class="bg-transparent border-0 border-transparent focus:border-transparent focus:ring-0 text-xs text-slate-600 focus:outline-none w-full placeholder-slate-400 p-0">
@@ -83,18 +83,18 @@
                     <!-- Right: Quick Links, Notifications, Profile -->
                     <div class="flex items-center space-x-6">
                         <!-- Quick Links -->
-                        <div class="hidden md:flex items-center space-x-5 text-xs font-semibold text-slate-500">
-                            <a href="{{ route('dashboard') }}" wire:navigate class="hover:text-indigo-600 transition">Quest</a>
+                        <div class="hidden md:flex items-center space-x-5 text-xs font-black uppercase tracking-wider text-slate-500">
+                            <a href="{{ route('dashboard') }}" wire:navigate class="hover:text-slate-950 transition">Quest</a>
                             @if(auth()->user()->role && auth()->user()->role->name === 'siswa')
-                                <a href="{{ route('student.my-classes') }}" wire:navigate class="hover:text-indigo-600 transition">Kelas Saya</a>
-                                <a href="{{ route('student.rewards') }}" wire:navigate class="hover:text-indigo-600 transition">Reward Store</a>
+                                <a href="{{ route('student.my-classes') }}" wire:navigate class="hover:text-slate-950 transition">Kelas Saya</a>
+                                <a href="{{ route('student.rewards') }}" wire:navigate class="hover:text-slate-950 transition">Reward Store</a>
                             @endif
-                            <a href="{{ route('leaderboard') }}" wire:navigate class="hover:text-indigo-600 transition">Leaderboard</a>
+                            <a href="{{ route('leaderboard') }}" wire:navigate class="hover:text-slate-950 transition">Leaderboard</a>
                         </div>
 
                         <!-- Notifications -->
                         <div class="relative">
-                            <a href="{{ route('notifications') }}" wire:navigate class="relative inline-block p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-50 transition" title="Lihat Notifikasi">
+                            <a href="{{ route('notifications') }}" wire:navigate class="relative inline-block p-1.5 text-slate-400 hover:text-slate-950 hover:bg-slate-100 rounded-lg transition" title="Lihat Notifikasi">
                                 <span uk-icon="icon: bell; ratio: 0.95"></span>
                                 @php
                                     $unreadNotificationsCount = auth()->check() ? \App\Models\Notification::where('user_id', auth()->id())->where('is_unread', true)->count() : 0;
@@ -106,13 +106,13 @@
                         </div>
 
                         <!-- Profile Info (Logout Form) -->
-                        <div class="flex items-center space-x-3 pl-4 border-l border-slate-100">
-                            <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center font-bold text-indigo-700 text-xs shadow-inner">
+                        <div class="flex items-center space-x-3 pl-4 border-l border-slate-200">
+                            <div class="w-8 h-8 bg-[#E4FF1A] border-2 border-slate-950 rounded-full flex items-center justify-center font-black text-slate-950 text-xs shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)]">
                                 {{ substr(auth()->user()->name, 0, 1) }}
                             </div>
                             <div class="hidden sm:block text-left">
-                                <div class="text-xs font-bold text-slate-800 leading-tight">{{ auth()->user()->name }}</div>
-                                <div class="text-[9px] text-slate-400 font-semibold capitalize">{{ auth()->user()->role->display_name ?? 'Siswa' }}</div>
+                                <div class="text-xs font-black text-slate-950 leading-tight uppercase">{{ auth()->user()->name }}</div>
+                                <div class="text-[9px] text-slate-400 font-bold capitalize">{{ auth()->user()->role->display_name ?? 'Siswa' }}</div>
                             </div>
                             <!-- Logout Button -->
                             <form method="POST" action="{{ route('logout') }}" class="inline ml-2">
@@ -127,7 +127,7 @@
 
                 <!-- Optional Header -->
                 @isset($header)
-                    <div class="bg-white border-b border-slate-100 py-4 px-4 sm:px-6 lg:px-8">
+                    <div class="bg-white border-b-2 border-slate-950 py-4 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
                 @endisset

@@ -1,87 +1,86 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-bold text-2xl text-slate-800 leading-tight">
+        <h2 class="font-black text-2xl text-slate-950 leading-tight uppercase tracking-tight">
             Dompet Poin
         </h2>
     </x-slot>
 
-    <div class="py-12 bg-slate-50 min-h-screen">
-        <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 space-y-6">
+    <div class="py-12 bg-slate-100/30 min-h-screen">
+        <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 space-y-8">
 
             @if(session('success'))
-                <div class="bg-emerald-100 border border-emerald-400 text-emerald-700 px-4 py-3 rounded-xl relative" role="alert">
-                    <span class="block sm:inline">{{ session('success') }}</span>
+                <div class="bg-[#EAFCEF] border-2 border-slate-950 text-emerald-800 px-4 py-3 rounded-xl shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] font-bold uppercase text-xs" role="alert">
+                    <span>{{ session('success') }}</span>
                 </div>
             @endif
 
             @if(session('error'))
-                <div class="bg-rose-100 border border-rose-400 text-rose-700 px-4 py-3 rounded-xl relative" role="alert">
-                    <span class="block sm:inline">{{ session('error') }}</span>
+                <div class="bg-[#FFEAEA] border-2 border-slate-950 text-rose-800 px-4 py-3 rounded-xl shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] font-bold uppercase text-xs" role="alert">
+                    <span>{{ session('error') }}</span>
                 </div>
             @endif
 
             <!-- Bagian Atas: Info Poin & Tombol Scan -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- Info Poin -->
-                <div class="bg-gradient-to-br from-indigo-600 to-violet-800 rounded-3xl p-6 shadow-lg shadow-indigo-200 text-white flex flex-col justify-between relative overflow-hidden">
-                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
-                    <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-indigo-400/20 rounded-full blur-xl"></div>
+                <div class="bg-[#E4FF1A] border-4 border-slate-950 rounded-3xl p-6 shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] text-slate-950 flex flex-col justify-between relative overflow-hidden">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/20 rounded-full blur-2xl"></div>
                     
                     <div class="relative z-10 flex justify-between items-start">
                         <div>
-                            <p class="text-indigo-100 font-medium text-sm">Total Saldo Poin Anda</p>
-                            <h3 class="text-4xl font-black mt-1">{{ number_format($user->points) }} <span class="text-lg font-bold text-indigo-200">Poin</span></h3>
+                            <p class="text-slate-800 font-extrabold uppercase text-[10px] tracking-wider">Total Saldo Poin Anda</p>
+                            <h3 class="text-4xl font-black mt-1.5">{{ number_format($user->points) }} <span class="text-lg font-bold">Poin</span></h3>
                         </div>
-                        <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <div class="w-12 h-12 bg-white border-2 border-slate-950 rounded-2xl flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+                            <svg class="w-6 h-6 text-slate-950" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         </div>
                     </div>
                     
-                    <div class="relative z-10 mt-6 pt-4 border-t border-indigo-500/30">
-                        <p class="text-indigo-100 text-xs font-medium">Gunakan poin Anda untuk berbelanja di kantin atau menukarkan reward!</p>
+                    <div class="relative z-10 mt-8 pt-4 border-t-2 border-slate-950">
+                        <p class="text-slate-800 text-xs font-bold uppercase tracking-wide">Gunakan poin untuk berbelanja di kantin atau menukarkan reward!</p>
                     </div>
                 </div>
 
                 <!-- Scanner QR -->
-                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col justify-center">
+                <div class="bg-white rounded-3xl border-4 border-slate-950 p-6 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] flex flex-col justify-center">
                     <div id="scan-standby" class="text-center space-y-4">
-                        <div class="w-16 h-16 bg-violet-50 text-violet-600 rounded-2xl flex items-center justify-center mx-auto">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                        <div class="w-16 h-16 bg-[#EAFCEF] border-2 border-slate-950 text-emerald-700 rounded-2xl flex items-center justify-center mx-auto shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
                         </div>
                         <div>
-                            <h3 class="text-base font-bold text-slate-800">Bayar di Toko / Kantin</h3>
-                            <p class="text-xs text-slate-500 mt-1">Scan QR Code dari penjual untuk melakukan pembayaran.</p>
+                            <h3 class="text-base font-black uppercase tracking-tight text-slate-950">Bayar di Toko / Kantin</h3>
+                            <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mt-1">Scan QR Code dari penjual untuk melakukan pembayaran.</p>
                         </div>
-                        <button onclick="startScanner()" id="btn-start" class="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3.5 rounded-2xl shadow-md shadow-violet-100 transition">
+                        <button onclick="startScanner()" id="btn-start" class="w-full bg-[#E4FF1A] text-slate-950 hover:bg-slate-950 hover:text-white border-2 border-slate-950 font-black py-3.5 rounded-2xl shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] transition active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_rgba(15,23,42,1)] uppercase text-xs tracking-wider">
                             Mulai Scan QR
                         </button>
                     </div>
 
-                    <div id="scan-active" class="hidden flex-col items-center">
-                        <div class="w-full max-w-xs rounded-2xl overflow-hidden border-4 border-violet-100 aspect-square relative bg-slate-900" id="reader-container">
+                    <div id="scan-active" style="display: none;" class="flex-col items-center">
+                        <div class="w-full max-w-xs rounded-2xl overflow-hidden border-4 border-slate-950 aspect-square relative bg-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]" id="reader-container">
                             <div id="reader" class="w-full h-full"></div>
                         </div>
-                        <div id="scan-result" class="hidden mt-4 w-full p-3 rounded-xl bg-emerald-50 text-emerald-700 font-bold text-sm flex items-center justify-center space-x-2 border border-emerald-100">
+                        <div id="scan-result" style="display: none;" class="mt-4 w-full p-3.5 rounded-xl bg-[#EAFCEF] text-emerald-700 font-black text-sm flex items-center justify-center space-x-2 border-2 border-slate-950 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
                             <span class="animate-spin inline-block w-4 h-4 border-2 border-emerald-500 border-t-transparent rounded-full"></span>
                             <span>QR Terdeteksi! Memproses...</span>
                         </div>
-                        <button onclick="stopScanner()" id="btn-stop" class="mt-4 text-xs font-bold text-rose-500 hover:text-rose-700 transition">
+                        <button onclick="stopScanner()" id="btn-stop" class="mt-4 text-xs font-black uppercase tracking-wider text-rose-600 hover:text-rose-800 hover:underline transition">
                             Batalkan Scan
                         </button>
                     </div>
                 </div>
 
                 <!-- Transfer Poin (Generate QR) -->
-                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col justify-center">
+                <div class="bg-white rounded-3xl border-4 border-slate-950 p-6 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] flex flex-col justify-center">
                     <div class="text-center space-y-4">
-                        <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+                        <div class="w-16 h-16 bg-[#FFEAEA] border-2 border-slate-950 text-rose-700 rounded-2xl flex items-center justify-center mx-auto shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
                         </div>
                         <div>
-                            <h3 class="text-base font-bold text-slate-800">Kirim Poin</h3>
-                            <p class="text-xs text-slate-500 mt-1">Buat QR Code berisi nominal poin untuk di-scan oleh teman Anda.</p>
+                            <h3 class="text-base font-black uppercase tracking-tight text-slate-950">Kirim Poin</h3>
+                            <p class="text-xs text-slate-500 mt-1 font-bold uppercase tracking-wider">Buat QR Code berisi nominal poin untuk di-scan oleh teman Anda.</p>
                         </div>
-                        <button uk-toggle="target: #modal-transfer" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-2xl shadow-md shadow-blue-100 transition">
+                        <button uk-toggle="target: #modal-transfer" class="w-full bg-[#E4FF1A] text-slate-950 hover:bg-slate-950 hover:text-white border-2 border-slate-950 font-black py-3.5 rounded-2xl shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] transition active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_rgba(15,23,42,1)] uppercase text-xs tracking-wider">
                             Buat QR Transfer
                         </button>
                     </div>
@@ -91,38 +90,38 @@
             <!-- Bagian Bawah: Riwayat -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Riwayat Transaksi Toko -->
-                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-                    <div class="p-5 border-b border-slate-100 bg-slate-50/50">
-                        <h3 class="font-bold text-slate-800 flex items-center space-x-2">
+                <div class="bg-white rounded-3xl border-4 border-slate-950 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] overflow-hidden">
+                    <div class="p-5 border-b-2 border-slate-950 bg-slate-50/50">
+                        <h3 class="font-black text-slate-950 flex items-center space-x-2 uppercase tracking-tight">
                             <span uk-icon="icon: bag; ratio: 0.9"></span>
                             <span>Riwayat Belanja</span>
                         </h3>
                     </div>
-                    <div class="divide-y divide-slate-100 max-h-[400px] overflow-y-auto">
+                    <div class="divide-y-2 divide-slate-950 max-h-[400px] overflow-y-auto">
                         @forelse($shopTransactions as $tx)
-                            <div class="p-4 flex items-center justify-between hover:bg-slate-50 transition">
+                            <div class="p-4 flex items-center justify-between hover:bg-slate-100 transition">
                                 <div class="flex items-center space-x-4">
-                                    <div class="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center shrink-0">
-                                        <span class="font-bold text-slate-600 text-sm">{{ substr($tx->shop->name ?? '?', 0, 1) }}</span>
+                                    <div class="w-10 h-10 bg-[#E4FF1A] border-2 border-slate-950 rounded-xl flex items-center justify-center shrink-0 shadow-[1.5px_1.5px_0px_0px_rgba(15,23,42,1)]">
+                                        <span class="font-black text-slate-950 text-sm">{{ substr($tx->shop->name ?? '?', 0, 1) }}</span>
                                     </div>
                                     <div>
-                                        <p class="text-sm font-bold text-slate-800">{{ $tx->item_name }}</p>
-                                        <p class="text-[10px] text-slate-400 mt-0.5">
+                                        <p class="text-xs font-black text-slate-950 uppercase tracking-tight">{{ $tx->item_name }}</p>
+                                        <p class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mt-1">
                                             {{ $tx->shop->name ?? 'Toko' }} · {{ $tx->created_at->translatedFormat('d M, H:i') }}
                                         </p>
                                     </div>
                                 </div>
                                 <div class="text-right">
-                                    <p class="text-sm font-black text-rose-600">-{{ $tx->points_amount }}</p>
+                                    <p class="text-sm font-black text-rose-700">-{{ $tx->points_amount }}</p>
                                     @if($tx->status === 'paid')
-                                        <span class="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">Lunas</span>
+                                        <span class="text-[9px] font-black uppercase text-emerald-700 bg-[#EAFCEF] border border-slate-950 px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(15,23,42,1)]">Lunas</span>
                                     @else
-                                        <span class="text-[9px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">Gagal/Expired</span>
+                                        <span class="text-[9px] font-black uppercase text-rose-700 bg-[#FFEAEA] border border-slate-950 px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(15,23,42,1)]">Gagal/Expired</span>
                                     @endif
                                 </div>
                             </div>
                         @empty
-                            <div class="p-8 text-center text-slate-400 text-sm font-medium">
+                            <div class="p-8 text-center text-slate-400 text-xs font-bold uppercase tracking-wider">
                                 Belum ada riwayat belanja.
                             </div>
                         @endforelse
@@ -130,36 +129,36 @@
                 </div>
 
                 <!-- Riwayat Perubahan Poin -->
-                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-                    <div class="p-5 border-b border-slate-100 bg-slate-50/50">
-                        <h3 class="font-bold text-slate-800 flex items-center space-x-2">
+                <div class="bg-white rounded-3xl border-4 border-slate-950 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] overflow-hidden">
+                    <div class="p-5 border-b-2 border-slate-950 bg-slate-50/50">
+                        <h3 class="font-black text-slate-950 flex items-center space-x-2 uppercase tracking-tight">
                             <span uk-icon="icon: history; ratio: 0.9"></span>
                             <span>Aktivitas Poin</span>
                         </h3>
                     </div>
-                    <div class="divide-y divide-slate-100 max-h-[400px] overflow-y-auto">
+                    <div class="divide-y-2 divide-slate-950 max-h-[400px] overflow-y-auto">
                         @forelse($pointHistory as $history)
                             @php
                                 $isPositive = $history->points > 0;
                             @endphp
-                            <div class="p-4 flex items-start space-x-3 hover:bg-slate-50 transition">
-                                <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 {{ $isPositive ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600' }}">
+                            <div class="p-4 flex items-start space-x-3 hover:bg-slate-100 transition">
+                                <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border-2 border-slate-950 shadow-[1px_1px_0px_0px_rgba(15,23,42,1)] {{ $isPositive ? 'bg-[#EAFCEF] text-emerald-700' : 'bg-[#FFEAEA] text-rose-700' }}">
                                     @if($isPositive)
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                                     @else
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/></svg>
                                     @endif
                                 </div>
                                 <div class="flex-1 min-w-0">
-                                    <p class="text-xs font-bold text-slate-800">{{ $history->description }}</p>
-                                    <p class="text-[10px] text-slate-400 mt-1">{{ $history->created_at->diffForHumans() }}</p>
+                                    <p class="text-xs font-bold text-slate-950">{{ $history->description }}</p>
+                                    <p class="text-[9px] text-slate-400 font-bold uppercase mt-1">{{ $history->created_at->diffForHumans() }}</p>
                                 </div>
-                                <div class="text-sm font-black {{ $isPositive ? 'text-emerald-600' : 'text-rose-600' }}">
+                                <div class="text-xs font-black {{ $isPositive ? 'text-emerald-700' : 'text-rose-700' }}">
                                     {{ $isPositive ? '+' : '' }}{{ $history->points }}
                                 </div>
                             </div>
                         @empty
-                            <div class="p-8 text-center text-slate-400 text-sm font-medium">
+                            <div class="p-8 text-center text-slate-400 text-xs font-bold uppercase tracking-wider">
                                 Belum ada aktivitas poin.
                             </div>
                         @endforelse
@@ -172,18 +171,18 @@
 
     <!-- Modal Transfer -->
     <div id="modal-transfer" uk-modal>
-        <div class="uk-modal-dialog rounded-3xl p-6">
+        <div class="uk-modal-dialog border-4 border-slate-950 rounded-3xl p-6 shadow-[8px_8px_0px_0px_rgba(15,23,42,1)]">
             <div id="transfer-form-section">
-                <h3 class="text-lg font-bold text-slate-800">Transfer Poin</h3>
-                <p class="text-sm text-slate-500 mb-6">Masukkan jumlah poin yang ingin dikirimkan ke teman Anda.</p>
-                <input type="number" id="transfer-amount" class="w-full border-slate-200 rounded-xl mb-4" placeholder="Contoh: 500">
-                <button id="btn-generate-transfer" onclick="generateTransfer()" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl">Generate QR Code</button>
+                <h3 class="text-lg font-black uppercase text-slate-950 tracking-tight">Transfer Poin</h3>
+                <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-6">Masukkan jumlah poin yang ingin dikirimkan ke teman Anda.</p>
+                <input type="number" id="transfer-amount" class="w-full border-2 border-slate-950 rounded-xl mb-4 p-3 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] focus:ring-slate-950 focus:border-slate-950" placeholder="Contoh: 500">
+                <button id="btn-generate-transfer" onclick="generateTransfer()" class="w-full bg-[#E4FF1A] text-slate-950 border-2 border-slate-950 font-black py-3 rounded-xl shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_rgba(15,23,42,1)] transition text-xs uppercase tracking-wider">Generate QR Code</button>
             </div>
             <div id="transfer-qr-section" class="hidden flex-col items-center">
-                <h3 class="text-lg font-bold text-slate-800">Scan QR Transfer</h3>
-                <div id="transfer-qr-display" class="my-6"></div>
-                <p class="text-sm text-slate-600">Poin: <span id="transfer-display-amount" class="font-bold"></span></p>
-                <button onclick="cancelTransfer()" class="mt-6 text-rose-500 font-bold">Batal</button>
+                <h3 class="text-lg font-black uppercase text-slate-950 tracking-tight">Scan QR Transfer</h3>
+                <div id="transfer-qr-display" class="my-6 p-4 border-2 border-slate-950 rounded-2xl bg-white shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]"></div>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-800">Poin: <span id="transfer-display-amount" class="font-black text-slate-950"></span></p>
+                <button onclick="cancelTransfer()" class="mt-6 text-rose-600 font-black uppercase tracking-wider text-xs hover:underline">Batal</button>
             </div>
         </div>
     </div>
@@ -278,7 +277,7 @@
                         text: data.qr_url,
                         width: 200,
                         height: 200,
-                        colorDark: '#2563eb',
+                        colorDark: '#0f172a',
                         colorLight: '#ffffff',
                         correctLevel: QRCode.CorrectLevel.H
                     });
