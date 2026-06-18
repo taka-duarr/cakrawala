@@ -44,43 +44,24 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <!-- AI Student Insight -->
-                    <div class="lg:col-span-2 space-y-4">
-                        <div class="flex flex-wrap justify-between items-center gap-2">
-                            <h3 class="font-black text-slate-950 text-sm uppercase tracking-wider">🤖 AI Student Insight</h3>
-                            <form method="GET" action="{{ route('parent.dashboard') }}" onsubmit="let btn = this.querySelector('button[type=submit]'); if(btn) { btn.disabled = true; btn.innerHTML = '<span class=\'animate-spin inline-block w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full mr-1.5 align-middle\'></span> Memproses...'; }">
-                                <input type="hidden" name="trigger_ai" value="1">
-                                <input type="hidden" name="student_id" value="{{ $child->id }}">
-                                <button type="submit" class="px-4 py-2 bg-white hover:bg-[#E4FF1A] text-slate-950 border-2 border-slate-950 text-xs font-black rounded-xl transition shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_rgba(15,23,42,1)] uppercase tracking-wider flex items-center space-x-1.5">
-                                    <span>Minta AI Insight</span>
-                                </button>
-                            </form>
-                        </div>
-                        
-                        <div class="bg-[#E4FF1A]/10 border-2 border-slate-950 rounded-2xl p-6 text-xs text-slate-950 font-bold uppercase tracking-wide leading-relaxed shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
-                            {{ $aiInsights[$child->id] }}
-                        </div>
-                        
-                        <!-- Lencana/Badges yang diraih -->
-                        <div class="space-y-3 pt-2">
-                            <h3 class="font-black text-slate-950 text-sm uppercase tracking-wider flex items-center gap-2">
-                                <span uk-icon="icon: award; ratio: 0.9" class="text-amber-500"></span>
-                                <span>Lencana Karakter & Prestasi</span>
-                            </h3>
-                            <div class="flex flex-wrap gap-3">
-                                @forelse($child->achievements as $achievement)
-                                    <div class="px-4 py-2.5 bg-white border-2 border-slate-950 rounded-xl flex items-center space-x-2.5 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-0.5 transition-all">
-                                        <span uk-icon="icon: star; ratio: 0.75" class="text-amber-500"></span>
-                                        <div>
-                                            <div class="text-xs font-black text-slate-950 uppercase tracking-tight">{{ $achievement->title }}</div>
-                                            <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">{{ $achievement->description }}</div>
-                                        </div>
+                    <!-- Lencana/Badges yang diraih -->
+                    <div class="lg:col-span-2 space-y-3">
+                        <h3 class="font-black text-slate-950 text-sm uppercase tracking-wider flex items-center gap-2">
+                            <span uk-icon="icon: award; ratio: 0.9" class="text-amber-500"></span>
+                            <span>Lencana Karakter & Prestasi</span>
+                        </h3>
+                        <div class="flex flex-wrap gap-3">
+                            @forelse($child->achievements as $achievement)
+                                <div class="px-4 py-2.5 bg-white border-2 border-slate-950 rounded-xl flex items-center space-x-2.5 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-0.5 transition-all">
+                                    <span uk-icon="icon: star; ratio: 0.75" class="text-amber-500"></span>
+                                    <div>
+                                        <div class="text-xs font-black text-slate-950 uppercase tracking-tight">{{ $achievement->title }}</div>
+                                        <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">{{ $achievement->description }}</div>
                                     </div>
-                                @empty
-                                    <p class="text-xs text-slate-400 font-bold uppercase tracking-wider italic">Belum ada lencana yang diraih.</p>
-                                @endforelse
-                            </div>
+                                </div>
+                            @empty
+                                <p class="text-xs text-slate-400 font-bold uppercase tracking-wider italic">Belum ada lencana yang diraih.</p>
+                            @endforelse
                         </div>
                     </div>
 

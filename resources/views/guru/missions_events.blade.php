@@ -44,7 +44,7 @@
                                 <td class="px-6 py-4 font-black text-slate-950 text-xs uppercase tracking-tight">{{ $mission->title }}</td>
                                 <td class="px-6 py-4 text-xs text-slate-500 font-bold max-w-xs truncate uppercase tracking-wider" title="{{ $mission->description }}">{{ $mission->description }}</td>
                                 <td class="px-6 py-4 text-center">
-                                    <span class="bg-[#E4FF1A] border-2 border-slate-950 text-slate-950 text-[10px] font-black px-2.5 py-1 rounded shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] uppercase tracking-wider">
+                                    <span class="bg-[#E4FF1A] border-2 border-slate-950 text-slate-950 text-[10px] font-black px-2.5 py-1 rounded shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] uppercase tracking-wider whitespace-nowrap">
                                         +{{ $mission->points_reward }} Pts
                                     </span>
                                 </td>
@@ -114,7 +114,7 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    <span class="bg-[#E4FF1A] border-2 border-slate-950 text-slate-950 text-[10px] font-black px-2.5 py-1 rounded shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] uppercase tracking-wider">
+                                    <span class="bg-[#E4FF1A] border-2 border-slate-950 text-slate-950 text-[10px] font-black px-2.5 py-1 rounded shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] uppercase tracking-wider whitespace-nowrap">
                                         +{{ $event->points_bonus }} Pts
                                     </span>
                                 </td>
