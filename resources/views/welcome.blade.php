@@ -425,11 +425,11 @@
                     <div class="bg-[#E6FCFF] border-2 border-slate-950 rounded-3xl p-6 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:-translate-y-2 hover:translate-x-1 hover:shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] transition-all duration-300 space-y-5 flex flex-col justify-between scroll-animate">
                         <div class="space-y-4">
                             <div class="w-12 h-12 bg-[#E4FF1A] border-2 border-slate-950 text-slate-950 rounded-2xl flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
-                                <span uk-icon="icon: bolt; ratio: 1.1"></span>
+                                <span uk-icon="icon: bookmark; ratio: 1.1"></span>
                             </div>
-                            <h3 class="text-base font-black text-slate-950 uppercase leading-snug">Insight & Rekomendasi AI</h3>
+                            <h3 class="text-base font-black text-slate-950 uppercase leading-snug">Materi & Tugas Mapel</h3>
                             <p class="text-xs text-slate-700 leading-relaxed font-medium">
-                                Rekomendasi misi berbasis kecerdasan buatan untuk mengoptimalkan potensi dan mendeteksi bakat anak berdasarkan riwayat keaktifan harian.
+                                Akses materi pembelajaran dan kerjakan tugas secara terintegrasi. Guru dapat memonitor progres belajar dan kehadiran siswa dalam satu platform interaktif.
                             </p>
                         </div>
                     </div>
