@@ -47,12 +47,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/classrooms/{id}/enroll', [AdminController::class, 'classroomEnrollStudent'])->name('classrooms.enroll');
     Route::delete('/classrooms/{classroomId}/unenroll/{userId}', [AdminController::class, 'classroomUnenrollStudent'])->name('classrooms.unenroll');
 
-    // Reward Management Routes
-    Route::get('/rewards', [\App\Http\Controllers\RewardController::class, 'manage'])->name('rewards.manage');
-    Route::post('/rewards/store', [\App\Http\Controllers\RewardController::class, 'store'])->name('rewards.store');
-    Route::put('/rewards/{id}/update', [\App\Http\Controllers\RewardController::class, 'update'])->name('rewards.update');
-    Route::delete('/rewards/{id}/destroy', [\App\Http\Controllers\RewardController::class, 'destroy'])->name('rewards.destroy');
-    Route::post('/rewards/claims/{id}/approve', [\App\Http\Controllers\RewardController::class, 'approveClaim'])->name('rewards.approve');
 
     // Academic Year Management Routes
     Route::get('/academic-years', [AdminController::class, 'academicYearsIndex'])->name('academic-years.index');
@@ -154,7 +148,7 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
 
 Route::middleware(['auth', 'role:walikelas'])->prefix('walikelas')->name('walikelas.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\WaliKelasController::class, 'index'])->name('dashboard');
-    Route::post('/rewards/claims/{id}/approve', [\App\Http\Controllers\RewardController::class, 'approveClaim'])->name('rewards.approve');
+
 });
 
 Route::middleware(['auth', 'role:orangtua'])->prefix('parent')->name('parent.')->group(function () {
@@ -165,8 +159,7 @@ Route::middleware(['auth', 'role:siswa'])->prefix('student')->name('student.')->
     Route::get('/dashboard', [StudentController::class, 'index'])->name('dashboard');
     Route::post('/mission/{id}/take', [\App\Http\Controllers\MissionController::class, 'takeMission'])->name('mission.take');
     Route::post('/mission/{id}/submit', [\App\Http\Controllers\MissionController::class, 'submitProof'])->name('mission.submit');
-    Route::get('/rewards', [\App\Http\Controllers\RewardController::class, 'index'])->name('rewards');
-    Route::post('/rewards/{id}/claim', [\App\Http\Controllers\RewardController::class, 'claim'])->name('rewards.claim');
+
     Route::get('/my-classes', [StudentController::class, 'myClasses'])->name('my-classes');
     Route::get('/my-classes/{id}', [StudentController::class, 'classDetail'])->name('class-detail');
     Route::get('/dompet', [StudentController::class, 'dompet'])->name('dompet');

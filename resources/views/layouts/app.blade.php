@@ -87,7 +87,6 @@
                             <a href="{{ route('dashboard') }}" wire:navigate class="hover:text-slate-950 transition">Quest</a>
                             @if(auth()->user()->role && auth()->user()->role->name === 'siswa')
                                 <a href="{{ route('student.my-classes') }}" wire:navigate class="hover:text-slate-950 transition">Kelas Saya</a>
-                                <a href="{{ route('student.rewards') }}" wire:navigate class="hover:text-slate-950 transition">Reward Store</a>
                             @endif
                             <a href="{{ route('leaderboard') }}" wire:navigate class="hover:text-slate-950 transition">Leaderboard</a>
                         </div>
@@ -174,10 +173,7 @@
                         <span uk-icon="icon: grid; ratio: 0.9"></span>
                         <span>Kelas Saya</span>
                     </a>
-                    <a href="{{ route('student.rewards') }}" wire:navigate class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('student.rewards') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
-                        <span uk-icon="icon: cart; ratio: 0.9"></span>
-                        <span>Toko Hadiah</span>
-                    </a>
+
                     <a href="{{ route('student.dompet') }}" wire:navigate class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('student.dompet') ? 'bg-violet-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                         <span uk-icon="icon: credit-card; ratio: 0.9"></span>
                         <span>Dompet Poin</span>
@@ -192,10 +188,7 @@
                 @endif
 
                 @if(auth()->user()->role && auth()->user()->role->name === 'admin')
-                    <a href="{{ route('admin.rewards.manage') }}" wire:navigate class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('admin.rewards.manage') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
-                        <span uk-icon="icon: settings; ratio: 0.9"></span>
-                        <span>Kelola Toko Hadiah</span>
-                    </a>
+
                     <a href="{{ route('admin.subjects.index') }}" wire:navigate class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold {{ request()->routeIs('admin.subjects.*') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                         <span uk-icon="icon: bookmark; ratio: 0.9"></span>
                         <span>Mata Pelajaran</span>
